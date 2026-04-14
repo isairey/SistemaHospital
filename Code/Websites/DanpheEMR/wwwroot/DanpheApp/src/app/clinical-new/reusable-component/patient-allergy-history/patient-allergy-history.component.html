@@ -1,0 +1,100 @@
+<style>
+  .icheck-inline>label {
+    margin-right: 15px;
+    margin-left: 0;
+  }
+
+  .icheck-inline label {
+    color: #fff;
+  }
+
+  .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+</style>
+
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="form-body">
+      <div id="allergySection">
+        <div class="row">
+
+          <div class="col-md-12 col-xs-12">
+
+            <div class="portlet cstm-portlet portlet-with-collapse">
+              <div class="portlet-title cstm-pt-title">
+                <div class="cstm-portlet-caption">
+                  Allergy List
+                </div>
+                <div class="tools">
+                  <a href="javascript:;" class="fullscreen" data-original-title="" title=""> </a>
+                </div>
+                <div class="cstm-action">
+                  <a class="cstm-add" (click)="ShowAddAllergyBox()">
+                    <i class="fa fa-plus-circle"></i> Add New
+                  </a>
+                </div>
+              </div>
+
+              <div class="cstm-portlet-body">
+                <div class="table-responsive">
+                  <table class="table doc-tbl flip-content" style="margin-bottom: 0px;">
+                    <thead>
+                      <tr>
+                        <th>Recorded On</th>
+                        <th>Allergen</th>
+                        <th>Severity</th>
+                        <th>Reaction</th>
+                        <th>Verified</th>
+                        <th>Comments</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let allergy of AllergyLists;let i=index">
+                        <td>{{allergy.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm'}}</td>
+                        <td>{{allergy.AllergenAdvRecName}}</td>
+                        <td>{{allergy.Severity}}</td>
+                        <td>{{allergy.Reaction}}</td>
+                        <td>{{allergy.Verified}}</td>
+                        <td>{{allergy.Comments}}</td>
+                        <td>
+                          <a
+                             (click)="Edit(allergy, i)"
+                             class="bs-glyphicon-class btn yello"
+                             [class.disabled]="!CanEditOrRemove(allergy)"
+                             [attr.aria-disabled]="!CanEditOrRemove(allergy)">
+                            <span class="glyphicon glyphicon-edit"></span>
+                          </a>
+
+                          <!-- Disable Remove button if the current user is not the creator -->
+                          <a
+                             (click)="Remove(allergy, i)"
+                             [class.disabled]="!CanEditOrRemove(allergy)"
+                             [attr.aria-disabled]="!CanEditOrRemove(allergy)">
+                            <span class="fa fa-trash"></span>
+                          </a>
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+          <div class="col-md-4">
+            <patient-allergy-add [ShowAllergyAddBox]="ShowAllergyAddBox"
+                                 [Selected-Allergy]="SelectedAllergy"
+                                 (Callback-AddUpdate)="CallBackAddUpdate($event)"></patient-allergy-add>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

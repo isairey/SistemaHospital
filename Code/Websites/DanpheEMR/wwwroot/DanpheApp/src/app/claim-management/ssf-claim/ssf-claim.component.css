@@ -1,0 +1,19 @@
+.diagnosis-section {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-top: 1px dotted;
+  border-bottom: 1px dotted;
+}
+
+.close-icon {
+  color: red;
+}
+
+.selected-diagnosis-tbl {
+  margin-top: 25px;
+}
+
+.pd-5 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

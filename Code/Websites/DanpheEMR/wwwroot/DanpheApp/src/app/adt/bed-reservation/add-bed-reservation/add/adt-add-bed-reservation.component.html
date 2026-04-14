@@ -1,0 +1,216 @@
+<div class="popup-static portlet box portlet-fullscreen">
+  <div class="portlet-body form">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div">
+        <div class="caption custom-caption">
+          <h3> <span>Add Bed Reservation</span></h3>
+        </div>
+        <div class="modelbox-body">
+          <div class="row">
+            <div class="col-md-12">
+              <!--Add Form for Bed Reservation-->
+              <div class="col-md-12" style="background-color: #e7ecf1;border:1px solid">
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <label>
+                        Patient Name
+                      </label>
+                      <span style="float:right">:</span>
+                    </div>
+                    <div class="col-md-7">
+                      <label>
+                        {{ AdmittedPatientInformation.PatientName }}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-5">
+                      <label>
+                        Age/Sex
+                      </label>
+                      <span style="float:right">:</span>
+                    </div>
+                    <div class="col-md-7">
+                      <label>
+                        {{ AdmittedPatientInformation.AgeSex }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <label>
+                        Ip Number
+                      </label>
+                      <span style="float:right">:</span>
+                    </div>
+                    <div class="col-md-7">
+                      <label>
+                        {{ AdmittedPatientInformation.VisitCode }}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-5">
+                      <label>
+                        Hospital No
+                      </label>
+                      <span style="float:right">:</span>
+                    </div>
+                    <div class="col-md-7">
+                      <label>
+                        {{ AdmittedPatientInformation.PatientCode}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <label>
+                        Admitted Date
+                      </label>
+                      <span style="float:right">:</span>
+                    </div>
+                    <div class="col-md-7">
+                      <label>
+                        {{ AdmittedPatientInformation.AdmittedDate | DanpheDateTime: 'format':'YYYY-MM-DD HH:mm A'}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-5">
+                      <label>
+                        Current Ward/Bed
+                      </label>
+                      <span style="float:right">:</span>
+                    </div>
+                    <div class="col-md-7">
+                      <label>
+                        {{ AdmittedPatientInformation.CurrentWardBed}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row p-14px">
+            <div class="col-md-12">
+              <h4><strong>Reservation Detail</strong></h4>
+            </div>
+
+            <div class="reservation-detail-container">
+              <div class="row">
+
+                <div class="form-group col-md-6">
+                  <label for="id_bed_reservation_primary_visitor_name" class="control-label col-md-4">Visitor/CareTaker
+                    Name<sup>*</sup><b>:</b></label>
+                  <div class="col-md-8">
+                    <input id="id_bed_reservation_primary_visitor_name" class="form-control" maxlength="30" type="text"
+                           [(ngModel)]="AddBedReservation.PrimaryCareTakerName" />
+                  </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label for="id_bed_reservation_secondary_visitor_name" class="control-label col-md-4">Secondary Visitor/CareTaker
+                    Name<b>:</b></label>
+                  <div class="col-md-8">
+                    <input id="id_bed_reservation_secondary_visitor_name" class="form-control" maxlength="30" type="text"
+                           [(ngModel)]="AddBedReservation.SecondaryCareTakerName" />
+                  </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="id_bed_reservation_primary_visitor_contact" class="control-label col-md-4">Visitor/CareTaker
+                    Contact<sup>*</sup><b>:</b></label>
+                  <div class="col-md-8">
+                    <input id="id_bed_reservation_primary_visitor_contact" class="form-control" maxlength="30" type="text"
+                           [(ngModel)]="AddBedReservation.PrimaryCareTakerContact" />
+                  </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label for="id_bed_reservation_secondary_visitor_contact" class="control-label col-md-4">Secondary Visitor/CareTaker
+                    Contact<b>:</b></label>
+                  <div class="col-md-8">
+                    <input id="id_bed_reservation_secondary_visitor_contact" class="form-control" maxlength="30" type="text"
+                           [(ngModel)]="AddBedReservation.SecondaryCareTakerContact" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="id_bed_reservation_ward" class="control-label col-md-4">Ward<sup>*</sup><b>:</b></label>
+                  <div class="col-md-8">
+                    <select id="id_bed_reservation_ward" class="form-control" (change)="WardChanged($event)">
+                      <option value="">--Select Ward--</option>
+                      <option *ngFor="let ward of WardList; let i = index;" value="{{ward.WardId}}">{{ ward.WardName }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="id_bed_reservation_bedfeature" class="control-label col-md-4">Bed Feature<sup>*</sup><b>:</b></label>
+                  <div class="col-md-8">
+                    <select id="id_bed_reservation_bedfeature" class="form-control" (change)="GetAvailableBeds($event)">
+                      <option value="">--Select Bed Feature--</option>
+                      <option *ngFor="let bedFeature of BedFeatureList" value="{{bedFeature.BedFeatureId}}">{{ bedFeature.BedFeatureName }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="id_bed_reservation_bed" class="control-label col-md-4">Bed<sup>*</sup><b>:</b></label>
+                  <div class="col-md-8">
+                    <select id="id_bed_reservation_bed" class="form-control" (change)="BedChanged($event)">
+                      <option value="">--Select Bed--</option>
+                      <option *ngFor="let bed of BedList" value="{{bed.BedId}}">{{ bed.BedCode }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-9">
+                </div>
+
+                <div class="form-group col-md-3">
+                  <input
+                         DanpheConfirmationDialog
+                         type="button"
+                         id="id_btn_reserve_bed"
+                         class="btn green btn-success"
+                         [title]="ConfirmationTitle"
+                         [message]="ConfirmationMessage"
+                         (confirm)="handleConfirm()"
+                         (cancel)="handleCancel()"
+                         value="Reserve"
+                         [disabled]="Loading" />
+                  <button type="button" class="btn btn-danger" (click)="Discard()">Discard</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="close-modelbox">
+        <button class="btn btn-danger" (click)="Close()">
+          X
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

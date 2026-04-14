@@ -1,0 +1,692 @@
+<ng-container>
+  <!-- top -->
+  <div class="top">
+    <div class="row g-0">
+
+      <!-- <div class="col-lg-5 col-md-8 col-sm-8 topcolumn">
+        <from-to-date-select>
+        </from-to-date-select>
+      </div> -->
+
+      <div class="col-lg-5 col-md-8 col-sm-8 topcolumn d-flex align-items-center">
+        <from-to-date-select [date-settings-name]="'common-range-with-today'"></from-to-date-select>
+        <button class="btn green btn-sm btn-success ms-2 OKbutton" (click)="OnButtonClick()">Load</button>
+      </div>
+
+      <!-- Daily-Weekly-Monthly-Yearly -->
+      <div class="col-lg-7 col-md-4 col-sm-4 topcolumn">
+        <div class="row g-0">
+          <div class="col-lg-3 col-md-0 col-sm-0 topcolumn"></div>
+          <div class="col-lg-9 col-md-12 col-sm-12 topcolumn" style="text-align:right;">
+            <button
+                    type="button"
+                    class="btn btn-sm daily-button"
+                    [ngClass]="{ active: ActiveButton === 'daily' }"
+                    (click)="SetActiveButton('daily')">
+              Daily
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-sm middle-button"
+                    [ngClass]="{ active: ActiveButton === 'weekly' }"
+                    (click)="SetActiveButton('weekly')">
+              Weekly
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-sm middle-button"
+                    [ngClass]="{ active: ActiveButton === 'monthly' }"
+                    (click)="SetActiveButton('monthly')">
+              Monthly
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-sm yearly-button"
+                    [ngClass]="{ active: ActiveButton === 'yearly' }"
+                    (click)="SetActiveButton('yearly')">
+              Yearly
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub Container 2-->
+  <div class="row g-0 sub2">
+    <!-- Sampled Reports -->
+    <div class="col-lg-3 col-md-3 col-sm-3 topcontainer">
+      <div class="sub-container2 dashboard-stat dashboard-stat-v2 blue point-cursor">
+        <div class="row g-0" style="width: 100%; height: 27px">
+          <div class="col-lg-12 col-md-12 col-sm-12 chart-header topcardsheadercolumn">
+            <p class="chartheading" style="font-size: 14px">Sampled Report</p>
+            <span class="iconspan">
+              <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+                <i class="fa fa-info-circle info" data-toggle="tooltip"></i>
+                <span class="tooltip-text" id="top" style="width: 110px">
+                  <div>This is a tooltip!</div>
+                </span>
+              </div>
+            </span>
+          </div>
+        </div>
+        <div class="row g-0" style="width: 100%; height: 120px">
+          <div class="col-lg-6 col-md-6 col-sm-6 sampled-buttons topcontainer" style="margin-top: 10px">
+            <p class="topnumber">223</p>
+
+            <div class="inlinetop">
+              <span class="sampledspan"><i class="fa fa-flask button-icon flaskicon" style="color:white;"></i></span>
+              <p class="total">Total</p>
+
+
+            </div>
+
+          </div>
+
+          <div class="col-lg-6 col-md-6 col-sm-6 sampledrightcontainer">
+            <div class="inlinesampledreport text-end">
+              <p class="numbercounttop">28</p>
+              <p class="toplabel" style="margin-left: 3px">IP</p>
+            </div>
+
+            <div class="inlinesampledreport text-end">
+              <p class="numbercounttop">131</p>
+              <p class="toplabel" style="margin-left: 3px">OP</p>
+            </div>
+
+            <div class="inlinesampledreport text-end">
+              <p class="numbercounttop">1</p>
+              <p class="toplabel" style="margin-left: 3px">ER</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Pharmacy Patient Count -->
+    <div class="col-lg-3 col-md-3 col-sm-3 topcontainer">
+      <div class="sub-container2 dashboard-stat dashboard-stat-v2 red point-cursor">
+        <div class="row g-0" style="width: 100%; height: 27px">
+          <div
+               class="col-lg-12 col-md-12 col-sm-12 chart-header pharmacypatientcounthead">
+            <p class="chartheading" style="font-size: 14px">
+              Pharmacy Patient Count
+            </p>
+            <!-- <span><i class="fa-solid fa-circle-info" id="info"></i></span> -->
+            <span class="iconspan">
+              <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+                <i class="fa fa-info-circle info" data-toggle="tooltip"></i>
+                <span class="tooltip-text" id="top" style="width: 110px">
+                  <div>This is a tooltip!</div>
+                </span>
+              </div>
+            </span>
+          </div>
+          <!-- <div class="col-lg-1 col-md-1 col-sm-12"></div> -->
+        </div>
+        <div class="row g-0" style="width: 100%; height: 120px">
+          <div
+               class="col-lg-6 col-md-6 col-sm-6 pharmacyleftcontainer topcontainer"
+               style="margin-top: 10px">
+            <p class="topnumber">14181</p>
+
+            <div class="inlinetoppharmacypatientcount">
+              <span class="pharmacyspan"><i class="fa fa-medkit button-icon medkiticon" style="color:white;"></i></span>
+              <p class="total" style="margin-left: 3px">Total</p>
+
+            </div>
+
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 pharmacypatientcountright" style="margin-top: 5px">
+            <div class="row g-0 text-end">
+              <div class="inlinepharmacycount">
+                <p class="numbercounttop p">1577</p>
+                <p class="p toplabel" style="margin-left: 3px">IP</p>
+              </div>
+              <div class="inlinepharmacycount">
+                <p class="numbercounttop p">12604</p>
+                <p class="p toplabel" style="margin-left: 3px">OP</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Current Inpatient Details -->
+    <div class="col-lg-4 col-md-4 col-sm-4 topcontainer">
+      <div class="sub-container2 dashboard-stat dashboard-stat-v2 green-haze point-cursor" style="background-color: #44b6ae;">
+
+        <div class="row g-0" style="width: 100%; height: 27px;margin-left:5px">
+          <div class="col-lg-8 col-md-8 col-sm-8 chart-header topcontainer">
+            <p class="currentimpatientdetailsheading">
+              Current Inpatient Details
+            </p>
+            <!-- <span><i class="fa-solid fa-circle-info" id="info"></i></span> -->
+            <span class="iconspan">
+              <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+                <i class="fa fa-info-circle info" data-toggle="tooltip"></i>
+                <span class="tooltip-text" id="top" style="width: 110px">
+                  <div>This is a tooltip!</div>
+                </span>
+              </div>
+            </span>
+          </div>
+          <button
+                  class="button-container col-lg-4 col-md-4 col-sm-4 inpatientbutton" style="width: 30%" (click)="OnButtonClick()">
+            <div class="viewinpatientdetails">
+              <label
+                     for="currentinpatientdetails"
+                     class="viewcurrentimpatientdetails point-cursor">View Details</label>
+              <i class="fa fa-angle-right arrowicon"></i>
+            </div>
+          </button>
+        </div>
+        <div class="row g-0" style="width: 100%;">
+          <div class="col-lg-8 col-md-8 col-sm-8 ipdetail">
+            <div class="inlineinpatientleft">
+              <span><i class="fa fa-bed bedicon"></i></span>
+              <p style="margin-left: 3px" class="numbercountinpatient">118</p>
+              <p class="labeltop" style="margin-left: 3px">Total Beds</p>
+            </div>
+            <div class="inlineinpatientleft">
+              <p style="margin-left: 3px" class="numbercountinpatient">2</p>
+              <p class="labeltop" style="margin-left: 3px">Not in Service</p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 margintopinpatient">
+            <div class="inlineinpatient">
+              <p class="numbercountinpatient">32</p>
+              <p class="labeltop" style="margin-left: 3px">Current</p>
+            </div>
+            <div class="inlineinpatient" style="margin-top: 0px">
+              <p class="numbercountinpatient">1460</p>
+              <p class="labeltop" style="margin-left: 3px">Discharge</p>
+            </div>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Death Count -->
+    <div
+         class="col-lg-2 col-md-2 col-sm-2 topcontainer"
+         style="padding-right: 10px">
+      <div class="sub-container2 dashboard-stat dashboard-stat-v2 green point-cursor">
+        <div class="row g-0">
+          <div class="totaldeathheader">
+            <p class="totaldeath">Total Deaths</p>
+
+            <span class="deathinfospan">
+              <div class="hover-text" style="margin-top: 10px; margin-left: 0px">
+                <i
+                   class="fa fa-info-circle fa-2x infototaldeath"
+                   data-toggle="tooltip"></i>
+                <span
+                      class="tooltip-text"
+                      id="top"
+                      style="width: 110px; right: 40%; bottom: 100%">
+                  <div>This is a tooltip!</div>
+                </span>
+              </div>
+            </span>
+          </div>
+          <!-- </div> -->
+        </div>
+        <div class="row g-0">
+          <div class="col-lg-12 col-md-12 col-sm-12 ttldeathcnt">
+            <p class="numbercountdeath">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub Container 1 -->
+  <div class="row g-0 sub1" style="height: 350px">
+    <div class="col-lg-3 col-md-3 col-sm-3 topcontainer">
+      <div class="sub-container1 point-cursor">
+        <div class="row g-0">
+          <div class="col-lg-5 col-md-4 col-sm-4 text topcontainer">
+            <div class="totalpatient">
+              <p class="totalheading mb-0">Total</p>
+              <span class="totalspan">
+                <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+                  <i
+                     class="fa fa-info-circle info"
+                     style="color:#666;"
+                     data-toggle="tooltip"></i>
+                  <span class="tooltip-text" id="top">
+                    <div>
+                      Click on 'View Detais' buton at top right corner to see more
+                      information on this!
+                    </div>
+                  </span>
+                </div>
+              </span>
+            </div>
+            <div>
+              <p class="numbercounttotal">35399</p>
+            </div>
+          </div>
+
+          <div class="col-lg-7 col-md-8 col-sm-8 line" style="margin-top: 27px">
+            <div class="row g-0 colorfullinerow">
+              <!-- Vertical Colorful Line -->
+              <div
+                   class="col-lg-1 col-md-1 col-sm-1 colorfulbutton-container topcontainer"
+                   style="margin-top: 3px">
+                <button
+                        type="button"
+                        class="verticalcolorfulline topverticalbutton"
+                        style="background-color: #6495ed; border-color: #6495ed"></button>
+                <button
+                        type="button"
+                        class="verticalcolorfulline middleverticalbutton"
+                        style="background-color: #7a9e80; border-color: #7a9e80"></button>
+                <button
+                        type="button"
+                        class="verticalcolorfulline middleverticalbutton"
+                        style="background-color: #b23a3a; border-color: #b23a3a"></button>
+                <button
+                        type="button"
+                        class="verticalcolorfulline buttomverticalbutton"
+                        style="background-color: #917ba3; border-color: #917ba3"></button>
+              </div>
+
+              <div
+                   class="col-lg-11 col-md-11 col-sm-11 columnpatients topcontainer">
+                <div class>
+                  <p class="pcolorful mb-0" style="color: #6495ed">In Patients</p>
+                  <p class="numbercountcolorfulline">214</p>
+                </div>
+                <div>
+                  <p class="pcolorful mb-0" style="color: #7a9e80">
+                    Out Patients
+                  </p>
+                  <p class="numbercountcolorfulline">214</p>
+                </div>
+                <div>
+                  <p class="pcolorful mb-0" style="color: #b23a3a">Emergency</p>
+                  <p class="numbercountcolorfulline">214</p>
+                </div>
+                <div>
+                  <p style="color: #917ba3" class="pcolorful mb-0">PCR</p>
+                  <p class="numbercountcolorfulline">214</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Visit Reports -->
+    <div class="col-lg-3 col-md-3 col-sm-3 topcontainer">
+      <div class="sub-container10 point-cursor">
+        <div
+             class="row g-0 subcontainer1heading"
+             style="width: 105%; height: 30px">
+          <div class="col-lg-2 col-md-4 col-sm-4 chart-header">
+            <span>
+              <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+                <i class="fa fa-info-circle infoviewvisitreport" style="margin-top:0px" data-toggle="tooltip"></i>
+                <span class="tooltip-text" id="top">
+                  <div>I'm a tooltip1!</div>
+                  <div>I'm a tooltip2!</div>
+                  <div>I'm a tooltip3!</div>
+                  <div>I'm a tooltip4!</div>
+                  <div>I'm a tooltip5!</div>
+                </span>
+              </div>
+            </span>
+          </div>
+
+          <button
+                  class="button-container col-lg-10 col-md-8 col-sm-8 topcontainer viewvisitreoprtcontainer" (click)="OnButtonClick()">
+            <div class=" visitdetails">
+              <label for="viewvisitreports" class="viewvisitreports point-cursor">View Visit Reports</label>
+              <i class="fa fa-angle-right arrowiconviewvisitreport"></i>
+            </div>
+          </button>
+        </div>
+
+        <!-- Add here -->
+        <div class="row g-0 viewvisitreporttoprow d-flex">
+          <div class="col-lg-4 col-md-4 col-sm-4 NPButton horizontal-buttons">
+            <label
+                   type="button"
+                   class="buttons text-center"
+                   id="NPButton"
+                   data-toggle="tooltip">
+              NP
+            </label>
+            <span
+                  class="tooltip-text"
+                  for="NPButton"
+                  l
+                  style="left: 40%; top: 45%">
+              Click on the 'NP' button to perform an action.
+            </span>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 OPButton horizontal-buttons">
+            <label
+                   type="button"
+                   class="buttons text-center"
+                   id="OPButton"
+                   data-toggle="tooltip">
+              OP
+            </label>
+            <span
+                  class="tooltip-text"
+                  for="OPButton"
+                  l
+                  style="left: 40%; top: 45%">
+              Click on the 'OP' button to perform an action.
+            </span>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 FPButton horizontal-buttons">
+            <label
+                   type="button text-center"
+                   class="buttons text-center"
+                   id="FPButton"
+                   data-toggle="tooltip">
+              FP
+            </label>
+            <span
+                  class="tooltip-text"
+                  for="FPButton"
+                  l
+                  style="left: 40%; top: 45%">
+              Click on the 'FP' button to perform an action.
+            </span>
+          </div>
+        </div>
+        <div class="row g-0 viewvisitreportbottomrow">
+          <div class="col-lg-4 col-md-4 col-sm-4 text-start">
+            <p class="NPCount numbercountvisitreport">21017</p>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 text-center OPCount">
+            <p class="numbercountvisitreport">14382</p>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 text-end FPCount">
+            <p class="numbercountvisitreport">14562</p>
+          </div>
+        </div>
+      </div>
+      <div class="sub-container10 point-cursor">
+        <div
+             class="row g-0 subcontainer1heading"
+             style="width: 105%; height: 30px">
+          <div class="col-lg-2 col-md-4 col-sm-4 chart-header">
+            <span>
+              <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+                <i class="fa fa-info-circle infoviewvisitreport" data-toggle="tooltip"></i>
+                <span class="tooltip-text" id="top">
+                  <div>I'm a tooltip1!</div>
+                  <div>I'm a tooltip2!</div>
+                  <div>I'm a tooltip3!</div>
+                  <div>I'm a tooltip4!</div>
+                  <div>I'm a tooltip5!</div>
+                </span>
+              </div>
+            </span>
+          </div>
+
+          <button
+                  class="button-container col-lg-10 col-md-8 col-sm-8 topcontainer viewvisitreoprtcontainer" (click)="OnButtonClick()">
+            <div class="visitdetails">
+              <label for="viewvisitreports" class="viewvisitreports point-cursor">View Visit Reports</label>
+              <i class="fa fa-angle-right arrowiconviewvisitreport"></i>
+            </div>
+          </button>
+        </div>
+
+        <div class="row g-0 viewvisitreporttoprow d-flex">
+          <div class="col-lg-6 col-md-6 col-sm-6 text-start horizontal-buttons">
+            <label
+                   type="button"
+                   class="buttons text-center"
+                   id="EButton"
+                   data-toggle="tooltip">
+              E
+            </label>
+            <span
+                  class="tooltip-text"
+                  for="NPButton"
+                  l
+                  style="left: 40%; top: 45%">
+              Click on the 'NP' button to perform an action.
+            </span>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 WButton horizontal-buttons">
+            <label
+                   type="button"
+                   class="buttons text-center"
+                   id="WButton"
+                   data-toggle="tooltip">
+              W
+            </label>
+            <span
+                  class="tooltip-text"
+                  for="OPButton"
+                  l
+                  style="left: 40%; top: 45%">
+              Click on the 'OP' button to perform an action.
+            </span>
+          </div>
+        </div>
+        <div class="row g-0 viewvisitreportbottomrow">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <p class="ECount numbercountvisitreportdown">21017</p>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 text-end WCount">
+            <p class="numbercountvisitreportdown">14382</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+         class="col-lg-3 col-md-3 col-sm-3 topcontainer"
+         style="padding-right: 10px">
+      <div class="sub-container1 point-cursor">
+        <div
+             class="row g-0 subcontainer1heading"
+             style="width: 105%; height: 30%">
+          <div class="col-lg-6 col-md-6 col-sm-6 chart-header">
+            <!-- <span><i class="fa-solid fa-circle-info"></i></span> -->
+            <span>
+              <div class="hover-text" style="margin-top: 5px; margin-left: 0px">
+                <i class="fa fa-info-circle infoviewvisitreport" data-toggle="tooltip"></i>
+                <span class="tooltip-text" id="top" style="width: 95px">
+                  <div>I'm a tooltip1!</div>
+                </span>
+              </div>
+            </span>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6"></div>
+        </div>
+      </div>
+    </div>
+    <div
+         class="col-lg-3 col-md-3 col-sm-3 topcontainer"
+         style="padding-right: 10px; padding-left: 0px">
+      <div class="sub-container1 point-cursor"></div>
+    </div>
+  </div>
+
+  <!-- Sub Container 3 -->
+  <div class="row g-0 sub3">
+    <!-- Lab Details -->
+    <div class="col-lg-6 col-md-6 col-sm-6 topcontainer">
+      <div class="sub-container7 point-cursor" style="height: 450px">
+        <div class="row g-0 header" style="width: 100%; height: 25px">
+          <div class="col-lg-8 col-md-8 col-sm-8 chart-header headpadding">
+            <p class="labdetailsheading">Lab Details</p>
+            <!-- <span><i class="fa-solid fa-circle-info"></i></span> -->
+            <span>
+              <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+                <i
+                   class="fa fa-info-circle infolabdetails"
+                   data-toggle="tooltip"></i>
+                <span class="tooltip-text" id="top">
+                  <div>
+                    Click on view details button at the corner to see more details
+                    on lab!
+                  </div>
+                </span>
+              </div>
+            </span>
+          </div>
+
+          <button
+                  class="button-container col-lg-4 col-md-4 col-sm-4 topcontainer" (click)="OnButtonClick()">
+            <div class="viewdetails" style="float: right">
+              <label for="viewlabdetails" class="viewlabdetails point-cursor">View Details</label>
+              <i class="fa fa-angle-right arrowlabdetails"></i>
+            </div>
+          </button>
+        </div>
+
+        <div class="row g-0">
+          <div class="col-lg-12 col-md-12 col-sm-12 chart-box">
+            <div class="chart-size">
+              <canvas #labDetailsChart></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Radio Details -->
+    <div
+         class="col-lg-6 col-md-6 col-sm-6 topcontainer"
+         style="padding-right: 10px">
+      <div class="sub-container7 point-cursor" style="height: 450px">
+        <div class="row g-0 header" style="width: 100%; height: 25px">
+          <div class="col-lg-7 col-md-8 col-sm-8 chart-header headpadding">
+            <p class="radiodetailsheading">Radio Details</p>
+            <!-- <span><i class="fa-solid fa-circle-info"></i></span> -->
+            <span>
+              <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+                <i
+                   class="fa fa-info-circle infolabdetails"
+                   data-toggle="tooltip"></i>
+                <span class="tooltip-text" id="top">
+                  <div>
+                    Click on view details at top right corner to see more
+                    information!
+                  </div>
+                </span>
+              </div>
+            </span>
+          </div>
+          <button
+                  class="button-container col-lg-5 col-md-4 col-sm-4 topcontainer" (click)="OnButtonClick()">
+            <div class="viewdetails" style="float: right">
+              <label for="viewradiodetails" class="viewlabdetails point-cursor">View Details</label>
+              <i class="fa fa-angle-right arrowlabdetails"></i>
+            </div>
+          </button>
+        </div>
+        <div class="row g-0">
+          <div class="col-lg-12 col-md-12 col-sm-12 chart-box">
+            <div class="chart-size">
+              <canvas #radioDetailsChart></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub Container 5 -->
+  <div class="row g-0 sub5">
+    <div
+         class="col-lg-12 col-md-12 col-sm-12 topcontainer"
+         style="padding-right: 10px">
+      <div class="sub-container5 point-cursor" style="height: 610px">
+        <app-collectiondetail [TimePeriod]="ActiveButton"></app-collectiondetail>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub Container 6 -->
+  <div class="row g-0 sub4">
+    <div class="col-lg-6 col-md-6 col-sm-6 topcontainer">
+      <div class="sub-container4 point-cursor">
+        <app-fractionsummary></app-fractionsummary>
+      </div>
+    </div>
+    <div
+         class="col-lg-6 col-md-6 col-sm-6 topcontainer"
+         style="padding-right: 10px">
+      <!-- radiology reports -->
+      <div class="sub-container4 point-cursor">
+        <app-radiologyreports [TimePeriod]="ActiveButton"></app-radiologyreports>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub Container 7 -->
+  <div class="row g-0 sub6">
+    <div
+         class="col-lg-12 col-md-12 col-sm-12 topcontainer"
+         style="padding-right: 10px">
+      <!-- Lab Reports -->
+      <div class="sub-container6 point-cursor">
+        <app-labreports></app-labreports>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub Container 8 -->
+  <div class="row g-0 sub7">
+    <div
+         class="col-lg-12 col-md-12 col-sm-12 topcontainer"
+         style="padding-right: 10px">
+      <div class="sub-container8 point-cursor" style="height: 450px">
+        <app-categorywiseincomereport
+                                      [TimePeriod]="ActiveButton"></app-categorywiseincomereport>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub Container 9 -->
+  <div class="row g- sub8">
+    <div
+         class="col-lg-12 col-md-12 col-sm-12 topcontainer"
+         style="padding-right: 10px">
+      <div class="sub-container5 containerlabtest point-cursor" style="height: 680px;">
+        <app-labtests [TimePeriod]="ActiveButton"></app-labtests>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub Container 10 -->
+  <div class="row g-0 sub9">
+    <div
+         class="col-lg-12 col-md-12 col-sm-12 topcontainer"
+         style="padding-right: 10px">
+      <div class="sub-container5 point-cursor" style="height:680px; margin-top:15px !important">
+        <app-radiotests [TimePeriod]="ActiveButton"></app-radiotests>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-0 sub10">
+    <div class="col-lg-6 col-md-6 col-sm-6 topcontainer">
+      <!-------Age Wise Details------->
+      <div class="sub-container9 point-cursor">
+        <app-age-wise-details [TimePeriod]="ActiveButton"></app-age-wise-details>
+      </div>
+    </div>
+    <div
+         class="col-lg-6 col-md-6 col-sm-6 topcontainer"
+         style="padding-right: 10px">
+      <div class="sub-container9 point-cursor"></div>
+    </div>
+  </div>
+</ng-container>

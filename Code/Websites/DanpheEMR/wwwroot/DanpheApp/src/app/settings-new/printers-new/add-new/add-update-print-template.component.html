@@ -1,0 +1,119 @@
+<div class="wrapper">
+    <div style="margin-top:50px;">
+        <div class="popup-static portlet box portlet-fullscreen custom_modal">
+            <div class="portlet-body form">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="modelbox-div ref_modal_div clearfix">
+                            <div class="caption custom-caption no-margin">
+                                <h3>
+                                    <span>
+                                        <ng-container *ngIf="IsAddNewPrintTemplate">Add Print Template</ng-container>
+                                        <ng-container *ngIf="!IsAddNewPrintTemplate">Edit Print Template</ng-container>
+                                    </span>
+                                </h3>
+                                <a class="btn btn-danger" (click)="Close()">X</a>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="form-body">
+                                        <div class="form-group padding-bottom">
+                                            <label class="control-label col-md-5">Print Type <sup>*</sup><b>:</b></label>
+                                            <div class="col-md-7">
+                                                <select class="form-control" name="printType" id="id_print_type"
+                                                        [(ngModel)]="PrintTemplateSettings.PrintType"
+                                                        [disabled]="!IsAddNewPrintTemplate">
+                                                    <option value="">--Select Print Type--</option>
+                                                    <option value="reg-sticker">RegistrationSticker</option>
+                                                    <option value="opd-billing">OPD INVOICE</option>
+                                                    <option value="ipd-billing">IPD INVOICE</option>
+                                                    <option value="ip-discharge">IP DISCHARGE</option>
+                                                    <option value="ip-discharge-summary">IP DISCHARGE SUMMARY</option>
+                                                    <option value="ip-discharge-detail">IP DISCHARGE DETAIL</option>
+                                                    <option value="return-invoice">RETURN INVOICE</option>
+                                                    <option value="provisional-invoice">PROVISIONAL INVOICE</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group padding-bottom">
+                                            <label class="control-label col-md-5">Visit Type <sup>*</sup><b>:</b></label>
+                                            <div class="col-md-7">
+                                                <select class="form-control" name="visitType" id="id_visit_type"
+                                                        [(ngModel)]="PrintTemplateSettings.VisitType"
+                                                        [disabled]="!IsAddNewPrintTemplate">
+                                                    <option value="">--Select Visit Type--</option>
+                                                    <option value="OPD">OPD</option>
+                                                    <option value="IPD">IPD</option>
+                                                    <option value="ER">ER</option>
+                                                    <option value="GENERAL">GENERAL</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group padding-bottom">
+                                            <label class="control-label col-md-5">Field Settings ParamName <sup>*</sup><b>:</b></label>
+                                            <div class="col-md-7">
+                                                <input type="text" class="form-control" name="fieldSettingsParamName" id="id_field_Settings_param"
+                                                       [(ngModel)]="PrintTemplateSettings.FieldSettingsName"
+                                                       placeholder="Enter Field Settings Name"
+                                                       [disabled]="!IsAddNewPrintTemplate" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group padding-bottom">
+                                            <label class="control-label col-md-5">Printer Type <sup>*</sup><b>:</b></label>
+                                            <div class="col-md-7">
+                                                <select class="form-control" name="printerType" id="id_printer_type"
+                                                        [(ngModel)]="PrintTemplateSettings.PrinterType"
+                                                        [disabled]="!IsAddNewPrintTemplate">
+                                                    <option value="">--Select Printer Type--</option>
+                                                    <option value="browser">Browser</option>
+                                                    <option value="dotmatrix">Dotmatrix</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group padding-bottom">
+                                            <label class="control-label col-md-5">Editor Type <b>:</b></label>
+                                            <div class="col-md-7">
+                                                <select class="form-control" name="editorType" id="id_editor_type"
+                                                        [(ngModel)]="isFreeTextDisplay">
+                                                    <option [ngValue]="false" selected>CK Editor</option>
+                                                    <option [ngValue]="true">Free Text</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row margin">
+                                    <div class="col-md-12">
+                                        <div class="col-md-10">
+                                        </div>
+                                        <div class="col-md-2 text-align-right">
+                                            <input *ngIf="IsAddNewPrintTemplate" type="button" class="btn green btn-success" value="Save"
+                                                   (click)="SavePrintFormat()">
+                                            <input *ngIf="!IsAddNewPrintTemplate" type="button" class="btn green btn-success" value="Update"
+                                                   (click)="UpdatePrintTemplate()">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row printFormatDesigner" *ngIf="isFreeTextDisplay === false">
+                                    <danphe-ckeditor [readonly]="false" (get-html-content)="OnChangeEditorData($event)"
+                                                     [set-html-content]="PrintTemplateSettings.PrintTemplateMainFormat"
+                                                     id="id_ckeditor_sticker_print_format"> </danphe-ckeditor>
+                                </div>
+                                <div *ngIf="isFreeTextDisplay === true" class="col-md-12"><label class="control-label no-padding"
+                                           style="font-size: 15px;"> Printable Form Content <b>:</b></label>
+                                    <textarea
+                                              class="form-control"
+                                              name="TemplateHTML" rows="20" style="margin-top: 10px;"
+                                              [(ngModel)]="this.PrintTemplateSettings.PrintTemplateMainFormat">
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

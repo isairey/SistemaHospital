@@ -1,0 +1,6 @@
+.disabled-link {
+    pointer-events: none; /* Prevents click */
+    color: gray; /* Optional: Make the text appear disabled */
+    text-decoration: none; /* Optional: Remove underline */
+    cursor: not-allowed; /* Optional: Change cursor to show it's disabled */
+  }

@@ -1,0 +1,178 @@
+<style>
+  .caption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .caption span {
+    text-align: center;
+  }
+
+  .custom-checkbox {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+</style>
+<div
+     class="popup-static portlet box portlet-fullscreen custom_modal"
+     *ngIf="ShowNewClinicalNotesPage">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div ref_modal_div clearfix">
+          <div class="caption custom-caption no-margin">
+            <h3>
+              <span>
+                <span *ngIf="!UpdateClinicalNotes">Add Clinical Note</span>
+                <span *ngIf="UpdateClinicalNotes">Edit Clinical Note</span>
+              </span>
+            </h3>
+            <a class="btn btn-danger" (click)="Close()">X</a>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <form
+                    [formGroup]="ClinicalMasterNotes.ClinicalNotesValidator"
+                    class="form-horizontal hm-form">
+                <div class="form-body col-md-12 hm-form">
+                  <div class="form-group">
+                    <label for="Name" class="control-label col-md-5">Note Title<sup>*</sup><b>:</b></label>
+                    <div class="col-md-7">
+                      <input
+                             class="form-control"
+                             maxlength="100"
+                             type="text"
+                             id="id_Note_Title"
+                             formControlName="ClinicalNotesName"
+                             placeholder="Note Title" />
+                      <span
+                            class="color-red font-sm"
+                            *ngIf="
+                          ClinicalMasterNotes.ClinicalNotesValidator.get(
+                            'ClinicalNotesName'
+                          ).invalid &&
+                          ClinicalMasterNotes.ClinicalNotesValidator.get(
+                            'ClinicalNotesName'
+                          ).touched
+                        ">Clinical Notes Name is required</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="IsDefault " class="control-label col-md-5">IsDefault?<b>:</b></label>
+                    <div class="col-md-7">
+                      <input type="checkbox" class="form-check-input custom-checkbox"
+                             formControlName="IsDefault">
+                      <span
+                            class="color-red font-sm"
+                            *ngIf="ClinicalMasterNotes.ClinicalNotesValidator.get('IsDefault').invalid && ClinicalMasterNotes.ClinicalNotesValidator.get('IsDefault').touched">
+                        Only one clinical note can be set as default.
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <form
+                    [formGroup]="ClinicalMasterNotes.ClinicalNotesValidator"
+                    class="form-horizontal hm-form">
+                <div class="form-body col-md-12 hm-form">
+                  <div class="form-group">
+                    <label for="ClinicalNotesCode " class="control-label col-md-3">
+                      Code<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <input
+                             formControlName="ClinicalNotesCode"
+                             id="id_ClinicalNotesCode"
+                             class="form-control"
+                             placeholder="ClinicalNotesCode"
+                             type="text" />
+
+                      <span
+                            class="color-red font-sm"
+                            *ngIf="
+                            ClinicalMasterNotes.ClinicalNotesValidator.get(
+                            'ClinicalNotesCode'
+                          ).invalid &&
+                          ClinicalMasterNotes.ClinicalNotesValidator.get(
+                            'ClinicalNotesCode'
+                          ).touched
+                        ">Clinical Note Code is required</span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <form
+                    [formGroup]="ClinicalMasterNotes.ClinicalNotesValidator"
+                    class="form-horizontal hm-form">
+                <div class="form-body col-md-12">
+                  <div class="form-group">
+                    <label for="DisplaySequence " class="control-label col-md-3">
+                      Display Sequence<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <input
+                             formControlName="DisplaySequence"
+                             id="id_DisplaySequence"
+                             (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                             class="form-control"
+                             placeholder="DisplaySequence"
+                             type="text" />
+
+                      <span
+                            class="color-red font-sm"
+                            *ngIf="
+                            ClinicalMasterNotes.ClinicalNotesValidator.get(
+                            'DisplaySequence'
+                          ).invalid &&
+                          ClinicalMasterNotes.ClinicalNotesValidator.get(
+                            'DisplaySequence'
+                          ).touched
+                        ">
+                        <span class="color-red font-sm"
+                              *ngIf="ClinicalMasterNotes.ClinicalNotesValidator.get('DisplaySequence').hasError('required')">
+                          Display Sequence is required
+                        </span>
+                        <span class="color-red font-sm" *ngIf="ClinicalMasterNotes.ClinicalNotesValidator.get('DisplaySequence').hasError('min')">
+                          Display Sequence Can't be Zero Or Negative Number
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modelbox-footer">
+            <div class="all-buttons text-right">
+              <input
+                     type="button"
+                     id="add"
+                     class="btn green btn-success margin-7-hr"
+                     (click)="AddClinicalMasterNotes()"
+                     *ngIf="!UpdateClinicalNotes"
+                     value="Add" />
+              <input
+                     type="button"
+                     id="add"
+                     class="btn green btn-success margin-7-hr"
+                     (click)="UpdateClinicalMasterNotes()"
+                     value="Update"
+                     *ngIf="UpdateClinicalNotes" />
+              <input
+                     type="button"
+                     id="close"
+                     class="btn red btn-danger margin-7-hr"
+                     (click)="Close()"
+                     value="Close" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

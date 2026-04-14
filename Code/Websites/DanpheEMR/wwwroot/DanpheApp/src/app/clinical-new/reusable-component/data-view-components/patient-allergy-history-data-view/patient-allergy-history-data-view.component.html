@@ -1,0 +1,30 @@
+<style>
+
+</style>
+
+
+
+<div class="table-container" style="margin-top: 5px;">
+  <div>
+    <table id="Requested" class="table table-bordered tbl_hover table-condensed">
+      <thead>
+        <tr style="background-color: #599be0; color: white;">
+          <th>Allergen</th>
+          <th>Severity</th>
+          <th>Reaction</th>
+          <th>Verified</th>
+          <th>Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let allergy of AllergyLists;let i=index">
+          <td>{{allergy.AllergenAdvRecName}}</td>
+          <td>{{allergy.Severity}}</td>
+          <td>{{allergy.Reaction}}</td>
+          <td>{{allergy.Verified}}</td>
+          <td>{{allergy.Comments}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

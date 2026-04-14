@@ -1,0 +1,42 @@
+<form [formGroup]="PersonnelType.PersonnelTypeValidator" class="form-horizontal hm-form">
+
+  <div class="form-group" style="padding: 0px; margin: 0px;">
+    <label class="control-label col-md-2">Personnel Type<sup> *</sup> <b>:</b> </label>
+    <div class="col-md-3">
+      <div class="col-wrapper">
+        <div class="col">
+          <input id="id_txt_personnel_type" class="form-control" maxlength="50" type="text"
+                 formControlName="PersonnelType" placeholder="Personnel Type"
+                 (keyup.enter)="GoToNextElement($event, 'id_checkbox_isActive')" />
+          <span class="color-red font-sm" *ngIf="PersonnelType.IsDirty('PersonnelType')"
+                [hidden]="PersonnelType.IsValidCheck('PersonnelType','required')">Personnel Type is required.</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1" style="padding: 0px; margin: 3px 0px 0px 10px;">
+      <label for="id_checkbox_isActive" class="is-ref mt-checkbox mt-checkbox-outline">
+        <input type="checkbox" id="id_checkbox_isActive" formControlName="IsActive" style="cursor: pointer;"
+               (keyup.enter)="GoToNextElement($event, 'id_btn_save_personnel_type')" />
+        <span></span>IsActive
+      </label>
+    </div>
+    <div class="col-md-1" style="padding: 0px; margin: 0px 15px;">
+      <button id="id_btn_save_personnel_type" class="btn green btn-success" (click)="SavePersonnelType()" style="float: right; margin-left: 10px;">
+        {{ IsUpdate? 'Update' : 'Save' }}
+      </button>
+    </div>
+    <div class="col-md-1" style="padding: 0px; margin: 0px;">
+      <button id="id_btn_clear_personnel_type" class="btn orange btn-success" (click)="ClearPersonnelTyeFormControls()"
+              style="float: left; margin-left: 10px;">
+        Clear
+      </button>
+    </div>
+  </div>
+
+</form>
+
+<div class="row" style="padding: 10px; margin: 0px;">
+  <danphe-grid [grid-colDefaults]="PersonnelGridColumns"
+               [grid-data]="PersonnelTypes"
+               (grid-actions)="PersonnelTypeGridActions($event)"> </danphe-grid>
+</div>

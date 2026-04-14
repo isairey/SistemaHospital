@@ -1,0 +1,17 @@
+<div class="page-bar fixed-top-bar" style="padding: 0px !important; margin: 0px 5px 0px 5px;">
+  <ul class="nav nav-tabs" style="display: flex; justify-content: flex-start; align-items: center;">
+    <li>
+      <a routerLink="UpdateProvisionalBills" [routerLinkActive]="'a-tab-active'">
+        Update Bills
+      </a>
+    </li>
+    <li>
+      <a routerLink="FinalizeProvisionalBills" [routerLinkActive]="'a-tab-active'">
+        Finalize Bills
+      </a>
+    </li>
+  </ul>
+</div>
+<div class="wrapper">
+  <router-outlet></router-outlet>
+</div>

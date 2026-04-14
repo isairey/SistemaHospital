@@ -1,0 +1,125 @@
+<a feature="button" class="btn blue bordered" (click)="AddNewFiscalYearPage()"><i class="fa fa-plus"></i>Add Fiscal Year</a>
+<div class="col-md-12 col-xs-12 col-sm-12">
+  <danphe-grid [grid-colDefaults]="InventoryFiscalYearListGridCols" [grid-data]="INVFiscalYearList"
+               [show-print-button]="false" [NepaliDateInGridParams]="NepaliDateInGridSettings">
+  </danphe-grid>
+</div>
+
+<style>
+  .caption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .caption span {
+    text-align: center;
+  }
+
+  .custom-checkbox {
+    width: 20px;
+    height: 20px;
+    margin: auto;
+  }
+
+  .color-red {
+    color: red;
+  }
+
+  .form-horizontal {
+    padding: 15px;
+  }
+</style>
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowAddFiscalYearPage">
+  <div class="portlet-body form">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div ref_modal_div clearfix">
+        <div class="caption custom-caption no-margin">
+          <h3>
+            <span>
+              <span>Add Inventory Fiscal Year</span>
+            </span>
+          </h3>
+          <a class="btn btn-danger" (click)="Close()">X</a>
+        </div>
+
+        <form [formGroup]="INVFiscalYearData.INVFiscalYearGroup" class="form-horizontal hm-form">
+          <!-- Fiscal Year Name -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group" style="padding-left: 20px">
+                <label for="id_FiscalYearName" class="control-label col-md-5">Fiscal Year Name<sup>*</sup><b>:</b></label>
+                <div class="col-md-6">
+                  <input class="form-control" maxlength="100" type="text" id="id_FiscalYearName" formControlName="FiscalYearName"
+                         placeholder="Fiscal Year Name" />
+                  <span class="color-red font-sm"
+                        *ngIf="INVFiscalYearData.INVFiscalYearGroup.get('FiscalYearName').invalid && INVFiscalYearData.INVFiscalYearGroup.get('FiscalYearName').touched">Fiscal
+                    Year Name is required</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br>
+          <!-- Start Date and End Date in one row -->
+          <div class="row">
+            <!-- Start Date -->
+            <div class="col-md-6">
+              <div class="row" style="padding-left: 05%;">
+                <label for="id_StartDate" class="control-label col-md-4 pt5">Start Date <b>:</b></label>
+                <div class="col-md-8" style="padding-left: 55px !important;">
+                  <div class="flx date-insurance">
+                    <danphe-date-picker id="id_StartYear_Date"
+                                        [(ngModel)]="INVFiscalYearData.StartDate"
+                                        [CalendarTypes]="'en,np'"
+                                        formControlName="StartDate"
+                                        [allow-future-date]="true">
+                    </danphe-date-picker>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- End Date -->
+            <div class="col-md-6">
+              <div class="row">
+                <label for="id_EndDate" class="control-label col-md-4 pt5">End Date <b>:</b></label>
+                <div class="col-md-8" style="padding-left: 6px !important;">
+                  <div class="flx date-insurance">
+                    <danphe-date-picker id="id_EndYear_Date"
+                                        [(ngModel)]="INVFiscalYearData.EndDate"
+                                        [CalendarTypes]="'en,np'"
+                                        formControlName="EndDate"
+                                        [allow-future-date]="true">
+                    </danphe-date-picker>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- Buttons -->
+        <div class="modelbox-footer">
+          <div class="all-buttons text-right">
+            <input
+                   type="button"
+                   id="add"
+                   class="btn green btn-success margin-7-hr"
+                   (click)="AddFiscalYear()"
+                   value="Add" />
+            <input
+                   type="button"
+                   id="close"
+                   class="btn red btn-danger margin-7-hr"
+                   (click)="Clear()"
+                   value="Clear" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

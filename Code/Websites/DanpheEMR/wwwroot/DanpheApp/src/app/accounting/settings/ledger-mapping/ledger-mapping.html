@@ -1,0 +1,126 @@
+<div class="row">
+  <div class="col-md-12">
+    <ul class="nav nav-tabs">
+      <li *ngFor="let d of LedgerDisplayList"
+          [rbac-permission]="d.PermissionValue">
+        <a [ngClass]="LedgerType == d.LedgerType ? 'a-tab-active': ''"
+           (click)="ToggleLedgerType(d.LedgerType)">{{d.LedgerDisplayName}}</a>
+      </li>
+      <!-- <li
+          [rbac-permission]="{'name':'accounting-create-billing-item-ledger-button-permission','actionOnInvalid':'hidden'}">
+        <a [ngClass]="{'a-tab-active':LedgerType=='billingincomeledger'}"
+           (click)="ToggleLedgerType('billingincomeledger')">Billing Ledgers</a>
+      </li> -->
+      <!-- <li
+          [rbac-permission]="{'name':'accounting-create-phrm-supplier-ledger-button-permission','actionOnInvalid':'hidden'}">
+        <a [ngClass]="{'a-tab-active':LedgerType=='pharmacysupplier'}"
+           (click)="ToggleLedgerType('pharmacysupplier')">Pharmacy Supplier</a>
+      </li>
+      <li
+          [rbac-permission]="{'name':'accounting-create-consultant-credit-ledger-button-permission','actionOnInvalid':'hidden'}">
+        <a [ngClass]="{'a-tab-active':LedgerType=='consultant'}" (click)="ToggleLedgerType('consultant')">Consultant
+          (Credit A/C)</a>
+      </li>
+      <li
+          [rbac-permission]="{'name':'accounting-create-credit-organization-ledger-button-permission','actionOnInvalid':'hidden'}">
+        <a [ngClass]="{'a-tab-active':LedgerType=='creditorganization'}"
+           (click)="ToggleLedgerType('creditorganization')"> Credit Organizations</a>
+      </li>
+      <li
+          [rbac-permission]="{'name':'accounting-create-inventory-vendor-ledger-button-permission','actionOnInvalid':'hidden'}">
+        <a [ngClass]="{'a-tab-active':LedgerType=='inventoryvendor'}"
+           (click)="ToggleLedgerType('inventoryvendor')">Inventory Vendor</a>
+      </li>
+      <li *ngIf="SubStoreAndSubCategorySetting === 'inventorysubstore'"
+          [rbac-permission]="{'name':'accounting-create-inventory-substore-ledger-button-permission','actionOnInvalid':'hidden'}">
+        <a [ngClass]="{'a-tab-active':LedgerType=='InventoryConsumption'}"
+           (click)="ToggleLedgerType('InventoryConsumption')">Inventory SubStore</a>
+      </li>
+      <li *ngIf="SubStoreAndSubCategorySetting === 'inventorysubcategory'"
+          [rbac-permission]="{'name':'accounting-create-inventory-subcategory-ledger-button-permission','actionOnInvalid':'hidden'}">
+        <a [ngClass]="{'a-tab-active':LedgerType=='inventorysubcategory'}"
+           (click)="ToggleLedgerType('inventorysubcategory')">Inventory SubCategory</a>
+      </li>
+      <li>
+        <a [ngClass]="{'a-tab-active':LedgerType=='paymentmodes'}" (click)="ToggleLedgerType('paymentmodes')">Payment
+          Modes</a>
+      </li> -->
+      <li class="dropdown" style="display:inline-block;"> <a
+           class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          More... <span class="caret"></span> </a>
+        <ul class="dropdown-menu">
+          <li class="hr-ddlCstm">
+            <a (click)="ToggleLedgerType('bankreconciliationcategory')">Bank Reconciliation Category</a>
+          </li>
+          <li class="hr-ddlCstm">
+            <a (click)="ToggleLedgerType('medicaretypes')">Medicare Types</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <!-- <div *ngIf="LedgerDisplayList.length === 0" style="padding:10px;">
+    No Ledger Mapping Available, Need To Map At Least One Section To Selected Account Division.
+  </div> -->
+  <div class="form-body">
+    <!-- START: Pharmacy Supplier -->
+    <pharmacy-supplier-ledger-mapping *ngIf="TypeSupplier">
+
+    </pharmacy-supplier-ledger-mapping>
+    <!-- END: Pharmacy Supplier -->
+
+    <!-- START: consultant-->
+    <consultant-ledger-mapping *ngIf="TypeConsultant">
+
+    </consultant-ledger-mapping>
+    <!--END: consultant-->
+
+    <!-- START: Billing Items Ledger -->
+    <!-- <billing-ledger-mapping-old *ngIf="TypeBillingLedger">
+
+    </billing-ledger-mapping-old> -->
+
+    <billing-ledger-mapping *ngIf="TypeBillingLedger">
+
+    </billing-ledger-mapping>
+    <!-- END: Billing Items Ledger -->
+
+    <!-- START: Credit Organization -->
+    <credit-organization-ledger-mapping *ngIf="TypeCreditOrganization">
+
+    </credit-organization-ledger-mapping>
+    <!-- END: Credit Organization -->
+
+    <!-- START: Inventory Vendor -->
+    <inventory-vendor-ledger-mapping *ngIf="TypeInventoryVendor">
+
+    </inventory-vendor-ledger-mapping>
+    <!-- END: Inventory Vendor -->
+
+    <!-- START: Inventory Subcategory -->
+    <inventory-substore-ledger-mapping *ngIf="TypeInventorySubstore">
+
+    </inventory-substore-ledger-mapping>
+    <!-- END: Inventory Subcategory -->
+    <!-- START: Inventory Subcategory -->
+    <inventory-subcategory-ledger-mapping *ngIf="TypeInventorySubcategory">
+
+    </inventory-subcategory-ledger-mapping>
+    <!-- END: Inventory Subcategory -->
+
+    <!-- Start: Payment Modes -->
+    <payment-mode-ledger-mapping *ngIf="TypePaymentMode">
+
+    </payment-mode-ledger-mapping>
+    <!-- END: Payment Modes -->
+
+    <bank-reconciliation-category-ledger-mapping *ngIf="TypeBankReconciliationCategory">
+
+    </bank-reconciliation-category-ledger-mapping>
+
+    <medicare-types-ledger-mapping *ngIf="TypeMedicareTypes">
+
+    </medicare-types-ledger-mapping>
+
+  </div>
+</div>

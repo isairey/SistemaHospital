@@ -1,0 +1,207 @@
+.radiotests-header {
+  display: flex;
+  height: 25px;
+}
+
+.radiotestsheading {
+  margin-right: 5px;
+  font-size: 16px;
+  color: #666; /* Text color */
+  font-weight: bold;
+}
+
+.viewradiotestsdetails {
+  margin-right: 3px;
+  color: #777;
+  margin-left: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.viewdetails {
+  border: 1px solid #888;
+  border-radius: 5px !important;
+  height: 27px;
+  justify-content: center;
+  /* width: 22%; */
+  float: right;
+  margin-left: 0px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding-left: 5px;
+  padding-right: 0px;
+  margin-top: 10px;
+}
+
+.radiotestsreport {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* For Table Container */
+.table-container {
+  max-height: auto; /* Remove fixed height */
+  margin: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* For Table */
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Style the table header */
+.table-container thead {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+}
+
+/* Style the table header cells */
+.table-container th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Style the table body cells */
+.table-container td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Hover effect on table rows */
+.table-container tbody tr:hover {
+  background-color: #ddd;
+}
+
+/* Style the virtual scroll items */
+.table-container .example-item {
+  transition: background-color 0.3s ease;
+}
+
+.table-container .example-item:hover {
+  background-color: #ddd;
+}
+
+.chart-box {
+  width: 90%;
+  height: 550px;
+  background-color: none;
+  /* border: 1px solid black; */
+  padding: 20px;
+  /* box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); */
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-left: 35px;
+  margin-top: 20px;
+}
+.chart-size {
+  width: 95%;
+  height: 90%;
+}
+
+/* For Tooltip */
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  width: 150px; /* Increased width for better display */
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left; /* Adjusted text alignment */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Added box-shadow for better visibility */
+}
+
+.hover-text:hover .tooltip-text {
+  visibility: visible;
+}
+
+.hover-text {
+  position: relative;
+  display: inline-block;
+  margin: 40px;
+  font-family: Arial;
+  text-align: center;
+}
+
+.info {
+  color: #666;
+  margin-top: 12px;
+}
+
+.arrowicon {
+  color: #666;
+  font-weight: 700;
+}
+
+.viewdetails:hover {
+  cursor: pointer;
+  background-color: #0773bc;
+}
+
+.viewdetails:active {
+  background-color: #0056a3;
+  transform: scale(0.98);
+}
+
+.viewdetails:hover .viewradiotestsdetails {
+  color: white;
+}
+
+.viewdetails:hover .arrowicon {
+  color: white !important;
+}
+
+@media only screen and (max-width: 1468px) and (min-width: 768px) {
+  .radiotestsheading {
+    font-size: 13px;
+    margin-top: 3px;
+  }
+
+  .info {
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .viewdetails {
+    height: 22px;
+    justify-content: center;
+    width: 95px;
+    margin-right: 25px;
+  }
+
+  .viewradiotestsdetails {
+    margin-right: 3px;
+    font-size: 11px;
+  }
+
+  .table-container th {
+    padding: 7px;
+    font-size: 12px;
+  }
+
+  .table-container td {
+    padding: 8px;
+    font-size: 10px;
+  }
+
+  .chart-box {
+    margin-top: 5px;
+  }
+
+  .header {
+    height: 25px !important;
+  }
+  .container {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}

@@ -1,0 +1,23 @@
+<style>
+    .container {
+        padding: 20px;
+        background-color: whitesmoke;
+        /* border: 2px solid rgb(205, 202, 202); */
+        margin: 8px;
+    }
+
+    .q-body {
+        margin: 20px;
+        padding: 8px;
+    }
+</style>
+
+<div class="container">
+    <h4 *ngIf="Field.FieldConfig.label">{{Field.FieldConfig.label}}</h4>
+    <div class="q-body">
+        <clinical-reusable-elements *ngFor="let item of Field.QuestionaryConfig" [question]="item">
+
+        </clinical-reusable-elements>
+    </div>
+
+</div>

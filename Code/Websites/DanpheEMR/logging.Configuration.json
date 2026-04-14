@@ -1,0 +1,76 @@
+// Below is the configuration implementation for Serilog, Do not change it unless necessary
+
+{
+  "Serilog": {
+    "Using": [
+      "Serilog.Sinks.Console",
+      "Serilog.Sinks.File"
+    ],
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": { // Overriding the Microsoft's logging level help us to log out custom messages only and runtime environment will log only when some runtime Error occurs.
+        "Microsoft": "Error"
+      },
+      "System": "Warning"
+    },
+    "WriteTo": [
+      {
+        "Name": "Console",
+        "Args": {
+          "outputTemplate": "[{Timestamp:HH:mm:ss} {SourceContext} [{Level}] {Message}{NewLine}{Exception}"
+        }
+      },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "Logs/DanpheEMR-.log",
+          "rollingInterval": "Day",
+          "outputTemplate": "[{Timestamp:HH:mm:ss} {SourceContext} [{Level}] {Message}{NewLine}{Exception}",
+          "formatter": {
+            "type": "Serilog.Formatting.Compact.CompactJsonFormatter, Serilog.Formatting.Compact"
+          }
+        }
+      },
+      {
+        "Name": "Seq",
+        "Args": {
+          "serverUrl": "http://localhost:5341/", //This is the url where Seq is hosted
+          "apiKey": "eE1WgLTyRZmckC7lKoC0", //This is hospital specific apiKey generated from hosted Seq environment
+          "rollingInterval": "Day",
+          "outputTemplate": "[{Timestamp:HH:mm:ss} {SourceContext} [{Level}] {Message}{NewLine}{Exception}",
+          "formatter": {
+            "type": "Serilog.Formatting.Compact.CompactJsonFormatter, Serilog.Formatting.Compact"
+          }
+        }
+      }
+      //UnComment this only if database logging is needed
+      //{
+      //  "Name": "MSSqlServer",
+      //  "Args": {
+      //    "connectionString": "Data Source=krishna-imark\\SQLEXPRESS;Initial Catalog=TestLogging;Integrated Security=True;MultipleActiveResultSets=true", //This is the connectionString of the database to which we want to put logs
+      //    "sinkOptionsSection": {
+      //      "tableName": "LOG_SerilogEvents", //This is the table name into which logs will be saved
+      //      "autoCreateSqlTable": true //This will auto create the table as named above
+      //    },
+      //    "columnOptionsSection": {
+      //      "additionalColumns": [
+      //        {
+      //          "ColumnName": "UserId",
+      //          "DataType": "int"
+      //        }
+      //      ]
+      //    }
+      //  }
+        
+      //}
+    ],
+    "Enrich": [
+      "FromLogContext",
+      "WithMachineName",
+      "WithThreadId"
+    ],
+    "Properties": {
+      "Application": "DanpheEMR"
+    }
+  }
+}

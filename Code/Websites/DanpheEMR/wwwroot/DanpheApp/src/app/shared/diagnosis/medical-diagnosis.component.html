@@ -1,0 +1,60 @@
+<div class="container-fluid diagnosis-container">
+  <div class="row">
+    <div class="col-12">
+      <div class="diagnosis-header">
+        <strong>
+          Diagnosis ({{SelectedPatient.PatientCode}}, {{SelectedPatient.PatientName}})
+          <span class="performer" *ngIf="SelectedPatient.Performer">[{{SelectedPatient.Performer}}]</span>
+        </strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4" *ngIf="MasterICD && MasterICD.length">
+    <div class="col-md-6 mb-4">
+      <h5>Provisional Diagnosis:</h5>
+      <div class="form-group">
+        <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedProvisionalDiagnosis"
+               [source]="MasterICD" [list-formatter]="MedicalDiagnosisListFormatter"
+               placeholder="Select Provisional Diagnosis"
+               display-property-name="icd10Description" value-property-name=ICD10Code
+               min-chars="0" max-num-list="10" [ngModelOptions]="{standalone: true}"
+               (valueChanged)="OnProvisionalDiagnosisSelected()" />
+      </div>
+      <div class="selected-diagnosis" *ngIf="ProvisionalDiagnosis && ProvisionalDiagnosis.length">
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let icdCode of ProvisionalDiagnosis; let i = index;">
+            <span class="diagnosis-text">({{icdCode.DiagnosisCode}}) {{icdCode.DiagnosisCodeDescription}}</span>
+            <i class="fa fa-close remove_diagnosis" (click)="RemoveSelectedProvisionalDiagnosis(i)"></i>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <h5>Final Diagnosis:</h5>
+      <div class="form-group">
+        <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedFinalDiagnosis"
+               [source]="MasterICD" [list-formatter]="MedicalDiagnosisListFormatter"
+               placeholder="Select Final Diagnosis"
+               display-property-name="icd10Description" value-property-name=ICD10Code
+               min-chars="0" max-num-list="10" [ngModelOptions]="{standalone: true}"
+               (valueChanged)="OnFinalDiagnosisSelected()" />
+      </div>
+      <div class="selected-diagnosis" *ngIf="FinalDiagnosis && FinalDiagnosis.length">
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let icdCode of FinalDiagnosis; let i = index;">
+            <span class="diagnosis-text">({{icdCode.DiagnosisCode}}) {{icdCode.DiagnosisCodeDescription}}</span>
+            <i class="fa fa-close remove_diagnosis" (click)="RemoveSelectedFinalDiagnosis(i)"></i>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12 text-right">
+      <button type="button" class="btn btn-success" (click)="loading = true; SaveMedicalDiagnosis()">SAVE</button>
+    </div>
+  </div>
+</div>

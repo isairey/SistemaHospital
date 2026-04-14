@@ -1,0 +1,115 @@
+<a feature="button" id="id_btn_template_newTemplate" class="btn blue bordered" (click)="NewTemplate()"><i class="fa fa-plus"></i>Add Printable
+  Form</a>
+<div *ngIf="ShowGrid" class="row">
+  <div class="col-md-12 col-xs-12 col-sm-12">
+    <danphe-grid [grid-colDefaults]="TemplateGridColumns" [grid-data]="TemplateList " (grid-actions)="ClinicalTemplateGridActions($event)"
+                 [paginationPageSize]="100" [show-print-button]="false">
+    </danphe-grid>
+  </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen custom_modal modal-lg" *ngIf="ShowAddEditPage">
+  <div class="portlet-body form">
+    <!--Model Box Body Start-->
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="modelbox-div clearfix">
+          <div class="caption custom-caption">
+            <h3> <span *ngIf="!IsUpdate">Add Printable Form</span> <span *ngIf="IsUpdate">Update Template</span> </h3>
+            <a class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+          </div>
+          <div class="form-body form-horizontal hm-form">
+            <div class="row">
+              <div class="col-md-6 col-xs-12">
+                <form [formGroup]="CurrentTemplate.DynamicTemplateValidator">
+                  <div class="form-group">
+                    <label class="control-label col-md-4">Printable Form Name<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" id="TemplateName" formControlName="TemplateName" placeholder="Template Name"
+                             (keyup.enter)="SetFocusById('TemplateId')" />
+                      <span class="color-red font-sm"
+                            *ngIf="CurrentTemplate.DynamicTemplateValidator.get('TemplateName').invalid && CurrentTemplate.DynamicTemplateValidator.get('TemplateName').touched">Printable
+                        Form Name
+                        is required</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="TemplateOptions" class="control-label col-md-4">Printable Form Type<b>:</b></label>
+                    <div class="col-md-8">
+                      <select id="TemplateOptions" class="form-control" formControlName="EditorType"
+                              (change)="OnTemplateOptionChange($event.target.value)">
+                        <option *ngFor="let options of TemplateOptions" [value]="options">{{ options }}</option>
+                      </select>
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="chkbox_print_hospital_header" class="control-label col-md-4">Print Hospital Header<b>:</b></label>
+                    <div class="col-md-8" style="padding-left: 10px">
+                      <div class="col-md-1" style="padding: 0px; margin: 0px;">
+                        <input class="form-control" style="zoom: 0.7; cursor: pointer; display: inline-block;" type="checkbox"
+                               id="chkbox_print_hospital_header" formControlName="PrintHospitalHeader" />
+                      </div>
+                      <span></span>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <form [formGroup]="CurrentTemplate.DynamicTemplateValidator">
+                  <div class="form-group">
+                    <label class="control-label col-md-4">Printable Form Code<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" id="TemplateCode" formControlName="TemplateCode" placeholder="Template Code"
+                             (keyup.enter)="SetFocusById('TemplateCode')" />
+                      <span class="color-red font-sm"
+                            *ngIf="CurrentTemplate.DynamicTemplateValidator.get('TemplateCode').invalid && CurrentTemplate.DynamicTemplateValidator.get('TemplateCode').touched">Printable
+                        Form Code
+                        is required</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="TemplateType" class="control-label col-md-4">Template Type<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <select id="TemplateType" class="form-control" formControlName="TemplateType">
+                        <option value="">Select Template Type</option>
+                        <option *ngFor="let type of TemplateTypes" [value]="type">{{ type }}</option>
+                      </select>
+                      <span class="color-red font-sm" *ngIf="CurrentTemplate.DynamicTemplateValidator.get('TemplateType').invalid">
+                        Template Type is required
+                      </span>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group text-center">
+                  <div class="col-md-12">
+                    <label class="control-label no-padding" style="font-size: 15px;"> Printable Form Content <sup>*</sup><b>:</b> </label>
+                    <span class="color-red font-sm" *ngIf="!IsValidTemplate"> Printable Form Content HTML required</span>
+                    <br>
+                    <danphe-ckeditor *ngIf="ShowCKEditorGrid" [readonly]="false" (get-html-content)="OnChangeEditorData($event)"
+                                     [set-html-content]="CurrentTemplate.TemplateHTML" id="TemplateHTML" (keyup.enter)="FocusElementById('Add')">
+                    </danphe-ckeditor>
+
+                    <textarea *ngIf="!ShowCKEditorGrid" name="TemplateHTML" [(ngModel)]="CurrentTemplate.TemplateHTML"
+                              class="form-control vertical-expand" rows="20" style="margin-top: 10px;"> </textarea>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <input type="button" id="id_button_template_addNewTemplate" class="btn green btn-success margin-7-hr" *ngIf="!IsUpdate"
+                   (click)="AddNewTemplate()" value="Add" id="Add" />
+            <input type="button" id="id_button_template_update" class="btn green btn-success margin-7-hr" *ngIf="IsUpdate" (click)="Update()"
+                   value="Update" id="Add" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Model Box Body End-->
+  </div>
+</div>
+<!--End Add, Update Popup code-->

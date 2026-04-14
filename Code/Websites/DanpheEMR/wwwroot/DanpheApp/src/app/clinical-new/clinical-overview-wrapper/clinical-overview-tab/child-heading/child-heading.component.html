@@ -1,0 +1,43 @@
+<style>
+  .child-tab-container {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .item {
+    display: inline-block
+  }
+
+  .left {
+    width: 58%;
+  }
+
+  .right {
+    width: 38%;
+    background-color: whitesmoke;
+  }
+
+  .itemleft {
+    width: 100%;
+  }
+
+  .mat-form-field-appearance-legacy .mat-form-field-underline {
+    height: 0px !important;
+  }
+</style>
+<div class="child-tab-container">
+  <div class="itemleft">
+    <ul class="nav nav-tabs">
+      <li (click)="OpenHeadingTab(heading)" *ngFor="let heading of ChildHeadingFieldList" [class.active]="heading.ActiveTab">
+        <a>{{heading.DisplayName}}</a>
+      </li>
+    </ul>
+    <tab-group [hideTabsNav]="true" [dynamicTabs]="DynamicTabs">
+    </tab-group>
+  </div>
+
+
+</div>

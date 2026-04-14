@@ -1,0 +1,428 @@
+<style>
+  .clickable-icon {
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .clickable-icon:hover {
+    color: #007bff;
+  }
+
+  .link {
+    text-transform: capitalize;
+  }
+</style>
+<div class="container" class="col-md-12" style="overflow: hidden;">
+  <h3 class="col-md-12 mt-5" style="text-align: center;">Treatment Cardex <i class="fa fa-refresh clickable-icon"
+       style="margin-left:10px" (click)="ReloadMedicationView()"></i></h3>
+  <div class="row">
+    <div class="col-md-6">
+      <h5>Active/Hold Medications</h5>
+    </div>
+    <div class="col-md-6" style="text-align:right;">
+      <a class="link" (click)="GetAllMedicationLogList()" style="text-transform: capitalize;">show All Medication
+        History</a>
+    </div>
+  </div>
+  <div class="col-md-12" style=" width:100%; border-bottom: 1px solid #ccc;margin-right: 20px;margin-bottom: 20px;">
+  </div>
+  <div class="row">
+    <div class="col-md-6 card-container" *ngFor="let ActiveMedication of ActivePatientMedications">
+      <div class="card">
+        <div class="card-header" class-="col-md-3">{{ActiveMedication.ItemName}}<span style="color: rgb(81, 119, 244);"
+                *ngIf="ActiveMedication.GenericName">
+            /{{ActiveMedication.GenericName}}</span>
+          <span *ngIf="ActiveMedication.AlternativeItemName"
+                style="color:red; font-style: italic; font-size: smaller;">(Alternate:
+            {{ActiveMedication.AlternativeItemName}})</span>
+        </div>
+        <div class="card-body">
+          <div class="card-info">
+            <div class="card-info-label"><span>Strength</span><span>:</span></div>
+            <div class="card-info-value">
+              {{ActiveMedication.Strength}}:{{ActiveMedication.Doses}}-{{ActiveMedication.FrequencyAbbreviation}}-{{ActiveMedication.RouteOfAdministration}}
+              <span *ngIf="ActiveMedication.IsPRN">& PRN</span>
+            </div>
+          </div>
+          <div class="card-info">
+            <div class="card-info-label"><span>Last Taken</span><span>:</span></div>
+            <div class="card-info-value">
+              {{ ActiveMedication.MedicationTakenDate | MedicationDateTime:ActiveMedication.MedicationTakenTime }}
+            </div>
+          </div>
+          <div class="card-info">
+            <div class="card-info-label"><span>Start Date</span><span>:</span></div>
+            <div class="card-info-value">
+              {{
+              IsToday(ActiveMedication.MedicationStartDate)
+              ? 'Today ' + (ActiveMedication.MedicationStartDate | DanpheDateTime:'format':'hh:mm A ')
+              : IsYesterday(ActiveMedication.MedicationStartDate)
+              ? 'Yesterday ' + (ActiveMedication.MedicationStartDate | DanpheDateTime:'format':'hh:mm A ')
+              : (ActiveMedication.MedicationStartDate | DanpheDateTime:'format':'YYYY-MM-DD hh:mm A ')
+              }}
+            </div>
+          </div>
+          <div class="card-info">
+            <div class="card-info-label"><span>Duration</span><span>:</span></div>
+            <div class="card-info-value">{{ActiveMedication.Duration}} Days</div>
+          </div>
+          <div class="card-info">
+            <label class="status-banner">{{ActiveMedication.MedicationSchedule}}</label>
+          </div>
+          <div class="card-actions">
+            <button class="btn green btn-success" *ngIf="ActiveMedication.IsActiveMedication"
+                    (click)="AddNewMedicationLog(ActiveMedication)">Med.Taken</button>
+            <button class="btn btn-warning" *ngIf="!ActiveMedication.IsActiveMedication" [disabled]="true">On
+              Hold</button>
+            <button class="btn btn-info" (click)="ShowSelectedMedicationHistory(ActiveMedication)"><i
+                 class="fa fa-history" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add medication log popup -->
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowAddMedicationLogPopUp ">
+  <div class="portlet-body form">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="modelbox-div" style="width: 130%;margin-left: -10%;">
+        <div class="modelbox-header">
+          <h4 class="margin-0-vr text-warning">
+            <strong>Add Medication Entry</strong>
+          </h4>
+          <div class="close-modelbox">
+            <a class="btn btn-danger" (click)="ClosePopUp()" title="Cancel">X</a>
+          </div>
+        </div>
+        <div class="form-section" [formGroup]="MedicationViewValidator">
+          <div class="form-group row justify-content-between">
+            <div class="form-group col-md-6">
+              <div class="form-group row align-items-center">
+                <label for="id_ItemName" class="col-sm-4 col-form-label"><span>Brand Name</span></label>
+                <div class="col-sm-1">:</div>
+                <div class="col-sm-7">
+                  <input type="text" appFocusTextbox class="form-control" id="id_PrnNotes" placeholder="ItemName"
+                         [readonly]="true" formControlName="ItemName">
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-group row align-items-center">
+                <label for="id_LastTakenDate" class="col-sm-4 col-form-label"><span>Last Taken On</span></label>
+                <div class="col-sm-1">:</div>
+                <div class="col-sm-7">
+                  <input type="text" appFocusTextbox class="form-control" id="id_LastTakenDate" [readonly]="true"
+                         formControlName="LastMedicationTakenDateTime"
+                         [value]="MedicationViewValidator.get('LastMedicationTakenDateTime').value || 'Not Started'">
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-group row align-items-center">
+                <label for="id_MedicationTakenDateTime" class="col-sm-4 col-form-label" style="padding: 0%; padding-left: 12px;"><span>Medication
+                    Taken
+                    On</span></label>
+                <div class="col-sm-1">:</div>
+                <div class="col-sm-7" style="padding: 0px;">
+                  <danphe-date-picker [ngModelOptions]="{standalone: true}" [(ngModel)]="MedicationTakenDateTime"
+                                      [showTime]="true"></danphe-date-picker>
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-group row align-items-center">
+                <label for="id_Comments" class="col-sm-4 col-form-label"><span>Comments</span></label>
+                <div class="col-sm-1">:</div>
+                <div class="col-sm-7">
+                  <textarea appFocusTextbox class="form-control" id="id_Comments" formControlName="Comments"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row col-md-12 text-right">
+            <button type="button" class="btn green btn-success float-right" style="margin-top: 20px;"
+                    (click)="AddMedicationEntry()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Show medication log history popup -->
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShoMedicationLogs">
+  <div class="portlet-body form">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div" style="width: 120%;">
+        <div class="modelbox-header col-md-12 row">
+          <div class="col-md-8">
+            <h4 class="margin-0-vr text-warning">
+              <strong>
+                Medication Details With Log History
+              </strong>
+            </h4>
+          </div>
+          <div class="col-md-4">
+            <label class="col-form-label">Prescribed By: </label> <strong style="color:blue">{{PrescriberName}}</strong>
+          </div>
+          <div class="close-modelbox">
+            <a class="btn btn-danger" (click)="ClosePopUp()" title="Cancel">X</a>
+          </div>
+        </div>
+        <div class="form-section" style="margin: 10px;">
+          <div class="medicine-detail">
+            <div class="medicine-detail-container row">
+              <div class="medicine-info col-md-12">
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Brand Name</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedActiveMedication.ItemName}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Generic Name</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedActiveMedication.GenericName}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Strength</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedActiveMedication.Strength}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Dose</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedActiveMedication.Doses}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Route</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedActiveMedication.RouteOfAdministration}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Frequency</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedActiveMedication.FrequencyAbbreviation}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Medication Schedule</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedActiveMedication.MedicationSchedule}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Duration</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedActiveMedication.Duration}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Is PRN?</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedActiveMedication.IsPRN}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div *ngIf="SelectedActiveMedication.CardexNote">
+                      <div class="form-group col-md-6">
+                        <div class="form-group row align-items-center">
+                          <label class="col-sm-4 col-form-label">Cardex Note</label>
+                          <div class="col-sm-1">:</div>
+                          <div class="col-sm-7">
+                            <strong>{{ SelectedActiveMedication.CardexNote }}</strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="SelectedActiveMedication.IsPRN">
+                      <div class="form-group col-md-6">
+                        <div class="form-group row align-items-center">
+                          <label class="col-sm-4 col-form-label">PRN Notes</label>
+                          <div class="col-sm-1">:</div>
+                          <div class="col-sm-7">
+                            <strong>{{ SelectedActiveMedication.PRNNotes }}</strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-6" *ngIf="SelectedActiveMedication.AlternativeItemName">
+                      <div class="form-group row align-items-center">
+                        <label class="col-sm-4 col-form-label">Alternate Medicine</label>
+                        <div class="col-sm-1">:</div>
+                        <div class="col-sm-7">
+                          <strong><span
+                                  style="color:blue">{{SelectedActiveMedication.AlternativeItemName}}</span></strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="medication-history mt-4">
+                <h5>Medication History</h5>
+                <div class="date-range row mb-3">
+                  <div class="col-md-7 mb-2">
+                    <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'Default'">
+                    </from-to-date-select>
+                  </div>
+                  <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-info w-100" (click)="FilterEntryLogs()">Filter</button>
+                  </div>
+                  <div class="col-md-3 mb-2">
+                    <p>
+                      Medicine Started Date:
+                      {{ SelectedActiveMedication.MedicationCreatedOn ?
+                      (SelectedActiveMedication.MedicationCreatedOn | DanpheDateTime:'format':'YYYY-MM-DD') :
+                      'Not Started' }}
+                    </p>
+                    <p>
+                      Last Medication Date:
+                      {{ (SelectedActiveMedication.MedicationTakenDate && SelectedActiveMedication.MedicationTakenTime) ?
+                      (SelectedActiveMedication.MedicationTakenDate | DanpheDateTime:'format':'YYYY-MM-DD') + '/' +
+                      SelectedActiveMedication.MedicationTakenTime :
+                      'Not Started' }}
+                    </p>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Comment</th>
+                        <th>Entry By</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let entry of FilteredMedicationEntryLogs">
+                        <td>{{ entry.MedicationTakenDate | DanpheDateTime:'format':'YYYY-MM-DD'}}</td>
+                        <td>{{ entry.MedicationTakenTime }}</td>
+                        <td>{{ entry.Comment }}</td>
+                        <td>{{entry.EntryBy}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- pop up for all medication history page -->
+  <div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowAllMedicationLogPopUp">
+    <div class="portlet-body form">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div" style="width: max-content;">
+          <div class="modelbox-header row">
+            <div class="col-md-12">
+              <h4 class="margin-0-vr text-warning">
+                <strong>Patient Medication Entry Logs</strong>
+              </h4>
+            </div>
+            <div class="close-modelbox">
+              <button class="btn btn-danger" (click)="ClosePopUp()" title="Cancel" aria-label="Close">X</button>
+            </div>
+          </div>
+          <div class="date-range row mb-3" style="margin-top: 20px;">
+            <div class="col-md-6 mb-2">
+              <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'Default'">
+              </from-to-date-select>
+            </div>
+            <div class="col-md-5 mb-2">
+              <div class="col-md-3" style="width: max-content;">
+                <label for="BrandName"><span>Brand Name</span></label>
+              </div>
+              <div class="col-md-1"><span>:</span></div>
+              <div class="col-md-8" style="width: auto;">
+                <input danphe-auto-complete class="form-control cstm-form-control"
+                       [(ngModel)]="SelectedCardexItemToFilter" [source]="CardexMedicationItemList" placeholder="ItemName"
+                       path-to-data="Results" display-property-name="ItemName" value-property-name="ItemName"
+                       [list-formatter]="CardexMedicationItemLists" (valueChanged)="OnMedicationItemSelected($event)"
+                       max-num-list="10">
+              </div>
+            </div>
+            <div class=" col-md-1  " style="text-align:right">
+              <button class="btn btn-info w-100" (click)="FilterPatientAllMedicationEntryList()">Filter</button>
+            </div>
+          </div>
+          <div class="form-section mt-3">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Generic Name</th>
+                    <th>Brand Name/Alternate</th>
+                    <th>Comment</th>
+                    <th>Entry By</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let medicationEntry of FilterPatientAllMedicationList">
+                    <td>{{ medicationEntry.MedicationTakenDate | DanpheDateTime:'format':'YYYY-MM-DD' }}</td>
+                    <td>{{ medicationEntry.MedicationTakenTime }}</td>
+                    <td>{{medicationEntry.GenericName}}</td>
+                    <td>{{medicationEntry.ItemName}} <span *ngIf="medicationEntry.AlternativeItemName"
+                            style="color:blue">/{{medicationEntry.AlternativeItemName}}</span>
+                    </td>
+                    <td>{{ medicationEntry.Comment }}</td>
+                    <td>{{ medicationEntry.EntryBy }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,32 @@
+<div class="text-left add-billing-button" *ngIf="!ShowAddPage && !ShowManageItem">
+    <button class="btn btn-primary" (click)="AddReportGroup()"> + New Report Group</button>
+    <i class="fa fa-question-circle"
+       style="margin-left: 10px; cursor: pointer; font-size: 1.5em;"
+       [attr.title]="UnmappedServiceItemsTooltip"></i>
+</div>
+
+<report-group-add *ngIf="ShowAddPage"
+                  [selectedItem]="SelectedItem"
+                  [report-group-list]="ReportGroupList"
+                  (callback-add)="CallBackAdd($event)">
+</report-group-add>
+
+
+
+<div *ngIf="ShowGrid" class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+        <danphe-grid [grid-colDefaults]="ReportGroupFieldGridCols"
+                     (grid-actions)="ReportGroupGridActions($event)"
+                     [grid-data]="ReportGroupList"
+                     [show-print-button]="false">
+        </danphe-grid>
+    </div>
+</div>
+
+<div *ngIf="ShowManageItem" class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+        <manage-report-group-item *ngIf="ShowManageItem"
+                                  [selectedReportGroupItem]="SelectedItem"
+                                  (callback-manage)="HideManage($event)"></manage-report-group-item>
+    </div>
+</div>

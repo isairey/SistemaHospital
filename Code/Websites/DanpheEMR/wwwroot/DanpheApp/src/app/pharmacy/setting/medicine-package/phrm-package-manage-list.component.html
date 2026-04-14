@@ -1,0 +1,27 @@
+<div>
+    <input type="button" class="btn btn-primary" (click)="ShowAddNewPackage()" value="Add Medicine Package" />
+    <div class="row">
+        <div class="col-md-12 col-xs-12 col-sm-12">
+            <danphe-grid [grid-colDefaults]="PackageGridColumns" [grid-data]="PackageList" (grid-actions)="PackageGridActions($event)"> </danphe-grid>
+        </div>
+    </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen inv_modal" *ngIf="ShowPackageAddComponent">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="modelbox-div clearfix">
+                    <div class="caption lb-caption">
+                        <h3> <span>Configure Medicine Package</span>
+                        </h3>
+                        <a class="btn btn-danger" (click)="Close()" title="Cancel"><i class="fa fa-times"></i></a>
+                    </div>
+                    <phrm-package-add (callback-close)="OnClickCloseButton($event)" [PharmacyPackageId]="PharmacyPackageId"
+                                      [PackageList]="PackageList"
+                                      [IsEditMode]="IsEditMode"></phrm-package-add>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

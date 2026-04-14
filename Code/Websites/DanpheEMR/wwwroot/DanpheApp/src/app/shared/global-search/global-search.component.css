@@ -1,0 +1,127 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+.box {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(44, 44, 44, 0.329);
+    z-index: 9999;
+}
+
+
+.global-search {
+    width: 600px;
+    height: 180px;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    background-color: #494949;
+    border-radius: 8px !important;
+    /* flex-flow: column; */
+}
+
+.feature-search-container {
+    background-color: #787878;
+    border-radius: 8px !important;
+}
+
+.search-list {
+    /* background-color: #070707; */
+    height: calc(100% - 30px);
+    overflow-y: auto;
+}
+
+.search-list ul li {
+    /* background-color: #070707; */
+    margin: 5px;
+    font-size: 12px;
+    color: white;
+    border-bottom: 1px solid rgba(200, 199, 199, 0.763);
+    list-style-type: none;
+    cursor: pointer;
+    padding: 2px;
+}
+
+.search-list ul li:hover {
+    /* background-color: #070707; */
+    background-color: rgba(255, 255, 255, 0.753);
+    color: black;
+}
+
+.select-feature {
+    border: 0px;
+    padding: 0px;
+    width: 20%;
+    border-radius: 8px !important;
+    height: 30px;
+}
+
+
+.gsearch-option {
+    position: relative;
+    display: inline-block;
+    color: white;
+    border: 0px;
+    padding: 0px;
+    padding-left: 2%;
+    margin-left: 3%;
+    height: 30px;
+    width: 75%;
+    background-color: #797878;
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    border-left: 1px solid white;
+}
+
+.gsearch-option-input {
+    color: white;
+    border: 0px;
+    padding: 0px;
+    height: 30px;
+    width: 100%;
+    background-color: #797878;
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
+
+.gsearch-icon {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+::ng-deep .gsearch-option-input::placeholder {
+    color: white !important;
+    opacity: 0.6;
+}
+
+.filtered-list li.selected {
+    color: black !important;
+    background-color: rgba(255, 255, 255, 0.753);
+}
+
+
+
+
+/* Customize scrollbar for WebKit browsers (Chrome, Safari, etc.) */
+.search-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-list::-webkit-scrollbar-thumb {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+.search-list::-webkit-scrollbar-track {
+    background: #252525;
+}

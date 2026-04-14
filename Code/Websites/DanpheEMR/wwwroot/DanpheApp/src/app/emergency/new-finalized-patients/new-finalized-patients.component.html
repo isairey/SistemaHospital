@@ -1,0 +1,159 @@
+<div *ngIf="!ShowGridList">
+  <button (click)="Back()" class="btn blue">Back To Admitted Patient List</button>
+</div>
+
+<div *ngIf="ShowOrderPopUp" (click)="ParentOfPopUpClicked($event)" class="triaged-patient-orders cstm-popup-holder" style="padding: 55px;">
+  <div class="cstm-slidefromtop">
+    <div style="width: 100%; height: auto;">
+      <er-ward-billing (sendBackERPatientOrderData)="ReturnFromOrderAction($event)"
+                       [selectedPatient]="SelectedEmergencyPatient"></er-ward-billing>
+    </div>
+  </div>
+</div>
+<div *ngIf="ShowAddVitals" class="popup-static portlet box portlet-fullscreen custom_modal">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-11" style="margin-left:4%">
+        <div class="modelbox-div ref_modal_div clearfix">
+          <div class="caption custom-caption no-margin">
+            <a class="btn btn-danger" (click)="CloseVitalsPopUp()">X</a>
+          </div>
+          <vitals-new></vitals-new>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="ShowERPatRegistration" (click)="ParentOfPopUpClicked($event)" class="cstm-popup-holder" style="padding: 55px;">
+  <div id="cstmSlideFromTop" class="cstm-slidefromtop">
+    <div style="width: 100%; height: auto;">
+      <er-patient-registration (sendBackERPatientData)="ReturnFromPatRegistrationEdit($event)"
+                               [currentPatientToEdit]="SelectedERPatientToEdit"></er-patient-registration>
+    </div>
+  </div>
+</div>
+<div *ngIf="ShowDateRangeAndFilers" class="form-group row">
+  <div class="row align-items-center col-md-12" style="margin-bottom: 20px;">
+    <div class="col-md-2 mb-2 mb-md-0">
+      <select id="id_select_dateType_finalizedPatients" class="form-select" style="width:100%" [(ngModel)]="DateType">
+        <option selected *ngFor="let type of EmergencyDateFilterType" [value]="type">{{type}}</option>
+      </select>
+    </div>
+    <div class="formGroup-row col-md-5">
+      <from-to-date-select (on-change)="OnFromToDateChange($event)"
+                           [date-settings-name]="'common-range-with-today'">
+      </from-to-date-select>
+    </div>
+    <div class="col-md-5">
+      <div class="case-select d-flex align-items-center">
+        <label for="caseSelect" class="col-md-2" class="form-check-label"><strong>Case</strong></label>
+        <span class="col-md-1">:</span>
+        <patient-cases (selected-cases-list)="PatientCasesOnChange($event)" class="col-md-9"></patient-cases>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid" style="margin-top:20px;">
+    <div class="row align-items-center">
+      <div class="col-md-1">
+        <label class="form-check-label"><strong>Status:</strong></label>
+      </div>
+      <div class="col-md-10">
+        <div class="status-options-container">
+          <div class="status-options">
+            <div class="status-option" *ngFor="let status of FinalizedPatientStatuses">
+              <div class="form-check custom-checkbox">
+                <input class="form-check-input status-checkbox" type="checkbox" [id]="status.Value" name="status"
+                       [(ngModel)]="status.IsSelected" (change)="OnCheckboxChange(status)">
+                <label class="form-check-label" [for]="status.Value">
+                  {{status.Value}}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <button class="btn-green btn-medium" (click)="LoadFinalizedPatients()">
+          <i class="fa fa-refresh"></i> Load
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="Finalized-patients-grid" *ngIf="ShowEmergencyPatientsGrid">
+  <danphe-grid [grid-colDefaults]="ERFinalizedPatientGridCol" [grid-data]="FilteredEmergencyPatients" (grid-actions)="GridActionHandler($event)"
+               [grid-exportOptions]="FinalizedPatientListGridExportOptions" [grid-showExport]="true"
+               [NepaliDateInGridParams]="NepaliDateInGridSettings"
+               [grid-footer-content]="FooterContent" [report-for]="'pharmacy'" [show-header]="true">
+  </danphe-grid>
+  <div class="finalized-patients-summary" style="margin-top: 20px;">
+    <div class="row mt-4">
+      <div class="col-12" id="print-finalized-patients-summary">
+        <div class="table-container" style="display: flex; justify-content: center;">
+          <table class="table table-hover" style="width: 50%; background-color: transparent;">
+            <thead>
+              <tr>
+                <th colspan="4" class="summary-header" style="text-align: center;font-weight: bold;">
+                  Summary
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Total</th>
+                <th>Male</th>
+                <th>Female</th>
+                <th>Others</th>
+              </tr>
+              <tr>
+                <td>{{TotalCount}}</td>
+                <td>{{MaleCount}}</td>
+                <td>{{FemaleCount}}</td>
+                <td>{{OthersCount}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="ShowDischargeSummary">
+  <button class="btn btn-primary btn-sm" (click)="HideDischargeSummary()"> <i class="fa fa-backward"></i>&nbsp;&nbsp;&nbsp;Back </button>
+  <discharge-summary-add
+                         [selectedDischarge]="SelectedDischarge"
+                         [fromClinical]="false" [IsERPatient]="true"
+                         [showDischargeSummary]="ShowDischargeSummary"
+                         (sendData)="DischargeSummaryCallback($event)"
+                         (CallBackFromAdd)='CallBackFromAddEdit($event)'>
+  </discharge-summary-add>
+</div>
+<div *ngIf="ShowSummaryView">
+  <button class="btn btn-primary btn-sm" (click)="HideDischargeSummary()"> <i class="fa fa-backward"></i>&nbsp;&nbsp;&nbsp;Back </button>
+  <discharge-summary-view [selectedADT]="SelectedDischarge"
+                          (EditRecordEvent)='CallbackFromViewPage($event)' [showSummaryView]="ShowSummaryView"></discharge-summary-view>
+</div>
+
+<div *ngIf="ShowUploadConsent" class="popup-static portlet box portlet-fullscreen custom_modal">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div clearfix">
+          <div class="caption custom-caption">
+            <h3> <span>Upload Files</span></h3>
+            <a class="btn btn-danger" (click)="CloseUpload()" title="Cancel">X</a>
+          </div>
+
+          <div class="col-md-12">
+            <upload-consent *ngIf="ShowUploadConsent"
+                            [ERPatientId]="SelectedPatient.ERPatientId"
+                            [patientDetail]="SelectedPatient"
+                            (callBackFileUploadClose)="CallBackForClose($event)">
+            </upload-consent>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

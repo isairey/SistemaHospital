@@ -1,0 +1,77 @@
+.fs-large {
+  font-size: larger;
+}
+
+.mt-18 {
+  margin-top: 18px;
+}
+
+.visit-information-found {
+  background-color: #e7ecf1;
+  text-align: center;
+  border: 1px solid #cccc;
+  padding: 8px 0 5px 0;
+  border-radius: 6px !important;
+  height: 35px;
+}
+
+.visit-information-found p {
+  color: black;
+  font-size: larger;
+}
+
+.visit-information-not-found {
+  background-color: #e7ecf1;
+  text-align: center;
+  border: 1px solid #cccc;
+  padding: 12px 0 5px 0;
+  border-radius: 6px !important;
+}
+
+.visit-information-not-found p {
+  color: black;
+  font-size: larger;
+}
+
+.btn-manual-followup {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.page-bar span {
+  font-size: 15px !important;
+}
+
+.floatright {
+  text-align: right;
+}
+
+.department {
+  font-weight: 500;
+  text-align: left;
+  margin-left: -20px;
+  padding-left: 0px !important;
+}
+
+.department label {
+  margin-top: 7px;
+}
+
+.checkbutton {
+  text-align: right;
+}
+
+.confirmpreviousvisit {
+  font-size: 16px;
+  font-weight: 800;
+  color: #333;
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.patientinfo {
+  margin-left: -15px !important;
+  margin-right: -15px !important;
+  height: 80px;
+}

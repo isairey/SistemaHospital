@@ -1,0 +1,127 @@
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        <div>
+            <div style="margin-top: 5px;" *ngIf="!bedIsAlreadyReserved">
+                <form [formGroup]="BedReservationValidator">
+                    <div class="form-group row">
+                        <label for="case" class="control-label col-md-4">Case <b class="color-red"> <sup>*</sup></b><b
+                               style="float:right;">:</b></label>
+                        <div class="col-md-8">
+                            <select class="form-control" #allCase formControlName="Case"
+                                    (change)="OnCaseSelected($event)" id="id_case"
+                                    (keydown.enter)="FocusOnInputField('id_DepartmentName')">
+                                <option value="0" selected>--select--</option>
+                                <option *ngFor="let case of AdmissionCases" value="{{ case.Name }}">{{ case.Name }}</option>
+                            </select>
+                            <span *ngIf="BedReservationValidator.dirty && BedReservationValidator.invalid ">
+                                <span class="color-red font-sm"
+                                      *ngIf="BedReservationValidator.controls['Case'].hasError('required')">Case is Required</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="case" class="control-label col-md-4">Requesting Department <b style="float:right;">:</b></label>
+                        <div class="col-md-8">
+                            <input class="form-control" formControlName="DepartmentName" readonly id="id_DepartmentName" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="case" class="control-label col-md-4">Admitting Doctor<b style="float:right;">:</b></label>
+                        <div class="col-md-8">
+                            <input class="form-control" formControlName="AdmittingDoctor" readonly id="id_AdmittingDoctor" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="case" class="control-label col-md-4">Ward <b class="color-red"> <sup>*</sup></b><b
+                               style="float:right;">:</b></label>
+                        <div class="col-md-8">
+                            <select id="id_ward" formControlName="WardName"
+                                    class="form-control" (ngModelChange)="OnWardSelected($event)"
+                                    (keydown.enter)="FocusOnInputField('id_bedFeature')">
+                                <option [ngValue]="null">Select Ward</option>
+                                <option *ngFor="let ward of wardList" value="{{ward.WardId}}">{{ward.WardName}}</option>
+                            </select>
+                            <span *ngIf="BedReservationValidator.dirty && BedReservationValidator.invalid ">
+                                <span class="color-red font-sm"
+                                      *ngIf="BedReservationValidator.controls['WardName'].hasError('required')">WardName is Required</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="case" class="control-label col-md-4">Bed Feature<b class="color-red"> <sup>*</sup></b><b
+                               style="float:right;">:</b></label>
+                        <div class="col-md-8">
+                            <select id="id_bedFeature" formControlName="BedFeatureName" class="form-control"
+                                    (ngModelChange)="OnBedFeatureSelected($event)"
+                                    (keydown.enter)="FocusOnInputField('id_bed')">
+                                <option [ngValue]="null">Select Bed Feature</option>
+                                <option *ngFor="let bed of bedFeatureList" value="{{bed.BedFeatureId}}" [disabled]="disableFeature">
+                                    {{bed.BedFeatureName}}</option>
+                            </select>
+                            <span *ngIf="BedReservationValidator.dirty && BedReservationValidator.invalid ">
+                                <span class="color-red font-sm"
+                                      *ngIf="BedReservationValidator.controls['BedFeatureName'].hasError('required')">BedFeatureName is
+                                    Required</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="case" class="control-label col-md-4">Bed <b class="color-red"> <sup>*</sup></b><b
+                               style="float:right;">:</b></label>
+                        <div class="col-md-8">
+                            <select formControlName="BedCode" class="form-control"
+                                    id="id_bed" (ngModelChange)="OnBedSelected($event)">
+                                <option [ngValue]="null">Select Bed</option>
+                                <ng-container *ngFor="let bed of availableBedList">
+                                    <option [ngClass]="bed.IsReserved ? 'reserved':'not-reserved'" value="{{bed.BedId}}">
+                                        {{bed.BedCode}}
+                                        <ng-container *ngIf="bed && bed.IsReserved"> (Reserved)</ng-container>
+                                    </option>
+                                </ng-container>
+                            </select>
+                            <span *ngIf="BedReservationValidator.dirty && BedReservationValidator.invalid ">
+                                <span class="color-red font-sm"
+                                      *ngIf="BedReservationValidator.controls['BedCode'].hasError('required')">Bed is Required</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="case" class="control-label col-md-4">Admission Note <b style="float:right;">:</b></label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" formControlName="AdmissionNote"
+                                      id="id_admissionNote"
+                                      style="width: 100%; min-height: 70px; resize: none;"
+                                      (keydown.enter)="FocusOnInputField('id_bookAppointment')"></textarea>
+                        </div>
+                    </div>
+
+
+                </form>
+                <div class="col-lg-12 col-sm-12" style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                    <button class="btn btn-primary" [disabled]="loading" id="id_bookAppointment" (click)="loading=true;AssignValues();"
+                            style="width: 90px; border-radius: 10px !important;">Book</button>
+                </div>
+            </div>
+            <!-- <div style="margin-top: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center;"
+                 *ngIf="bedIsAlreadyReserved">
+                <label>
+                    <span>
+                        <h3><b style="color: red;"><b>{{SelectedPatient.ShortName}}</b> already has bed Reserved.</b></h3>
+                    </span>
+                    <span>
+                        <h4>Reservation Information :</h4><br>
+                    </span>
+                    <span> <b>Requesting Department :{{admission.DepartmentName}}</b><br></span>
+                    <span> <b>Requesting Doctor :{{admission.AdmittingDoctor}}</b><br></span>
+                    <span> <b>Ward:{{ExistingWardName}}</b><br></span>
+                    <span> <b>Bed Feature:{{ExistingBedFeatureName}} </b><br></span>
+                    <span> <b>Bed : {{ExistingBedName}}</b><br></span>
+                </label>
+            </div> -->
+
+        </div>
+    </div>
+</div>

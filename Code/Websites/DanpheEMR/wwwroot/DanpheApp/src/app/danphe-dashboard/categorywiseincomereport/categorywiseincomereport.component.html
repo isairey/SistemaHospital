@@ -1,0 +1,57 @@
+<div class="row g-0" style="width: 100%; height: 30px">
+  <div class="col-lg-7 col-md-8 col-sm-8 category-header">
+    <p class="categoryheading">Category Wise Income Report</p>
+    <!-- <span><i class="fa-solid fa-circle-info"></i></span> -->
+    <span>
+      <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+        <i class=" fa fa-info-circle info" data-toggle="tooltip"></i>
+        <span class="tooltip-text" id="top">
+          <div>
+            Click on the 'View Details' button at the top right corner to see
+            more information on this!
+          </div>
+        </span>
+      </div>
+    </span>
+  </div>
+  <div class="col-lg-5 col-md-4 col-sm-4 categoryreport container">
+    <button class="viewdetails" (click)="OnButtonClick()">
+      <label for="viewcategorydetails" class="viewcategorydetails point-cursor">View Details</label>
+      <i class="fa fa-angle-right arrowicon"></i>
+    </button>
+  </div>
+</div>
+
+<div class="row g-0">
+  <div class="col-lg-6 col-md-6 col-sm-6 container">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Category Report</th>
+            <th>Collection</th>
+            <th>Return</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+              *ngFor="let report of categoryReports; let i = index"
+              [class.hidden]="i >= 10">
+            <td>{{ report.id }}</td>
+            <td>{{ report.categoryreport }}</td>
+            <td>{{ report.collection }}</td>
+            <td>{{ report.return }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CategoryReportChart -->
+  <div class="col-lg-6 col-md-6 col-sm-6 chart-box">
+    <div class="chart-size">
+      <canvas #categorywisechart></canvas>
+    </div>
+  </div>
+</div>

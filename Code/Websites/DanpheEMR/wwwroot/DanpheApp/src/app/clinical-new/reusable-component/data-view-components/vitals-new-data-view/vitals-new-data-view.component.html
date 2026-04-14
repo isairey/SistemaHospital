@@ -1,0 +1,90 @@
+<div *ngIf="ShowLatestVitals">
+    <div class="table-container" style="margin-top: 5px;">
+        <table class="table table-bordered tbl_hover table-condensed">
+            <thead>
+                <tr class="header-row">
+                    <td [attr.colspan]="GetColSpanForLatestVitals()">
+                        <!-- <span style="display: flex; justify-content: space-between;">
+                            <span style="font-size: medium; font-weight: bold;">Vitals</span>
+                        </span> -->
+                    </td>
+                </tr>
+                <tr style="background-color: #599be0; color: white;">
+                    <th *ngFor="let vitalGroup of GroupedLatestPatientVitalsList">
+                        {{ vitalGroup.VitalsGroup }}
+                    </th>
+                    <th *ngIf="ShowBMIOnLatestVitals">
+                        {{BMI.BMIBiometricsName}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td *ngFor="let vital of GroupedLatestPatientVitalsList">
+                        {{ vital.VitalsValue }}
+                        <span *ngIf="vital.VitalsValue && vital.Unit"> {{ vital.Unit }}</span>
+                    </td>
+                    <td *ngIf="ShowBMIOnLatestVitals">
+                        {{BMI_ValueOnLatestVitals}} {{BMI.Unit}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- <div class="table-container" style="margin-top: 5px;">
+    <table class="table table-bordered tbl_hover table-condensed" *ngIf="(GroupedVitalsList && GroupedVitalsList.length)">
+        <thead>
+            <tr class="header-row">
+                <td [attr.colspan]="GetColSpanForVitals()">
+                    <span style="display: flex; justify-content: space-between;">
+                        <span style="font-size: medium; font-weight: bold;">Vitals</span>
+                    </span>
+                </td>
+            </tr>
+            <tr style="background-color: #599be0; color: white;">
+                <th>Created On</th>
+                <th *ngFor="let vitalGroup of GroupedVitalsList">
+                    {{ vitalGroup.VitalsName }}<span *ngIf="vitalGroup.Unit"> ({{ vitalGroup.Unit }})</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let grouped of GroupedPatientVitals">
+                <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A' }}</td>
+                <td *ngFor="let group of grouped.VitalsGroupsByCreatedOn">
+                    {{ group.VitalsData[0].VitalsValue }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div> -->
+
+<!-- <div *ngIf="GroupedPatientBiometrics && GroupedPatientBiometrics.length > 0" class="table-container" style="margin-top: 5px;">
+    <table class="table table-bordered tbl_hover table-condensed">
+        <thead>
+            <tr class="header-row">
+                <td [attr.colspan]="GetColSpanForBiometrics()">
+                    <span style="display: flex; justify-content: space-between;">
+                        <span style="font-size: medium; font-weight: bold;">Biometrics</span>
+                    </span>
+                </td>
+            </tr>
+            <tr style="background-color: #599be0; color: white;">
+                <th>Created On</th>
+                <th *ngFor="let vitalGroup of GroupedBiometricsList">
+                    {{ vitalGroup.VitalsName }}<span *ngIf="vitalGroup.Unit"> ({{ vitalGroup.Unit }})</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let grouped of GroupedPatientBiometrics">
+                <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A' }}</td>
+                <td *ngFor="let group of grouped.VitalsGroupsByCreatedOn">
+                    {{ group.VitalsData[0].VitalsValue }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div> -->

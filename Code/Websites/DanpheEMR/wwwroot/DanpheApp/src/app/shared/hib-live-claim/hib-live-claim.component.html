@@ -1,0 +1,62 @@
+<div class="hib_live_claim_container">
+  <strong>Claim Submission</strong>
+  <div class="hib_live_claim_diagnosis_section">
+    <medical-diagnosis [selected-patient]="SelectedPatient"></medical-diagnosis>
+  </div>
+  <div class="hib_live_claim_nmc_section">
+    <div class="row">
+      <div class="col-md-6">
+        <label>NMCNo:</label>
+        <div class="autocomplete-item">
+          <input danphe-auto-complete class="form-control"
+                 [(ngModel)]="SelectedNMCNo" [source]="DoctorsNMCNoList"
+                 [list-formatter]="NMCNoListFormatter"
+                 placeholder="--Select NMCNo--"
+                 display-property-name="DoctorName" value-property-name=null
+                 onClick="this.select();" (valueChanged)="OnNMCNoSelect()"
+                 max-num-list="100" id="id_nmc" [grid-sort]="'DoctorName'"
+                 match-formatted="true" />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <table class="tbl table-bordered">
+          <tr *ngFor="let doc of SelectedNMCNoList; let i =index;">
+            <td style="font-size: 10px;">{{doc.DoctorName}} </td>
+            <td style="font-size: 10px;">{{doc.NMCNo}} </td>
+            <td><i style="color: red;" class="fa fa-close"
+                 (click)="RemoveSelectedNMCNO(i)"></i>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="hib_live_claim_explanation_section">
+    <div class="row">
+      <div class="col-md-5">
+        <label>Explanations:</label>
+        <textarea class="form-control" [(ngModel)]="ExplanationContent"></textarea>
+        <button class="btn btn-green" (click)="AddExplanation()">Add</button>
+      </div>
+      <div class="col-md-7">
+        <table class="tbl table-bordered">
+          <tr *ngFor="let explanation of ExplanationContents; let i =index;">
+            <td style="font-size: 10px;">{{explanation}} </td>
+            <td><i style="color: red;" class="fa fa-close"
+                 (click)="RemoveExplanation(i)"></i>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="hib_live_claim_button_section">
+    <div class="row mt-4">
+      <div class="col-12 text-right">
+        <button type="button" class="btn btn-success" (click)="loading = true; SubmitHibLiveClaim()">Submit Claim</button>
+      </div>
+    </div>
+  </div>
+</div>

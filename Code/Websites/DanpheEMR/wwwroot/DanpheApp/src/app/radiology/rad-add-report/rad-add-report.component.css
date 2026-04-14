@@ -1,0 +1,64 @@
+.btn-small {
+    padding: 5px 7px;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.btn-file-upload {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: white !important;
+}
+
+.btn-edit-upload {
+    background-color: #2864a3 !important;
+    border-color: #007bff !important;
+    color: white !important;
+}
+
+.btn-add-report {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: white !important;
+}
+
+.btn-edit-report {
+    background-color: #53b118 !important;
+    border-color: #28a745 !important;
+    color: white !important;
+}
+
+.table {
+    width: 100%;
+    table-layout: auto;
+}
+
+.action-buttons {
+    white-space: nowrap;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+    min-width: 200px;
+}
+
+td {
+    word-wrap: break-word;
+}
+
+.table-container {
+    width: 99%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.caption {
+    padding-left: 15px !important;
+}
+
+.search-label {
+    padding-left: 0px !important;
+}
+
+.search-box {
+    padding-left: 0px !important;
+}

@@ -1,0 +1,221 @@
+<div class="popup-static portlet box portlet-fullscreen inv_modal">
+  <div class="portlet-body form">
+    <div class="col-md-12">
+      <div class="modelbox-div clearfix">
+        <div class="caption lb-caption no-margin" style="padding: 5px 15px !important;">
+          <h3> <span style="color: blue ; font-size: larger;" *ngIf="!isUpdate">Add New Member</span>
+            <span style=" color: blue ; font-size: larger;" *ngIf="isUpdate">Update Membership</span>
+          </h3>
+          <a class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+        </div>
+        <div class="form-body" style="padding-top: 0px !important; margin-top: 10px;">
+          <form [formGroup]="MemberDetails.MedicareMemberValidator" class="form-horizontal hm-form">
+
+            <div class="col-md-12">
+              <!-- Row for labels and input fields -->
+              <div class="row">
+                <!-- Hospital Number -->
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Hospital Number<sup>*</sup> <b>:</b></label>
+                  <div class="div-relative" *ngIf="!isUpdate">
+                    <input danphe-auto-complete id="id_input_hospitalNumber_medicareMember" class="form-control searchtbx w-100"
+                           [(ngModel)]="MemberData" [disabled]="isUpdate"
+                           [list-formatter]="PatientListFormatter" [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+                           placeholder="search by HospitalNo/Patient Name" display-property-name="PatientCode" value-property-name=null
+                           (valueChanged)="SelectMember()" onClick="this.select();" max-num-list="10" [min-chars]="3" match-formatted="true"
+                           [grid-sort]="'ShortName'" [ngModelOptions]="{standalone: true}" />
+                    <span class="color-red" *ngIf="MemberDetails.IsDirty('HospitalNo')"
+                          [hidden]="MemberDetails.IsValidCheck('HospitalNo','required')">Member is Required!</span>
+                  </div>
+                  <label *ngIf="isUpdate">{{MemberDetails.HospitalNo}}</label>
+                </div>
+
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Name<sup>*</sup> <b>:</b></label>
+                  <input type="text" id="id_name_medicareMember" class="form-control" formControlName="FullName"
+                         width="100%"
+                         [(ngModel)]="MemberDetails.FullName" [disabled]="isUpdate">
+                  <span class="color-red" *ngIf="MemberDetails.IsDirty('FullName')"
+                        [hidden]="MemberDetails.IsValidCheck('FullName','required')">Name is
+                    Required!</span>
+                </div>
+
+
+                <div class="col-md-1 padding-set">
+                  <label class="pt5">Age<sup>*</sup> <b>:</b></label>
+                  <input id="id_age_medicareMember" type="number" [disabled]="isUpdate" class="form-control"
+                         formControlName="Age"
+                         [ngModel]="MemberDetails.Age"
+                         [disabled]="isUpdate" disabled>
+                </div>
+
+
+                <div class="col-md-1 padding-set">
+                  <label class="pt5">Gender<sup>*</sup> <b>:</b></label>
+                  <input type="text" class="form-control"
+                         formControlName="Gender"
+                         [ngModel]="MemberDetails.Gender" disabled>
+
+                </div>
+
+                <!-- Scheme -->
+                <div class="col-md-4 padding-set" style="margin-top: 10px">
+
+                  <scheme-pricecategory-select (on-change)="OnSchemePriceCategoryChanged($event)" [service-billing-context]="serviceBillingContext"
+                                               [selected-scheme-priceCategory]="SelectedSchemePriCeCategory">
+                  </scheme-pricecategory-select>
+
+                </div>
+
+
+              </div>
+            </div>
+
+
+
+            <!-- *************************************** -->
+
+            <div class="col-md-12">
+              <!-- Row for labels and input fields -->
+              <div class="row">
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Designation<sup></sup> <b>:</b></label>
+                  <div class="div-relative">
+                    <select formControlName="DesignationId"
+                            style="width: -webkit-fill-available;">
+                      <option *ngFor="let dg of DesignationList" [value]="dg.DesignationId"> {{ dg.DesignationName}}</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Department<sup></sup> <b>:</b></label>
+                  <select formControlName="DepartmentId">
+                    <option *ngFor="let dpt of DepartmentsList" [value]="dpt.DepartmentId"> {{ dpt.DepartmentName}}</option>
+                  </select>
+
+                </div>
+
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Institute<sup></sup> <b>:</b></label>
+                  <select class="col-md-12" [(ngModel)]="SelectedMedicareInstitute" (change)="AssignSelectedInstitute()"
+                          formControlName="MedicareInstituteCode">
+                    <option *ngFor="let inst of MedicareInstituteList" [ngValue]=inst>{{inst.InstituteName}} ({{inst.MedicareInstituteCode}})
+                    </option>
+
+                  </select>
+
+                </div>
+
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Category<sup></sup> <b>:</b></label>
+                  <select [(ngModel)]="SelectedMedicareType" (change)="AssignSelectedMedicareType()" formControlName="MedicareTypeId"
+                          style="width: -webkit-fill-available;">
+                    <option *ngFor="let md of MedicalCareTypeList" [ngValue]=md> {{ md.MedicareTypeName}}</option>
+                    <!-- <option *ngFor="let md of MedicalCareTypeList" [value]="md.MedicareTypeId">{{ md.MedicareTypeName }}</option> -->
+                  </select>
+
+                </div>
+
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Insurance No.<sup></sup> <b>:</b></label>
+                  <input id="id_remarks_medicareMember" row="2" class="w-100 form-control" [ngModelOptions]="{standalone: true}"
+                         [(ngModel)]="MemberDetails.InsurancePolicyNo">
+                </div>
+
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Insurance Provider<sup></sup> <b>:</b></label>
+                  <select id="id_dropdown_insuranceProvider_medicareMember" class="form-control"
+                          formControlName="InsuranceProviderId">
+                    <option value="" disabled selected>Select Insurance Provider</option>
+                    <option *ngFor="let ins of InsuranceProvidersList" [value]="ins.InsuranceProviderId"> {{ ins.InsuranceProviderName}}</option>
+                  </select>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- ************************************** -->
+
+
+            <div class="col-md-12">
+              <!-- Row for labels and input fields -->
+              <div class="row">
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Member No.<sup>*</sup> <b>:</b></label>
+                  <input id="id_MemberNo_medicareMember" row="2" class="w-100 form-control" formControlName="MemberNo"
+                         [(ngModel)]="MemberDetails.MemberNo">
+                  <span class="color-red" *ngIf="MemberDetails.IsDirty('MemberNo')"
+                        [hidden]="MemberDetails.IsValidCheck('MemberNo','required')">MemberNo is Required! </span>
+                </div>
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Membership Start Date<sup>*</sup> <b>:</b></label>
+                  <div class="div-relative">
+                    <div class="flx date-insurance">
+                      <danphe-date-picker id="id_medicareStartDate_medicareMember"
+                                          [(ngModel)]="MemberDetails.MedicareStartDate"
+                                          [CalendarTypes]="'en,np'"
+                                          [allow-future-date]="true"
+                                          formControlName="MedicareStartDate">
+                      </danphe-date-picker>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Membership End Date<sup>*</sup> <b>:</b></label>
+                  <div class="div-relative">
+                    <div class="flx date-insurance">
+                      <danphe-date-picker id="id_medicareStartDate_medicareMember"
+                                          [(ngModel)]="MemberDetails.MedicareEndDate"
+                                          [CalendarTypes]="'en,np'"
+                                          [allow-future-date]="true"
+                                          formControlName="MedicareEndDate">
+                      </danphe-date-picker>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-2 padding-set">
+                  <label class="pt5">Remarks<sup></sup> <b>:</b></label>
+                  <textarea id="id_remarks_medicareMember" rows="2" class="w-100 form-control" formControlName="Remarks"
+                            [(ngModel)]="MemberDetails.Remarks"></textarea>
+                  <!-- <span class="color-red" *ngIf="memberDetails.IsDirty('Remarks')"
+                        [hidden]="memberDetails.IsValidCheck('Remarks','required')">Remarks is Required! </span> -->
+                </div>
+
+
+                <div class="col-md-2 padding-set" style="padding-top: 30px;">
+                  <label for="id_checkbox_IsActive_medicareMember" class="mt-checkbox mt-checkbox-outline">
+                    <input id="id_checkbox_IsActive_medicareMember" name="IsActive" type="checkbox" [ngModelOptions]="{standalone: true}"
+                           [(ngModel)]="MemberDetails.IsActive"
+                           style="zoom:1.4" [value]="true">
+                    <span></span>IsActive
+                  </label>
+                </div>
+
+
+              </div>
+            </div>
+            <!-- ************************************** -->
+
+
+          </form>
+          <div class="col-md-12" style="margin-bottom: 10px;">
+            <button class="btn green btn-success right" value="Submit"
+                    (click)="OnSubmit()">{{!isUpdate?'Submit':'Update'}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

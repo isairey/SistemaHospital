@@ -1,0 +1,30 @@
+export class PHRMBillSummaryDetailReportData {
+    PaymentMode: string = '';
+    InvoiceDate: string = '';
+    InvoiceNo: string = '';
+    SubTotal: number = 0;
+    DiscountAmount: number = 0;
+    TotalAmount: number = 0;
+    PatientId: number = 0;
+    PatientVisitId: number = 0;
+    PolicyNo: number = 0;
+    VisitType: string = '';
+    VisitCode: string = '';
+    AdmissionDate: string = '';
+    DischargeDate: string = '';
+    ShortName: string = '';
+    HospitalNo: number = 0;
+    PhoneNumber: number = 0;
+    Gender: string = '';
+    Address: string = '';
+    WardNumber: string = '';
+    CountryName: string = '';
+    CountrySubDivisionName: string = '';
+    MunicipalityName: string = '';
+    PatientName: string = '';
+    DateOfBirth: string = '';
+    SchemeName: string = '';
+    IsbillChecked: boolean = true;
+    InvoiceType: string = '';
+
+}

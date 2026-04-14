@@ -1,0 +1,252 @@
+<div class="wrapper">
+  <div class="row" style="margin-top:10px;margin-bottom:10px">
+    <div class="col-lg-8 col-sm-7">
+      <div class="caption custom-caption titlebar">
+        <h3><span><i class="fa fa-user" style="margin-top: -3px"></i>Manage Visits</span></h3>
+        <!-- <button class="btn green btn-success " name="name" value="" (click)="NewPatientAppointment()"
+                id="btnNewPatient"><span class="glyphicon glyphicon-plus"> </span> New Patient</button> -->
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-sm-5">
+      <div class="pull-right">
+        <div class="shortcut-key">
+          <button class="btn green btn-success " name="name" value="" (click)="NewPatientAppointment()"
+                  id="btnNewPatient"><span class="glyphicon glyphicon-plus"> </span> New Patient</button>
+          <div class="keydropdown">
+            <ul>
+              <li>
+                <p class="NewPatientButton">Click Here To Create <br /> a New Patient</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="shortcut-key shortkey-right " title="Shortcut Keys">
+          <a href="javascript: void(0)"><img alt="keyboard shortcut"
+                 src="../../../themes/theme-default/images/Keyboard-icon.svg"></a>
+          <div class="keydropdown">
+            <ul>
+              <li><kbd>ALT</kbd> + <kbd>N</kbd> = <samp>New Patient</samp></li>
+              <li><kbd>ALT</kbd> + <kbd>C</kbd> = <samp>Check In</samp></li>
+              <li><kbd>ALT</kbd> + <kbd>F</kbd> = <samp>Focus On Filter By</samp></li>
+              <li><kbd>ALT</kbd> + <kbd>M</kbd> = <samp>Do Manual FollowUp</samp></li>
+              <li><kbd>ALT</kbd> + <kbd>S</kbd> = <samp>Focus On Search Bar</samp></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="col-md-4">
+        <label for="id_search_patient" style="font-size:16px !important">Search Patients:</label>
+      </div>
+      <div class="col-md-8 ">
+        <input danphe-auto-complete id="id_search_patient" class="form-control searchtbx searchpatients " [(ngModel)]="PatientObj"
+               [list-formatter]="PatientListFormatter" [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+               placeholder="search by HospitalNo, Patient Name, Phone Number" display-property-name="ShortName" value-property-name=null
+               (ngModelChange)="PatientInfoChanged()" onClick="this.select();" max-num-list="500"
+               [min-chars]="PatientSearchMinCharacterCount" match-formatted="true"
+               [grid-sort]="'ShortName'" style="width: 100% !important;" />
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="col-md-2">Filter By:</div>
+      <div class="col-md-3" style="margin-left:10px;">
+        <select id="id_patient_filter_by_option" class="filterbyselect" (change)="SelectFilterOption($event)">
+          <option value="PolicyNo">Policy/Member No.</option>
+          <!-- <option value="IdCardNo">IdCardNo</option> -->
+        </select>
+      </div>
+      <div class="col-md-7" style="width:50%;">
+        <input danphe-auto-complete id="id_search_by_filter_options" class="form-control searchtbx" [(ngModel)]="PatientObjForSearchFilterOption"
+               [list-formatter]="PatientListFormatter" [source]="SearchPatientByFilterOption.bind(this)" [path-to-data]="'Results'"
+               placeholder="{{SearchPatientByFilterOptionPlaceholder}}" display-property-name="ShortName" value-property-name=null
+               (ngModelChange)="SearchFilterPatientInfoChanged()" onClick="this.select();" max-num-list="500"
+               [min-chars]="PatientSearchMinCharacterCount" match-formatted="true"
+               [grid-sort]="'ShortName'" style="width: 100% !important;" />
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="ShowPatientPanel">
+    <div class="col-lg-12 col-sm-12">
+      <div class="col-md-12">
+        <div class="page-bar bill-p-info mt10 fs-large">
+          <div>
+            <span>
+              <i class="fa fa-user"></i>&nbsp;Name : <b>{{SelectedPatient.ShortName}}</b>
+            </span>
+            <span>
+              <i class="fa fa-hospital-o"></i>&nbsp;Hospital No. : <b> {{SelectedPatient.PatientCode}}</b>
+            </span>
+            <span>
+              <i class="fa fa-male"></i>&nbsp;Age/Sex : <b> {{SelectedPatient.Age}}/ {{SelectedPatient.Gender}}</b>
+            </span>
+            <span>
+              <i class="fa fa-calendar"></i>&nbsp;Visit : <b *ngIf="SelectedPatient.IsAdmitted">Inpatient</b><b
+                 *ngIf="!SelectedPatient.IsAdmitted">Outpatient</b>
+
+            </span>
+          </div>
+          <div>
+            <span *ngIf="SelectedPatient.PolicyNo">
+              <i class="fa fa-user"></i>&nbsp;Policy/Member No: <b>{{SelectedPatient.PolicyNo}}</b>
+            </span>
+            <span>
+              <i class="fa fa-map-marker"></i>&nbsp;Address : <b>{{coreService.SortPatientAddress(SelectedPatient)}}</b>
+            </span>
+            <span *ngIf="SelectedPatient.PhoneNumber">
+              <i class="fa fa-phone"></i>&nbsp;Contact No : <b>{{SelectedPatient.PhoneNumber}}</b>
+            </span>
+            <span *ngIf="SelectedPatient.IsAdmitted">
+              <i class="fa fa-phone"></i>&nbsp;Ward/Bed : <b>{{SelectedPatient.WardName}}/{{SelectedPatient.BedCode}}</b>
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="page-bar-secondary ml-18">
+      <div class="shortcut-key">
+        <button id="id_btn_check_in" class="btn green btn-success" (click)="CheckIn()">Check In</button>
+        <div class="keydropdown">
+          <ul>
+            <li>
+              <p class="CheckInButton">Click Here To Create <br /> a New Visit</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="btn-group" *ngIf="(OutPatientVisitList && OutPatientVisitList.length) || (InPatientVisitList && InPatientVisitList.length)"
+           [rbac-permission]="{'name':'appointment-manual-followup-btn','actionOnInvalid':'remove'}">
+        <button #btnManualFollowup type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">+ Manual Follow up</button>
+        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false" style="margin-left: -4px;">
+          <i class="fa fa-angle-down"></i>
+        </button>
+
+        <div class="dropdown-menu">
+          <a class="dropdown-item" *ngFor="let option of FollowUpOptions" (click)="SelectFollowUpOption(option)"
+             title="Click me to create {{option.value}}">{{option.value}}</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row" *ngIf="ShowPatientPanel">
+    <div class="page-bar bill-p-info">
+      <div class="warning_div">
+        <p *ngIf="DisplayOutpatientVisits  && OutPatientVisitList && OutPatientVisitList.length">* Followup is valid upto
+          {{MaxLastVisitDaysVisitTypeWise.outpatient}} days of last visit with same doctor</p>
+        <p *ngIf="DisplayInpatientVisits && InPatientVisitList && InPatientVisitList.length">* Followup is valid upto
+          {{MaxLastVisitDaysVisitTypeWise.inpatient}} days of last visit with same doctor</p>
+        <p *ngIf="MaxInternalReferralDays">* Refer is valid upto {{MaxInternalReferralDays}} days of last visit</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row ml-5 mt-15"
+       *ngIf="ShowPatientPanel && (OutPatientVisitList || InPatientVisitList) && (OutPatientVisitList.length || InPatientVisitList.length)">
+    <div>
+      <ul class="nav nav-tabs">
+        <li class="nav-item" *ngFor="let visitType of VisitTypeOptions; let i = index;">
+          <a class="nav-link" (click)="SelectVisitTypeTab(visitType, i)" [class.active]="ActiveTab === i">{{visitType.value}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row"
+       *ngIf="ShowPatientPanel && DisplayOutpatientVisits  && OutPatientVisitList && OutPatientVisitList.length">
+    <div class="col-lg-12 col-sm-12">
+      <danphe-grid [grid-colDefaults]="OutPatientVisitListGridCols" [grid-data]="OutPatientVisitList"
+                   (grid-actions)="AppointmentPatientGridActions($event)" [show-print-button]="false"
+                   [NepaliDateInGridParams]="NepaliDateInGridSettingsOutpatient"> </danphe-grid>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="ShowPatientPanel && DisplayInpatientVisits && InPatientVisitList && InPatientVisitList.length">
+    <div class="col-lg-12 col-sm-12">
+      <danphe-grid [grid-colDefaults]="InPatientVisitListGridCols" [grid-data]="InPatientVisitList"
+                   (grid-actions)="AppointmentPatientGridActions($event)" [show-print-button]="false"
+                   [NepaliDateInGridParams]="NepaliDateInGridSettingsInpatient"> </danphe-grid>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 col-sm-12" hidden>
+      <!-- <danphe-grid [grid-colDefaults]="AppointmentpatientGridColumns" [grid-data]="patients"
+                   (grid-actions)="AppointmentPatientGridActions($event)" (serverSearchText)="serverSearchTxt($event)"
+                   [customServerSearch]="enableServerSideSearch" [searchUsingHospitalNo]="SearchPatientUsingHospitalNo"
+                   [searchUsingIdCardNo]="SearchPatientUsingIdCardNo"> </danphe-grid> -->
+      <!-- [show-ServerSideSearch]="true"
+          [api-type]="patGirdDataApi" -->
+    </div>
+  </div>
+
+  <!-- Anjana:08 oct, 2020: EMR 2478-->
+  <div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="showInpatientMessage">
+    <div class="portlet-body form">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="modelbox-div">
+          <button class="btn btn-danger del-btn" (click)="showInpatientMessage=false">X</button>
+          <div class="modelbox-header">
+            <h4 class="margin-0-vr">Patient Visit Status</h4>
+          </div>
+          <div class="modelbox-body text-center">
+            <h4><b style="color:#bd8111">Alert!</b></h4>
+            <!-- <p><b style="color:#bd8111;">This patient is already admitted in {{wardBedInfo.WardName}} ward, Bed no:
+                {{wardBedInfo.BedCode}}, OPD Visit can’t be Created for this patient.</b></p> -->
+
+            <p><b style="color:#bd8111;">This patient is already admitted. OPD Visit can't be Created for this patient.</b></p>
+          </div>
+          <div class="modelbox-footer">
+            <div class="all-buttons text-right">
+              <button type="button" class="btn btn-cancel btn-sm margin-7-hr" (click)="showInpatientMessage=false"> OK
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<danphe-followup-visit *ngIf="ShowFollowupPage" [parent-visit]="SelectedVisit"
+                       (on-followup-add)="FollowupPopupOnClose($event)"></danphe-followup-visit>
+
+<danphe-free-referal-visit *ngIf="ShowReferralPopup" [visit]="SelectedVisit"
+                           (add-referal)="FreeReferralPopupOnClose($event)"> </danphe-free-referal-visit>
+
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowOpdSticker">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-11 col-md-offset-half">
+        <div class="modelbox-div clearfix">
+          <a class="btn btn-danger del-btn" (click)="Close_OPD_Sticker_Popup()">X</a>
+          <div>
+            <div class="col-md-5" *ngIf="ShowOpdSticker" style="padding: 15px 5px 0px 30px;">
+              <registration-sticker [patientVisitId]="SelectedVisit.PatientVisitId"
+                                    (after-print-action)="Close_OPD_Sticker_Popup()">
+              </registration-sticker>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="DisplayFollowupPopup && SelectedFollowupOption">
+  <manual-follow-up [selected-followup-option]="SelectedFollowupOption" [selected-patient]="SelectedPatient"
+                    [patient-visits]="SelectedPatientVisits"
+                    [is-free-followup]="IsFreeFollowupOptionSelected"
+                    (callback-manual-followup)="CloseManualFollowup($event)"></manual-follow-up>
+</ng-container>

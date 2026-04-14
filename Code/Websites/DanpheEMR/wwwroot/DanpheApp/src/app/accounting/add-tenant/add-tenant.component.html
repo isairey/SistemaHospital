@@ -1,0 +1,75 @@
+<div class="container">
+    <p style="font-size: 16px;"><b>Add New Account Tenant</b></p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-5">
+                        <label>Hospital Short Code <span style="color:red;">*</span> </label>
+                        <span style="float:right"><label>:</label></span>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" id="id_input_addTenant_hospitalShortCode" class="form-control"
+                               [(ngModel)]="AddTenantPostObject.HospitalShortCode"
+                               (ngModelChange)="CapitalizeWord()" (keyup.enter)="MoveToNextInput('id_input_addTenant_hospitalFullName')">
+                    </div>
+                </div>
+
+                <div class="col-md-12" style="margin-top: 10px;">
+                    <div class="col-md-5">
+                        <label>Hospital Full Name <span style="color:red;">*</span></label>
+                        <span style="float:right"><label>:</label></span>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" id="id_input_addTenant_hospitalFullName" class="form-control"
+                               [(ngModel)]="AddTenantPostObject.HospitalName"
+                               (keyup.enter)="MoveToNextInput('id_button_addTenant_submit')">
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px;">
+                    <div class="col-md-5">
+                        <label>Sections</label>
+                        <span style="float:right"><label>:</label></span>
+                    </div>
+                    <div class="col-md-7">
+                        <danphe-multiselect *ngIf="TenantSectionMaps.SectionList"
+                                            [ddl-data]="TenantSectionMaps.SectionList"
+                                            [placeholder-text]="'Select Section'"
+                                            [value-property-name]="'SectionId'"
+                                            (selected-items-list)="OnSectionSelected($event)"
+                                            [display-property-name]="'SectionName'"
+                                            [single-selection]="false">
+                        </danphe-multiselect>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button class="btn green btn-success" id="id_button_addTenant_submit" style="float:right;margin:15px;" type="button"
+                            (click)="AddNewTenant()"
+                            [disabled]="Loading">
+                        <i class="fa fa-plus"></i>
+                        Add Tenant
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <p><b>Tenant Section Map List:</b></p>
+            <table class="table table-responsive">
+                <thead>
+                    <th>HospitalName</th>
+                    <th>HospitalCode</th>
+                    <th>SectionName</th>
+                    <th>Status</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let map of TenantSectionMaps.Maps;let i= index;">
+                        <td>{{ map.HospitalName }}</td>
+                        <td>{{ map.HospitalShortCode }}</td>
+                        <td>{{ map.SectionName }}</td>
+                        <td>{{ map.IsActive? 'Active' : 'Deactive' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

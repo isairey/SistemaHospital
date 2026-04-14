@@ -1,0 +1,36 @@
+<style>
+    tbody>tr>td {
+        border: 1px solid #e7ecf1 !important;
+    }
+
+    .boxm {
+        margin: 5px;
+    }
+</style>
+
+
+<table class="table table-bordered tbl_hover table-condensed">
+    <thead>
+        <tr style="background-color: #599be0; color: white;">
+            <th style="width: 10%;"><b>Generic Name </b> </th>
+            <th style="width: 20%;"><b>Brand </b> </th>
+            <th style="width: 10%;"><b>Frequency </b> </th>
+            <th style="width: 10%;"><b>Dosage </b> </th>
+            <th style="width: 10%;"><b>Duration (In Days) </b> </th>
+            <th style="width: 20%;"><b>Route</b></th>
+            <th style="width: 30%;"><b>Medication schedule</b></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let reqitem of RequestedMedicationList; let i = index">
+            <td>{{reqitem.GenericName}}</td>
+            <td>{{reqitem.ItemName}}</td>
+            <td>{{reqitem.FrequencyAbbreviation}}</td>
+            <td>{{reqitem.Dosage}}</td>
+            <td>{{reqitem.HowManyDays}}</td>
+            <td> {{reqitem.Route}}</td>
+            <td> {{reqitem.TimingOfMedicineTake}}</td>
+        </tr>
+    </tbody>
+</table>

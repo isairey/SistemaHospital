@@ -1,0 +1,116 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="full-width-flx">
+            <form [formGroup]="RadFileUploadValidator" class="form-horizontal hm-form">
+                <div class="form-body">
+                    <div *ngIf="!isAddFile" class="col-md-12 col-xs-12 col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" style="text-align: right;">Preview File</label>
+                            <div class="col-md-6">
+                                <a *ngIf="Uploadedfile.file" (click)="DocumentPreview(Uploadedfile)"
+                                   style="cursor: pointer; color: #0773BC; text-decoration: underline;">{{Uploadedfile.file.FileName}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-xs-12 col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" style="text-align: right;"><i class="fa fa-upload"
+                                   style="font-size: 25px;"></i></label>
+                            <div class="col-md-6">
+                                <input class="form-control" (change)="onFileChange($event)" #fileInput type="file" value=""
+                                       accept="application/pdf" />
+                                <span class="color-red font-sm" *ngIf="IsFieldValid('File', 'required')" class="text-danger">
+                                    File is required.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-12 col-xs-12 col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">File Name<b style="float:right;">:</b><b class="color-red">*</b></label>
+                            <div class="col-md-6">
+                                <input class="form-control" formControlName="FileName" type="text" [attr.disabled]="!isAddFile ? true : null" />
+                                <span class="color-red font-sm" *ngIf="IsFieldValid('FileName', 'required')" class="text-danger">
+                                    File Name is required.
+                                </span>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div class="col-md-12 col-xs-12 col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Remarks<b style="float:right;">:</b></label>
+                            <div class="col-md-6">
+                                <input class="form-control" formControlName="Remarks" type="text" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-xs-12 col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Reporting Doctor<b style="float:right;">:</b><b class="color-red"
+                                   *ngIf="IsPerformerMandatory">*</b></label>
+                            <div class="col-md-6">
+                                <input danphe-auto-complete class="search-textbox"
+                                       [(ngModel)]="newPerformer"
+                                       formControlName="DisplayReportingDoctor"
+                                       [list-formatter]="PerformerListFormatter"
+                                       [source]="doctorList"
+                                       (ngModelChange)="OnReportingDoctorChange()"
+                                       placeholder="Search Doctor Name"
+                                       display-property-name="EmployeeName"
+                                       value-property-name="EmployeeId"
+                                       onClick="this.select();" max-num-list="10" />
+                                <span class="color-red font-sm" *ngIf="IsFieldValid('ReportingDoctor', 'required')" class="text-danger">
+                                    Reporting Doctor is required.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-xs-12 col-sm-12">
+                        <div class="form-group">
+                            <div *ngIf="!isAddFile" class="col-md-3">
+                                <input type="button" class="btn btn-custom-green" (click)="Update()" title="update the file details" value="Update" />
+                            </div>
+                            <div *ngIf="isAddFile" class="col-md-3">
+                                <input type="button" class="btn btn-custom-green" (click)="Save()" value="Save" title="save the file" />
+                            </div>
+                            <div class="col-md-3">
+                                <input type="button" class="btn btn-custom-green" (click)="SaveAndSubmit()" title="save and finalize the file "
+                                       value="Save and Submit" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 hidden-xs hidden-sm" style="margin-right: 24px;"> </div>
+                </div>
+            </form>
+        </div>
+        <hr />
+    </div>
+</div>
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowFilePreviewPopUp">
+    <div class="portlet-body form">
+        <div class="form-body">
+            <div class="col-md-12 col-md-offset-0">
+                <div class="col-md-12 col-sm-12 col-xs-12 modelbox-div">
+                    <div class="col-md-12" style="margin-bottom: 10px;">
+                        <h4 class="margin-0-vr">{{FileName}}</h4>
+                    </div>
+                    <div style="text-align: center;">
+                        <h4 style="text-align:center">
+                            <b>
+                                <a style="float:right; border-radius: 50% !important;
+                                  " class="btn btn-danger  hidden-print"
+                                   (click)="CloseFilePreviewPopUp()" title="Cancel">X</a>
+                            </b>
+                        </h4>
+                        <iframe *ngIf="fileSrc" [src]="fileSrc" width="100%" height="620px">
+                        </iframe>
+                    </div>
+                </div>
+                <div class="col-md-1 hidden-xs hidden-sm"> </div>
+            </div>
+        </div>
+    </div>
+</div>

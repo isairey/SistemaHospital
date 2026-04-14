@@ -1,0 +1,12 @@
+.centered-caption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .patient-details-form-layout{
+    padding: 0px!important;
+              margin-top: 15px;
+              margin-bottom: 15px;
+  }

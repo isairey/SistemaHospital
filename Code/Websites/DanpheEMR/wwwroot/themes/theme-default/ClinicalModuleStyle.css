@@ -1,0 +1,196 @@
+﻿.clinical-pane .patient-details-form h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+.clinical-pane #patient-details .label-text {
+  margin-right: 10px;
+}
+.clinical-pane .tab-containerfields {
+  /* display: flex;
+  justify-content: space-between; */
+  padding: 0 8px !important;
+  width: 78% !important;
+}
+.clinical-pane .sidebar {
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+.clinical-pane .sidebar li {
+  padding: 4px 2px;
+  display: flex;
+  align-items: center;
+}
+.clinical-pane .sidebar li:hover {
+  background-color: #00ac75;
+  color: #ffffff;
+}
+.clinical-pane .sidebar li:before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  background: url(../../themes/theme-default/images/mingcute_dot-grid-line.png)
+    no-repeat;
+  display: flex;
+  align-items: center;
+}
+.clinical-pane .sidebar li:hover:before {
+  filter: brightness(0) invert(1);
+}
+.clinical-pane .container {
+  width: 100%;
+  padding: 0 !important;
+}
+.clinical-pane .nav-pills,
+.clinical-pane .nav-tabs {
+  display: flex;
+  gap: 0 8px;
+  justify-content: flex-start;
+}
+
+.clinical-pane .nav-tabs li {
+  float: none;
+  margin-bottom: 0;
+  padding-bottom: 8px;
+}
+.clinical-pane .nav-tabs li a,
+.clinical-pane .nav-pills li a {
+  font-size: 12px;
+  padding: 4px;
+  border: none !important;
+  border-radius: 4px !important;
+}
+.clinical-pane .nav-tabs li.active {
+  border-bottom: 2px solid #2d68ea;
+}
+.clinical-pane .nav-tabs li.active a {
+  /* background-color: #00ac75;
+  color: #ffffff; */
+  border: none;
+}
+
+.clinical-pane .nav-tabs li:hover a {
+  background-color: #efefef;
+  border: none;
+}
+.clinical-pane .portlet.light {
+  border: none !important;
+  box-shadow: none;
+}
+.clinical-pane .portlet.light > .portlet-title {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0 15px 0;
+}
+.clinical-pane .portlet.light > .portlet-title h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+.clinical-pane .portlet.light > .portlet-title > .tools {
+  display: flex;
+  align-items: center;
+  gap: 0 8px;
+}
+.clinical-pane .portlet.light > .portlet-title > .tools a {
+  background-position: center;
+  border: 1px solid #cccccc;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  background-repeat: no-repeat;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  border-radius: 4px !important;
+  background-size: 50%;
+  top: 0 !important;
+}
+.clinical-pane .portlet.light .portlet-body {
+  padding: 0;
+}
+.clinical-pane .preview-cockpit {
+  border: none !important;
+  border-radius: 4px !important;
+  margin: 0 !important;
+  padding: 4px !important;
+  display: flex !important;
+  width: 100% !important;
+  background-color: #f2f9ff;
+  justify-content: space-between;
+  gap: 0 8px;
+}
+.clinical-pane .preview-cockpit .btn {
+  padding: 4px 8px;
+  margin: auto 0 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0 4px;
+  height: 30px;
+}
+.clinical-pane .preview-cockpit select {
+  width: 100%;
+}
+.clinical-pane .document {
+  border: none !important;
+  margin: 4px 0 !important;
+  background-color: #f4f4f4;
+  padding: 8px;
+}
+.clinical-pane .document .document-title {
+  align-items: center;
+}
+.clinical-pane .document .document-title div {
+  display: flex;
+  align-items: center;
+  gap: 0 4px;
+}
+.clinical-pane .document .document-title .print-check-box {
+  margin: 0;
+}
+.clinical-pane .document .document-title .btn-toggle {
+  font-size: 1.5rem;
+  background-color: transparent;
+  color: #5f5d5d;
+  font-weight: bold;
+  border: none;
+}
+.clinical-pane .document .section {
+  border: none;
+  margin: 4px 0 0 0;
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 4px !important;
+}
+.clinical-pane .document .field {
+  border: none !important;
+  margin: 4px 0;
+  background-color: #f5f5f6;
+  /* display: flex;
+  align-items: center;
+  gap: 0 4px; */
+  padding: 8px;
+  border-radius: 4px !important;
+}
+.clinical-pane .document .field input,
+.clinical-pane .document .section input {
+  border: none;
+  margin: 0 4px 0 0;
+  vertical-align: middle;
+}
+.clinical-pane .document .field p,
+.clinical-pane .document .section p {
+  margin: 0;
+}
+.clinical-pane .dynamicFieldHolder {
+  display: block !important;
+  padding: 4px 0 !important;
+}
+.clinical-pane .clinicalTextArea {
+  height: 100% !important;
+  padding: 8px !important;
+  border-radius: 4px !important;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}

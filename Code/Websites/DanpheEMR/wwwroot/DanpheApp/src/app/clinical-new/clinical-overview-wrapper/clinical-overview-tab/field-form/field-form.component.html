@@ -1,0 +1,27 @@
+<div class="btn-contianer">
+    <button class="btn green btn-success button-refresh" (click)="OnRefresh()" [disabled]="DisableSave">
+        <i class="fa fa-refresh" style="margin-right:4px;"></i>Load</button>
+    <button *ngIf="IsSaveBtnVisible" class="btn orange btn-success button-discard" (click)="OnDiscard()" [disabled]="DisableSave">Discard</button>
+    <button *ngIf="IsSaveBtnVisible" class="btn green btn-success button-save" (click)="OnSubmitDynamicFormData()"
+            [disabled]="DisableSave">Save</button>
+</div>
+<div *ngIf="Load">
+
+    <div class="section-container">
+        <ng-container *ngFor="let field of Fields">
+            <div class="smart-temp-container" *ngIf="field.InputType === ENUMClinicalFieldInputType.SmartTemplate; else DynamicField">
+                <label for="id_input_element" class="field-label">{{field.FieldDisplayName}}</label>
+                <clinical-reusable-elements *ngIf="PreTemplateReloader" [field]="field">
+
+                </clinical-reusable-elements>
+            </div>
+
+            <ng-template #DynamicField>
+                <clinical-reusable-elements [field]="field">
+
+                </clinical-reusable-elements>
+            </ng-template>
+        </ng-container>
+    </div>
+
+</div>

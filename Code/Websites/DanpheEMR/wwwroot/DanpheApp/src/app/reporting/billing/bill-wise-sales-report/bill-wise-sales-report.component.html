@@ -1,0 +1,159 @@
+<div>
+    <div class="caption custom-caption"> <i class="glyphicon glyphicon-asterisk"></i> <span class="caption-subject">Bill Wise Sales Summary
+            Report</span> </div>
+    <div style="display: flex; justify-content: space-between; margin: 5px 15px 0px 15px;">
+        <div style="display: inline-block;">
+            <from-to-date-select (on-change)="OnFromToDateChange($event)"
+                                 [date-settings-name]="'common-range-with-today'">
+            </from-to-date-select>
+        </div>
+    </div>
+    <div class="col-md-12" style="display: flex; justify-content: space-between;">
+        <div class="col-md-4 col-xs-12" style="padding: 0px !important; margin: 5px 0px 0px -14px;">
+            <div class="form-group">
+                <label class="control-label col-md-5">Scheme Name<b style="float:right;">:</b></label>
+                <div class="col-md-7">
+                    <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedScheme" [source]="SchemeList"
+                           [list-formatter]="SchemeListFormatter" placeholder="Select Scheme" [min-chars]="1"
+                           display-property-name="SchemeName"
+                           onClick="this.select();" [ngModelOptions]="{standalone: true}" match-formatted="true" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-xs-12" style="padding: 0px !important; margin: 5px 0px 0px 0px;">
+            <div class="form-group">
+                <label class="control-label col-md-4">Visit Type<b style="float:right;">:</b></label>
+                <div>
+                    <select name="visit_type" id="id_visitType" [(ngModel)]="SelectedVisitType">
+                        <option *ngFor="let type of VisitTypes" [value]="type">{{ type | titlecase }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-xs-12" style="padding: 0px !important; margin: 5px 0px 0px 0px;">
+            <div class="form-group">
+                <label class="control-label col-md-5">Payment Mode<b style="float:right;">:</b></label>
+                <div>
+                    <select name="visit_type" id="id_visitType" [(ngModel)]="SelectedPaymentMode">
+                        <option *ngFor=" let mode of PaymentModes" [value]="mode">{{ mode | titlecase }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-xs-12" style="padding: 0px !important; margin: 5px 0px 0px 0px;">
+            <div class="form-group">
+                <label class="control-label col-md-5">Policy No<b style="float:right;">:</b></label>
+                <div class="col-md-7">
+                    <input class="form-control" [(ngModel)]="PolicyNo"
+                           placeholder="Policy No" [ngModelOptions]="{standalone: true}" match-formatted="true" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-xs-12" style="padding: 0px !important; margin: 5px 0px 0px 0px;">
+            <button
+                    class="btn green btn-success pull-right"
+                    (click)="this.LoadReport()">
+                Load
+                <i class="fa fa-refresh"></i>
+            </button>
+        </div>
+    </div>
+    <div class="wrapper">
+        <danphe-grid [grid-colDefaults]="ReportGridColumns" [grid-data]="BillWiseSalesReportData"
+                     [grid-exportOptions]="gridExportOptions" [grid-showExport]="true"
+                     [report-for]="'billing'" [NepaliDateInGridParams]="NepaliDateInGridSettings" [show-header]="true"
+                     [grid-footer-content]="FooterContent" [grid-date-range]="DateRange">
+        </danphe-grid>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5" style="margin: 10px;" id="dvSummary_BillWiseSalesReport">
+            <div *ngIf="BillWiseSalesReportData.length">
+                <h4>Summary</h4>
+                <table border="1" style="width: 80%;">
+                    <tr>
+                        <th>
+                            SN
+                        </th>
+                        <th>
+                            Particulars
+                        </th>
+
+                        <th>
+                            Amount
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>A</td>
+                        <td>Cash Sales </td>
+                        <td>{{Summary.Cash.SubTotal | number}}</td>
+                    </tr>
+                    <tr>
+                        <td>B</td>
+                        <td>Credit Sales </td>
+                        <td>{{Summary.Credit.SubTotal | number}}</td>
+                    </tr>
+                    <tr style="font-weight: bold;color: blue;">
+                        <td style="font-weight: normal;color:black;">C</td>
+                        <td>Gross Sales (A+B) </td>
+                        <td>{{Summary.GrossSales | number}}</td>
+                    </tr>
+                    <tr>
+                        <td>D</td>
+                        <td>Cash Discount </td>
+                        <td>{{Summary.Cash.Discount | number}}</td>
+                    </tr>
+
+                    <tr>
+                        <td>E</td>
+                        <td>Credit Discount </td>
+                        <td>{{Summary.Credit.Discount | number}}</td>
+                    </tr>
+                    <tr style="font-weight: bold;color: blue;">
+                        <td style="font-weight: normal;color:black;">F</td>
+                        <td>Total Discount (D+E) </td>
+                        <td>{{Summary.TotalDiscount | number}}</td>
+                    </tr>
+                    <tr>
+                        <td>G</td>
+                        <td>Return Cash Sales </td>
+                        <td>{{Summary.CashReturn.SubTotal | number}}</td>
+                    </tr>
+                    <tr>
+                        <td>H</td>
+                        <td>Return Credit Sales </td>
+                        <td>{{Summary.CreditReturn.SubTotal | number}}</td>
+                    </tr>
+                    <tr style="font-weight: bold;color: blue;">
+                        <td style="font-weight: normal;color:black;">I</td>
+                        <td>Total Sales Return (G+H) </td>
+                        <td>{{Summary.TotalSalesReturn | number}}</td>
+                    </tr>
+                    <tr>
+                        <td>J</td>
+                        <td>Return Cash Discount </td>
+                        <td>{{Summary.CashReturn.Discount | number}}</td>
+                    </tr>
+                    <tr>
+                        <td>K</td>
+                        <td>Return Credit Discount </td>
+                        <td>{{Summary.CreditReturn.Discount | number}}</td>
+                    </tr>
+                    <tr style="font-weight: bold;color: blue;">
+                        <td style="font-weight: normal;color:black;">L</td>
+                        <td>Total Return Discount (J+K)</td>
+                        <td>{{Summary.TotalReturnDiscount | number}}</td>
+                    </tr>
+                    <tr style="font-weight: bold;color: blue;font-size: 16px;">
+                        <td style="font-weight: normal;color:black;">M</td>
+                        <td>Net Sales (C-F-I+L) </td>
+                        <td>{{Summary.NetSales | number}}</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

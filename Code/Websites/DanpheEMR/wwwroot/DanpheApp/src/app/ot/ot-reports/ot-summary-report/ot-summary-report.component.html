@@ -1,0 +1,67 @@
+<div>
+    <div style="display: flex; justify-content: space-between; margin: 5px 15px 0px 15px;">
+        <div style="display: flex;">
+            <!-- <label style="vertical-align: top;margin-top: 10px; margin-right: 10px;">Booking Date: </label> -->
+            <select name="dateFilter" id="id_dateFilter" [(ngModel)]="IsOTStartDate" style="margin-top: 2px;">
+                <option [value]="true">OTStartDate</option>
+                <option [value]="false">OTConcludeDate</option>
+            </select>
+            <div style="display: inline-block; margin-left: 15px;">
+                <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'ot-booking-list'">
+                </from-to-date-select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <input
+                   danphe-auto-complete class="form-control" [source]="OTPrescriberList"
+                   [list-formatter]="PrescriberFormatter" placeholder="Search By Surgeon"
+                   display-property-name="PrescriberName" value-property-name="PrescriberId"
+                   [min-chars]="0" max-num-list="10"
+                   id="id_txt_prescriber" [(ngModel)]="CurrentPrescriber"
+                   (focusout)="OnPrescriberSelect()" />
+        </div>
+        <div>
+            <button
+                    [disabled]="loading" class="btn green btn-success pull-right"
+                    (click)="this.GetOTSummaryReport()">Load
+                <i class="fa fa-refresh"></i>
+            </button>
+        </div>
+
+    </div>
+    <div class="wrapper">
+        <danphe-grid [grid-colDefaults]="OTSummaryReportColumns" [grid-data]="OTSummaryReportData"
+                     [grid-exportOptions]="gridExportOptions" [grid-showExport]="true"
+                     [report-for]="'ot'" [NepaliDateInGridParams]="NepaliDateInGridSettings"
+                     [grid-footer-content]="FooterContent"
+                     [grid-date-range]="DateRange" [report-header]="ReportHeader">
+            (grid-actions)="OTBookingListGidActions($event)"
+        </danphe-grid>
+    </div>
+
+    <div class="row" *ngIf="ShowSummaryTable" style="margin-top: 30px;">
+        <div class="col-lg-12 col-sm-12">
+            <div class="col-md-12 col-xs-12 text-center">
+                <div id="ot_summary">
+                    <div style="padding-top:7px;">
+                        <table style="width: 50%; border-collapse: collapse; margin: 0 auto;">
+                            <tr>
+                                <th colspan="2"
+                                    style="text-align: center; font-weight: bold; font-size: 18px; border: 1px solid black; padding: 8px;">Summary
+                                </th>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; border: 1px solid black; padding: 5px;">Total Surgery Completed</td>
+                                <td style="border: 1px solid black; padding: 5px;">{{TotalSurgeryCompleted}}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; border: 1px solid black; padding: 5px;">Total Surgery Amount</td>
+                                <td style="border: 1px solid black; padding: 5px;">{{TotalSurgeryAmount}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

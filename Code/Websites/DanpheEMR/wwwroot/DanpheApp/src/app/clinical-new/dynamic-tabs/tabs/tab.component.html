@@ -1,0 +1,10 @@
+<div [hidden]="!Active" class="pane clinical-pane" style="padding: 0;">
+    <ng-content></ng-content>
+    <!-- <ng-container *ngIf="template"
+                  [ngTemplateOutlet]="template"
+                  [ngTemplateOutletContext]="{ person: dataContext }">
+    </ng-container> -->
+    <ng-container #tab_container>
+
+    </ng-container>
+</div>

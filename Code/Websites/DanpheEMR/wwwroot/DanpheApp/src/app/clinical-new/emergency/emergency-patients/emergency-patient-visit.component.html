@@ -1,0 +1,131 @@
+<style>
+  .hos-sec {
+    padding-top: 5px;
+    padding-left: 30px;
+    width: auto;
+  }
+
+  hr {
+    border: 0;
+    height: 1px;
+    background-color: gray;
+    opacity: 0.5;
+  }
+
+  .block {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem;
+    gap: 10px;
+  }
+
+  .form-check {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+  }
+
+  .form-check-input {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 8px;
+  }
+
+  .form-check-label {
+    font-size: 1.25rem;
+  }
+</style>
+<div class="wrapper">
+  <form [formGroup]="ERVisit_Filter.FilterFormGroup">
+    <div class="row" style="display: flex; align-items: center; margin: 0;">
+      <div style="display: flex; width:100%">
+        <div style="display: flex;width:70%;">
+          <div style="display: flex; align-items: center; margin-right: 20px;">
+            <label><b>Filter By</b></label>
+            <select class="form-control" style="width:120px;margin-left:25px" formControlName="VisitDateFilter"
+                    (change)="OnVisitDateChange($event)">
+              <option value="triaged-date" selected>Triaged Date</option>
+              <option value="visit-date">Visit Date</option>
+            </select>
+          </div>
+          <div style="display: flex; align-items: center;">
+            <from-to-date-select (on-change)="OnDateChange($event)" [date-settings-name]="'common-range-with-today'">
+            </from-to-date-select>
+          </div>
+        </div>
+
+        <div style="display: flex;width:20%; margin-right: 20px;">
+          <label style="vertical-align: top;margin-top: 7px; margin-right: 10px; padding-right: 20px;">Doctor<b>:</b></label>
+          <div style="display: inline-block;">
+            <input id="id" danphe-auto-complete class="form-control" style="width:120%;padding-right: 20px;" [list-formatter]="DoctorListFormatter"
+                   [source]="DoctorsList" placeholder="Select Doctor" formControlName="SelectedEmployee" display-property-name="FullName" />
+          </div>
+        </div>
+
+        <div class="pull-right" style="width:12%; margin-left: 30px;">
+          <button class="btn green btn-success margin-7-hr" style="margin-left:10%" type="submit" (click)="LoadERPatientList()">
+            <i class="fa fa-refresh"></i>Load
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="block align-items-center">
+      <div class="col-auto">
+        <label for="triageStatus"><b>Triage Status:</b></label>
+      </div>
+      <div class="col-auto d-flex">
+        <div class="form-check me-3">
+          <input
+                 type="radio"
+                 class="form-check-input"
+                 id="triageAll"
+                 name="triageStatus"
+                 value="All"
+                 [checked]="SelectedTriageStatus === 'All'"
+                 [disabled]="!ShowRadioButton"
+                 (change)="OnTriageStatusChange('All')" />
+          <label class="form-check-label" for="triageAll">All</label>
+        </div>
+        <div class="form-check me-3">
+          <input
+                 type="radio"
+                 class="form-check-input"
+                 id="triageDone"
+                 name="triageStatus"
+                 value="Triage Done"
+                 [checked]="SelectedTriageStatus === 'Triage Done'"
+                 [disabled]="ShowRadioButton"
+                 (change)="OnTriageStatusChange('Triage Done')"
+                 checked />
+          <label class="form-check-label" for="triageDone">Triage Done</label>
+        </div>
+        <div class="form-check">
+          <input
+                 type="radio"
+                 class="form-check-input"
+                 id="triagePending"
+                 name="triageStatus"
+                 value="Triage Pending"
+                 [checked]="SelectedTriageStatus === 'Triage Pending'"
+                 [disabled]="!ShowRadioButton"
+                 (change)="OnTriageStatusChange('Triage Pending')" />
+          <label class="form-check-label" for="triagePending">Triage Pending</label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<hr>
+<div class="wrapper">
+  <div class="row">
+    <div>
+      <div class="col-lg-12 col-sm-12">
+        <danphe-grid (grid-actions)="ERPatientsVisitsGridActions($event)" [grid-colDefaults]="ERPatVisitsGridColumn"
+                     [grid-data]="FilteredERPatVisitList" [NepaliDateInGridParams]="NepaliDateInGridSettings">
+        </danphe-grid>
+      </div>
+    </div>
+  </div>
+</div>

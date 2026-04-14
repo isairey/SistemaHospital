@@ -1,0 +1,142 @@
+<div>
+  <div class="caption custom-caption top-report-section" style="margin-bottom: 1px;">
+    <h3><i class="fa fa-book"></i>
+      <span class="caption-subject">Ageing Report</span>
+    </h3>
+  </div>
+  <div class="row" style="background: #bcbcbc; padding-top: 0px;">
+    <div class="col-md-12" style="margin-top: -10px;">
+      <div class="col-md-4">
+        <label class=" col-md-5" style="margin-top: 20px;">Sections<b class="color-red" style="float: right;"> *:</b></label><br>
+        <div class="col-md-7">
+          <select [(ngModel)]="SectionId" class="form-control">
+            <option [ngValue]=-1>All</option>
+            <option *ngFor="let section of SectionList" [ngValue]=section.SectionId>{{ section.SectionName }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class=" col-md-8" style="margin-top: 20px;">Number of Ageing Interval<b class="color-red" style="float: right;">
+            *:</b></label><br>
+        <div class="col-md-4">
+          <input type="number" [(ngModel)]="NumberOfAgeingInterval" class="form-control">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class=" col-md-8" style="margin-top: 20px;">Ageing Interval Duration (In Days)<b class="color-red" style="float: right;">
+            *:</b></label><br>
+        <div class="col-md-4">
+          <input type="number" [(ngModel)]="DurationOfAgeingInterval" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12" style="margin-top: -13px;">
+      <div class="col-md-4">
+        <label class=" col-md-5" style="margin-top: 20px;">Ageing Date Ref.<b class="color-red" style="float: right;"> *:</b></label><br>
+        <div class="col-md-7">
+          <select [(ngModel)]="IsVendorBillWiseAgeing" class="form-control">
+            <option [ngValue]="false">Good Receipt Date</option>
+            <option [ngValue]="true">Vendor Bill Date</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-8 col-xs-12" style=" margin-top: 10px;">
+        <div class="form-group mt10" style="float:right">
+          <button class="btn green btn-success" type="button" [disabled]="Loading" (click)="LoadAgeingReportData()">
+            <i class="fa fa-refresh"></i>
+            Load
+          </button>
+          <button *ngIf="AgeingReportData.length > 0" class="btn green btn-success hidden-print" value="Print" (click)="Print('printpage')"
+                  title="print page">
+            Print<i class="glyphicon glyphicon-print" style="margin-left:10px;"></i>
+          </button>
+          <button *ngIf="AgeingReportData.length > 0" class="btn green btn-success hidden-print" value=""
+                  (click)="ExportToExcel('exportTable')" title="export to excel">
+            Export<i class="fa fa-file-excel-o" style="margin-left:10px;"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" id="printpage" *ngIf="AgeingReportData.length > 0" style="padding: 10px; border: 1px solid #b9b9b9 !important;">
+    <div id="exportTable">
+      <div class="col-md-12" style="padding:0px;" id="print_ledger">
+        <div class="row" class="no-print">
+          <div class="col-md-3" style="margin-left: -15px; margin-bottom: 5px;">
+            <input id="search" class="form-control" [(ngModel)]="SearchString" onclick="this.select();"
+                   placeholder="Search">
+          </div>
+        </div>
+        <table class="table_data" style="width:100%;  margin-bottom: 20px;" border="1">
+          <thead>
+            <tr>
+              <th style="width: 5%;">S.No</th>
+              <th *ngFor="let header of TableHeader">{{ header }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rptData of AgeingReportData | searchFilter: SearchString | async;let i=index;">
+              <td>{{ i+1 }}</td>
+              <td *ngFor="let header of TableHeader"
+                  (click)=" rptData[header] != 0 ? OnTableCellClicked(header,rptData.SupplierId,rptData.SectionId) : ''"
+                  [ngStyle]="{'color': rptData[header] != 0 ? '#337ab7' : ''}">{{ rptData[header] }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowDetail">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="modelbox-div clearfix">
+          <div class="caption custom-caption">
+            <h3> <span>Selected Vendor: <b>{{ GoodReceiptDetail.length > 0 ? GoodReceiptDetail[0].SupplierName : ''}} </b></span></h3>
+            <a class="btn btn-danger" (click)="CloseDetail()" title="Close">X</a>
+          </div>
+          <div class="form-horizontal hm-form">
+            <div class="form-body">
+              <table class="table_data" style="width:100%;  margin-bottom: 20px;" border="1">
+                <thead>
+                  <tr>
+                    <th style="width: 5%;">S.No</th>
+                    <th>Good Receipt No.</th>
+                    <th>GR Date</th>
+                    <th>Invoice No.</th>
+                    <th>Total Amount</th>
+                    <th>Paid Amount</th>
+                    <th>Due Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of GoodReceiptDetail;let i=index;">
+                    <td>{{ i+1 }}</td>
+                    <td>{{ data.GRId }}</td>
+                    <td>{{ data.GRDate | DanpheDateTime:'format':'YYYY-MM-DD' }}</td>
+                    <td>{{ data.InvoiceNo }}</td>
+                    <td>{{ data.TotalAmount| Currency:'4' }}</td>
+                    <td>{{ data.PaidAmount| Currency:'4' }}</td>
+                    <td>{{ data.DueAmount | Currency:'4'}}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="4" style="text-align: center; font-weight: bold;">Total</td>
+                    <td style="text-align: left; font-weight: bold;">{{ GoodReceiptSummary.TotalAmount | Currency:'4'}}</td>
+                    <td style="text-align: left; font-weight: bold;">{{ GoodReceiptSummary.PaidAmount | Currency:'4'}}</td>
+                    <td style="text-align: left; font-weight: bold;">{{ GoodReceiptSummary.DueAmount | Currency:'4'}}</td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

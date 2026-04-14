@@ -1,0 +1,61 @@
+<div>
+    <div class="caption custom-caption top-report-section" style="margin-bottom: 1px;">
+        <h3><i class="fa fa-book"></i>
+            <span class="caption-subject">Transaction-wise Ageing Report</span>
+        </h3>
+    </div>
+    <div class="row" style="background: #bcbcbc; padding-top: 0px;">
+        <div class="col-md-12" style="margin-top: -10px;">
+            <div class="col-md-4">
+                <label class=" col-md-5" style="margin-top: 20px;">Supplier :</label><br>
+                <div class="col-md-7">
+                    <select [(ngModel)]="LedgerId" class="form-control" (change)="OnSupplierChange()">
+                        <option [ngValue]=-1>All</option>
+                        <option *ngFor="let supplier of Suppliers" [ngValue]=supplier.LedgerId>{{ supplier.LedgerName }}</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-12" style="margin-top: -13px;">
+            <div class="col-md-12 col-xs-12" style=" margin-top: 10px;">
+                <div class="form-group mt10" style="float:right">
+                    <button class="btn green btn-success" type="button" [disabled]="Loading" (click)="LoadTransactionWiseAgeingReport()">
+                        <i class="fa fa-refresh"></i>
+                        Load
+                    </button>
+                    <button *ngIf="true" class="btn green btn-success hidden-print" value="Print" (click)="Print('printpage')"
+                            title="print page">
+                        Print<i class="glyphicon glyphicon-print" style="margin-left:10px;"></i>
+                    </button>
+                    <button *ngIf="true" class="btn green btn-success hidden-print" value=""
+                            (click)="ExportToExcel('printpage')" title="export to excel">
+                        Export<i class="fa fa-file-excel-o" style="margin-left:10px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="printpage" style="max-width: 100%">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Supplier Name</th>
+                    <th>0-30 Days</th>
+                    <th>31-60 Days</th>
+                    <th>61-90 Days</th>
+                    <th>91+ Days</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ledger of FilteredTransactionWiseAgeingReportList">
+                    <td>{{ ledger.LedgerName }}</td>
+                    <td>{{ ledger['0–30 days']}}</td>
+                    <td>{{ ledger['31–60 days']}}</td>
+                    <td>{{ ledger['61–90 days']}}</td>
+                    <td>{{ ledger['91+ days']}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

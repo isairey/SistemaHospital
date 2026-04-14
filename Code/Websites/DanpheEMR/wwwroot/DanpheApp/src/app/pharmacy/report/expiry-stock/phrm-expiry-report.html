@@ -1,0 +1,114 @@
+<div class="row">
+  <div class="form-body">
+    <div class="col-md-12">
+      <div class="caption custom-caption no-margin"> <i class="glyphicon glyphicon-asterisk"></i> <span class="caption-subject">Pharmacy Expiry
+          Report</span> </div>
+    </div>
+    <div class="col-md-12 col-xs-12">
+      <div class="row">
+        <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'billing-reports'"> </from-to-date-select>
+      </div>
+    </div>
+    <div class="col-md-12 col-xs-12">
+      <div class="row mt10">
+        <div class="col-md-4">
+          <div class="form-group row">
+            <label>Generic Name<b>:</b></label>
+            <div style="display: inline-block;">
+              <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedGeneric" [source]="GenericList"
+                     [list-formatter]="GenericListFormatter" placeholder="--Select Generic--" display-property-name="GenericName"
+                     value-property-name=null onClick="this.select();" (valueChanged)="OnGenericSelect()" match-formatted="true"
+                     [grid-sort]="'GenericName'" max-num-list="20" min-chars="1" style="width:150%;" min-chars="0" />
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group row">
+            <label>Item Name<b>:</b></label>
+            <div style="display: inline-block;">
+              <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedItem" [source]="allItemList" [list-formatter]="ItemListFormatter"
+                     placeholder="--Select Item--" display-property-name="ItemName" match-formatted="true" [grid-sort]="'ItemName'"
+                     value-property-name=null onClick="this.select();" (valueChanged)="onItemSelect()" max-num-list="20" min-chars="0"
+                     style="width:150%;" />
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group row">
+            <label>Select Store<b>:</b></label>
+            <div style="display: inline-block;">
+              <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedStore" [source]="StoreList" [list-formatter]="StoreListFormatter"
+                     placeholder="--Select Store--" display-property-name="Name" match-formatted="true" [grid-sort]="'ItemName'"
+                     value-property-name=null onClick="this.select();" (valueChanged)="OnStoreSelect()" max-num-list="20" min-chars="0"
+                     style="width:150%;" />
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1 right">
+          <div class="form-group row">
+            <button class="btn blue" type="button" (click)="GetReportData()" [disabled]="Loading">
+              <i class="fa fa-search"></i>&nbsp;
+              <span *ngIf="!Loading"> Show Report</span>
+              <span *ngIf="Loading">Loading...</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="col-md-5"></div>
+      <div class="col-md-5" style="display: flex; justify-content: space-evenly;">
+        <div style="display: flex;flex-flow: row-reverse;align-items: baseline;">
+          <label for="NearlyExpiredItemCheckBox" style="margin-right: 20px;"> Nearly Expired Item </label>
+          <input type="checkbox" id="NearlyExpiredItemCheckBox" style="zoom:1.23;scale: 1.23;margin-right: 6px;" [(ngModel)]="IsNearlyExpired"
+                 (change)="ShowNearlyExpiredItem()">
+        </div>
+        <div style="display: flex;flex-flow: row-reverse;align-items: baseline;">
+          <label for="ExpiredItemCheckBox" style="margin-right: 20px;">Expired Item</label>
+          <input type="checkbox" id="ExpiredItemCheckBox" style="zoom:1.23;scale: 1.23;margin-right: 6px;" [(ngModel)]="IsExpired"
+                 (change)="ShowExpiredItem()">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12 col-sm-12">
+    <danphe-grid [grid-colDefaults]="PHRMExpiryReportColumns" [grid-data]="PHRMExpiryData" [grid-exportOptions]="gridExportOptions"
+                 [grid-showExport]="true" [report-for]="'pharmacy'" [grid-date-range]="DateRange" [filter-parameters]="FilterParameters"
+                 [show-header]="true" [report-title]="'Pharmacy Expiry Report'" [grid-footer-content]="footer"> </danphe-grid>
+  </div>
+</div>
+<div class=" col-sm-12 col-md-12" style="margin-bottom: 10px !important; display: flex;justify-content: center;">
+  <div class="table-responsive table-wrapper" id="expiry-print_summary">
+    <table class="table table-bordered table-hover table-condensed custom_table padLess_table" border="1">
+      <thead>
+        <tr>
+          <th colspan="2" style="text-align: center;">
+            <span style="font-size:large;"> Summary </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container>
+          <tr>
+            <td style="font-weight:bold; color:blue">
+              <span> <b> Total Cost Value</b> </span>
+            </td>
+            <td>
+              <span style="font-size:2rem;"> {{TotalCostValue | number: '1.0-2' }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-weight:bold; color:blue">
+              <span> <b>Total Sales Value</b> </span>
+            </td>
+            <td>
+              <span style="font-size:2rem;"> {{TotalSalesValue | number: '1.0-2' }}</span>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

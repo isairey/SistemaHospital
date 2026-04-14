@@ -1,0 +1,133 @@
+<style>
+  .form-with-border {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+  }
+</style>
+<form [formGroup]="DiagnosisList.FinalDiagnosisValidator" class="form-with-border" style="margin-top: 10px">
+  <div class="row" style="margin:auto;background-color: cornflowerblue;">
+    <div class="col-md-12">
+      <div style="padding-top: 4px;">
+        <label for="provisionalDiagnosis" style="width: 20%;height: 30px;padding-top: 8px;Color:white">Final
+          Diagnosis</label>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2" style="padding-top: 10px;">
+    <div class="col-md-12" style="padding: 0px; margin: 0px;">
+      <div class="col-md-4">
+        <div class="form-group">
+          <div class="col-md-7" style="width: 100%;">
+            <input danphe-auto-complete class="form-control" [(ngModel)]="provisionalDiagnosis" [source]="icd10List"
+                   [list-formatter]="DiagnosisFormatter" placeholder="Select ICD-11(s)Diagnosis -Final Diagnosis"
+                   display-property-name="icd10Description" value-property-name=ICD10Code min-chars="0" max-num-list="10"
+                   [ngModelOptions]="{standalone: true}" />
+          </div>
+        </div>
+      </div>
+      <!-- Text Area Column -->
+      <div class="col-md-4">
+        <div class="form-group">
+          <textarea appFocusTextbox class="form-control" id="additionalNotes" placeholder="Remarks" rows="3"
+                    formControlName="Remarks" name="additionalNotes" style="height: 32px;"></textarea>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <div class="col-md-1">
+            <input type="checkbox" id="IsCauseOfDeath" style="width: 20px;height: 20px;"
+                   formControlName="IsCauseOfDeath">
+          </div>
+          <label for="IsCauseOfDeath" class="control-label col-md-4"
+                 style="font-size: 12px;width: auto; cursor: pointer;">Primary Diagnosis</label>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button type="button" class="btn" style="background-color: #28a745; color: white;font-size: 12px;"
+                [disabled]="!provisionalDiagnosis?.ICD10Code"
+                (click)="addNewRow()">+</button>
+        <input type="button" id="add" class="btn blue btn-success margin-7-hr" value="Save" style="margin-right: 10px"
+               (click)="AddDiagnosis()" />
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="addedRows.length">
+    <div class="row mt-2" *ngFor="let row of addedRows ; let i=index;">
+      <div class="col-md-4" *ngFor="let diagnosis of row.ICDDataList; let j = index;">
+        <div class="form-group">
+          <div class="col-md-7" style="width: 100%;">
+            <input type="text" class="form-control" [value]="diagnosis.icd10Description" disabled />
+          </div>
+        </div>
+      </div>
+
+      <!-- Text Area Column for added rows -->
+      <div class="col-md-4">
+        <div class="form-group">
+          <textarea class="form-control" [value]="row.Remark" disabled style="height: 32px;"></textarea>
+        </div>
+      </div>
+
+      <!-- Checkbox Column for added rows -->
+      <div class="col-md-3" *ngIf="IsPrimaryDiagnosis">
+        <div class="form-group">
+          <input type="checkbox" [checked]="row.IsCauseOfDeath" disabled style="width: 20px; height: 20px;" />
+          <label for="IsCauseOfDeath" class="control-label col-md-4" style="font-size: 12px;width: auto">Primary
+            Diagnosis<b>:</b></label>
+        </div>
+      </div>
+      <div class="col-md-2" style="padding-left: inherit;">
+        <div id="DoctorListToolbox" class="tooltip" style="display: inline-block;">
+          <span
+                style="cursor: pointer; display: inline-block; width: 20px; height: 20px;"
+                [style.visibility]="row.IsCauseOfDeath ? 'visible' : 'hidden'">
+            <i
+               class="fa fa-info"
+               style="padding: 0; background-color: #2d68ea; border-radius: 50%; width: 20px; height: 20px; line-height: 20px; text-align: center; font-size: 13px; color: #fff;">
+            </i>
+          </span>
+          <p class="tooltiptext ttptextdown no-print">Primary Diagnosis</p>
+        </div>
+        <button type="button" class="btn btn-danger" (click)="removeRow(i)">X</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="border: 1px solid grey; padding: 10px; border-radius: 5px; margin-top: 10px;" *ngIf="CurrentDataList && CurrentDataList.length > 0">
+    <label style="font-weight: bold; display: block; margin-bottom: 5px;">Active Diagnosis</label>
+    <div class="row mt-2" *ngFor="let row1 of CombinedDiagnosisList;">
+      <div class="col-md-6" style="width: 30%;">
+        <div class="form-group" style="width: 130%; padding-left: 15px; position: relative;">
+          <label class="form-control" style="background-color: transparent; border: none; margin: 0; padding-right: 50px;">
+            {{ row1.DisplayDiagnosis }}
+            <span
+                  *ngIf="row1.IsCauseOfDeath"
+                  style="font-size: x-small; color: rgb(0, 132, 255); font-style: italic; position: absolute; right: -5px; top: -3px;">
+              Primary
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="col-md-5" style="padding-left: 8%;">
+        <div class="form-group" style="margin: 0;">
+          <label class="form-control"
+                 [ngStyle]="{'margin-left': '0px'}"
+                 style="background-color: transparent; border: none;">
+            {{ row1.Remarks }}
+          </label>
+        </div>
+      </div>
+
+      <div class=" col-md-1">
+        <button type="button" class="btn btn-danger" (click)="RemoveActiveDiagnosis(row1.Id)">X</button>
+      </div>
+    </div>
+  </div>
+
+
+
+</form>

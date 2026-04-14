@@ -1,0 +1,155 @@
+<div>
+  <div class="form-body">
+    <div id="inputoutputSection" class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="portlet cstm-portlet portlet-with-collapse">
+              <div class="portlet light bordered">
+
+                <div class="portlet-title cstm-pt-title" style="display: flex; justify-content: space-between; align-items: center;">
+                  <div class="cstm-portlet-caption" style="flex-grow: 1;">
+                    Intake/Output List
+                  </div>
+                  <div class="tools" style="margin-left: auto; margin-right: 10px;">
+                    <a href="javascript:;" class="fullscreen" data-original-title="" title=""> </a>
+                  </div>
+                  <div class="cstm-action" style="background-color:#26c281; border-color: #26c281;">
+                    <a class="cstm-add" (click)="AddNewIO()">
+                      <i class="fa fa-plus-circle"></i>Add New
+                    </a>
+                  </div>
+                </div>
+
+
+
+                <div class="portlet-body">
+                  <div class="row">
+                    <div class="col-md-12 d-flex flex-row ">
+                      <from-to-date-select (on-change)="OnFromToDateChange($event)">
+                      </from-to-date-select>
+                      <div style="margin-left:5px">
+                        <div class="form-group ">
+                          <button class="btn green btn-success btn-sm" type="button" style="margin-top:4px"
+                                  (click)="ShowIntakeOutput = true; GetPatientIntakeOutputList()">
+                            <i class="fa fa-search"></i> Load
+                          </button>
+                        </div>
+                      </div>
+                      <div class="form-group" style="margin-left: 8px;">
+                        <button class="btn btn-primary btn-sm hidden-print" style="margin-top:4px"
+                                (click)="ShowPrintPopUp()" value="Print"
+                                title="print page">
+                          Print<i class="fa fa-print" style="margin-left:10px;"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="cstm-portlet-body">
+                    <div class="table-responsive">
+                      <danphe-grid [grid-colDefaults]="IntakeOutputGridColumns" [grid-data]="IntakeOutputLists"
+                                   *ngIf="ShowIntakeOutput" (grid-actions)="IntakeOutputComponentGridActions($event)"
+                                   [NepaliDateInGridParams]="NepaliDateInGridSettings" [show-print-button]="false">
+                      </danphe-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ShowIOAddBox" class="popup-static portlet box portlet-fullscreen custom_modal">
+            <div class="portlet-body form">
+              <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                  <div class="modelbox-div clearfix">
+                    <div class="caption custom-caption" style="margin: 0px 0px 15px 0px;">
+                      <h3>
+                        <span style="color: blue;" *ngIf="!Update">Add New Intake/Output</span>
+                        <span style="color: blue;" *ngIf="Update">Update Intake/Output</span>
+                      </h3>
+                      <a class="btn btn-danger" (click)="CloseAddIntakeOutputPopUp()" title="Cancel">X</a>
+                    </div>
+                    <div class="col-md-12" style="margin: 5px; padding: 5px;">
+                      <Cln-IntakeOutput-add [showIOAddBox]="ShowIOAddBox" [selected-IO]="SelectedIO"
+                                            [last-balance]="LastBalance" [edit-IO]="SelectedIntakeOutput" [isUpdate]="Update"
+                                            (callback-ioupdate)="showInputOutput = true; callbackIoUpdate($event)">
+                      </Cln-IntakeOutput-add>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowIntakeOutputPopUp">
+  <div class="portlet-body form">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div">
+        <div id="printableContent" class="modelbox-body">
+          <div class="row">
+            <smart-printable-hospital-header></smart-printable-hospital-header>
+            <div style="text-align: center; width: 100%;" class="intake-output-title">
+              <span style="font-size: medium; font-weight: bold;">
+                INTAKE AND OUTPUT REPORT</span>
+            </div>
+            <patient-details-card></patient-details-card>
+            <div class="table-container" style="margin-top: 10px;">
+              <table class="table print-table patient-table">
+                <thead>
+                  <tr>
+                    <th>Recorded On</th>
+                    <th>Recorded Time</th>
+                    <th>Entry</th>
+                    <th>IntakeOutput Type</th>
+                    <th>Quantity(ml)</th>
+                    <th>Color</th>
+                    <th>Quality</th>
+                    <th>Remarks</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of IntakeOutputLists">
+                    <td>{{ item.RecordedDate }}</td>
+                    <td>{{ item.RecordedTime }}</td>
+                    <td>{{ item.IntakeOutputType }}</td>
+                    <td>{{ item.ParameterMainValue }}
+                      <span *ngIf="item.ParameterChildValue"> / {{ item.ParameterChildValue}}</span>
+                    </td>
+                    <td>{{ item.IntakeOutputValue }}</td>
+                    <td>{{ item.Color }}</td>
+                    <td>{{ item.Quality }}</td>
+                    <td>{{ item.Remarks }}</td>
+                    <td>{{ item.Balance }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="close-modelbox">
+          <button class="btn btn-danger" (click)="ClosePopup()">
+            X
+          </button>
+        </div>
+        <div class="modelbox-footer">
+          <div class="all-buttons text-right">
+            <button class="btn btn-primary btn-sm hidden-print" (click)="printIntakeOutputReport()" value="Print"
+                    title="Print Page">
+              Print <i class="fa fa-print" style="margin-left:10px;"></i>
+            </button>
+            <button type="button" class="btn btn-cancel" (click)="ClosePopup()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

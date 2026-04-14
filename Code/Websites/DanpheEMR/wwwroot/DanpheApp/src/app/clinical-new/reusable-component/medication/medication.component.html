@@ -1,0 +1,133 @@
+<style>
+  #medication table {
+    width: 100% !important;
+    border-collapse: collapse;
+  }
+
+  #medication th,
+  td {
+    border: 1px solid black;
+    padding: 2px;
+    text-align: center;
+  }
+
+  #medication thead {
+    background-color: #A7C942;
+    color: white;
+  }
+
+  #medication tbody {
+    background-color: #E5E7E9;
+    font-size: 12px;
+    height: 30px;
+  }
+
+  .full-width {
+    width: 100% !important;
+  }
+</style>
+
+<div class="form-horizontal hm-form" id="medication">
+  <div class="portlet" style="margin:0; padding:0">
+    <div class="portlet-title" style="margin:8px 12px;padding:0;min-height:0;border:0">
+      <div class="tools" style="margin:0;padding:0">
+        <a href="javascript:;" class="fullscreen" data-original-title="" title=""> </a>
+
+      </div>
+    </div>
+    <div class="portlet-body">
+      <div class="row" style="margin:15px;">
+        <div class="row">
+          <ul class="nav nav-tabs col-md-8">
+            <li>
+              <a [ngClass]="{'a-tab-active': ShowRequested === true}" (click)="updateView(0)">
+                {{ IsDischargeRequest ? 'Requested Discharge Medication' : 'Requested Medication' }}
+              </a>
+            </li>
+          </ul>
+          <div class="col-md-4 text-right">
+            <input type="button" class="btn" style="background-color: green; color: white;" [disabled]="Loading" name="name"
+                   value="Request Medication" (click)="RequestMedication()" />
+          </div>
+        </div><br>
+        <div style="max-height: auto; overflow-y: auto;">
+          <table style="width:100% !important;">
+            <thead>
+              <tr style="font-weight: bold;text-align:center">
+                <th style="width: 10%;"><b>Generic Name </b> </th>
+                <th style="width: 15%;"><b>Brand </b> </th>
+                <th style="width: 10%;"><b>Frequency </b> </th>
+                <th style="width: 10%;"><b>Strength </b> </th>
+                <th style="width: 10%;"><b>Dosage </b> </th>
+                <th style="width: 10%;"><b>Duration (In Days) </b> </th>
+                <th style="width: 10%;"><b>Route</b></th>
+                <th style="width: 15%;"><b>Medication schedule</b></th>
+                <th style="width: 30%;"><b>Action</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reqItem of FilteredMedicationList">
+                <td>{{reqItem.GenericName}}</td>
+                <td>{{reqItem.ItemName}}</td>
+                <td>{{reqItem.FrequencyAbbreviation}}</td>
+                <td>{{reqItem.Strength}}</td>
+                <td>{{reqItem.Dosage}}</td>
+                <td>{{reqItem.HowManyDays}}</td>
+                <td>{{reqItem.Route}}</td>
+                <td>{{reqItem.TimingOfMedicineTake}}</td>
+                <td>
+                  <a (click)="EditMedicationItem(reqItem)"
+                     style="padding: 0 10px; margin-right: 15px; background-color: blue; color: white; border: none; border-radius: 4px; text-decoration: none;"
+                     class="btn" title="Edit item">Edit
+                  </a>
+                  <button (click)="RemoveMedicationItem(reqItem)" class="grid-action" style="padding: 0;" title="Remove item">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowMedicationAddBox">
+      <div class="portlet-body form">
+        <div class="col-md-10  full-width">
+          <div class="modelbox-div">
+            <div class="modelbox-header d-flex justify-content-between">
+              <h4 class="margin-0-vr text-warning">
+                <strong>{{ IsDischargeRequest ? 'Discharge Medication Order' : 'Medication Order' }}</strong>
+              </h4>
+              <a class="btn btn-danger hidden-print rt_close_btn" (click)="ClosePopUp()" title="Cancel">X</a>
+            </div>
+            <add-medication [SelectedPatient]="SelectedPatient" [IsDischarge-Request]="IsDischargeRequest" [medication-list]="FilteredMedicineList"
+                            [generic-name-list]="GenericItems" (callback-close)="ClosePopUp()"
+                            (callback-add)="CallBackAddUpdate()"></add-medication>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Show Update Medication PopUp -->
+    <div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowMedicationUpdateBox">
+      <div class="portlet-body form">
+        <div class="col-md-10  full-width">
+          <div class="modelbox-div">
+            <div class="modelbox-header d-flex justify-content-between">
+              <h4 class="margin-0-vr text-warning">
+                <strong>Update Medication Order Item</strong>
+              </h4>
+              <a class="btn btn-danger hidden-print rt_close_btn" (click)="ClosePopUp()" title="Cancel">X</a>
+            </div>
+            <add-medication [SelectedPatient]="SelectedPatient" [medication-list]="FilteredMedicineList" [generic-name-list]="GenericItems"
+                            [is-update]="ShowMedicationUpdateBox"
+                            [selected-item]="SelectedMedicineItem" (callback-close)="ClosePopUp()"
+                            (callback-add)="CallBackAddUpdate()"></add-medication>
+          </div>
+        </div>
+      </div>
+    </div>

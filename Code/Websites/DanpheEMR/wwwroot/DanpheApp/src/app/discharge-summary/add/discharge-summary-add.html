@@ -1,0 +1,988 @@
+<style>
+    .left-panel {
+        width: 100%;
+        /*	margin: 0 0 15px 0;*/
+        background-color: #fffbdd;
+        padding: 0 0 0 0;
+        margin-bottom: 15px;
+    }
+
+    .left-panel .panel-heading {
+        border-bottom: 1px solid #f7f3d7;
+        background-color: #fff7bf;
+    }
+
+    .left-panel .patient-hdr-label {
+        background-color: transparent;
+        width: 100%;
+    }
+
+    .doc-pagecontent .form-body,
+    .doc-pagecontent .form-body:focus {
+        outline: none;
+    }
+
+    .doc-pagecontent .form-body {
+        background-color: transparent;
+    }
+
+    .investigation-panel table tr td .btn {
+        padding: 0;
+    }
+
+    .left-panel .panel-heading {
+        margin: 0;
+    }
+
+    .investigation-panel {
+        padding: 15px !important;
+    }
+
+    .show-report-btn {
+        padding: 10px 0;
+    }
+
+    .show-report-btn input[type=checkbox],
+    .show-report-btn input[type=radio] {
+        margin: 0 2px;
+        vertical-align: middle;
+    }
+
+    .dischargeSummaryMainDiv {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        justify-content: space-between;
+    }
+
+    .dischargeSummaryMainDiv .form-group {
+
+        width: 49% !important;
+    }
+
+    .textarea {
+        border: 1px solid #ccc;
+        font-family: inherit;
+        font-size: inherit;
+        padding: 1px 6px;
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        resize: both;
+        min-height: 60px;
+        line-height: 20px;
+        border-radius: 3px !important;
+    }
+
+    .right-panel .row {
+        margin: 0 -5px;
+    }
+
+    .right-panel div[class*="col-"] {
+        padding: 0 5px !important;
+    }
+
+    .form-horizontal .form-group {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+
+    .right-panel textarea.form-control {
+        min-height: 70px;
+        max-width: 100%;
+        width: 100%;
+        resize: both;
+        /* height: auto !important; */
+    }
+
+    /* .textarea {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  resize: both;
+  min-height: 40px;
+  line-height: 20px;
+}
+
+.textarea[contenteditable]:empty::before {
+  content: "Placeholder still possible";
+  color: gray;
+} */
+
+    .investigation-panel table tr td {
+        padding: 3px 5px;
+    }
+
+    .right-panel .control-label {
+        padding-left: 10px;
+        text-align: left;
+    }
+
+    .modelbox-div ul {
+        padding: 0;
+    }
+
+    .modelbox-div ul ul {
+        padding: 0 15px;
+    }
+
+    .modelbox-div ul li {
+        list-style: none;
+    }
+
+    .modelbox-div ul li label {
+        width: 100%;
+    }
+
+    .modelbox-div ul li label input {
+        float: right;
+        margin: 0;
+    }
+
+    #loading-screen-text h3 {
+        text-align: center;
+        margin: 10px 20px 0 0;
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .progress-bar {
+        position: relative;
+        height: 8px;
+        width: 200px;
+        background: #ffffff;
+        border-radius: 25px !important;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        position: absolute;
+        height: 10px;
+        width: 0%;
+        animation: progress-forward 3s infinite;
+        background: rgb(11, 219, 122);
+        border-radius: 15px;
+    }
+
+
+    @keyframes progress-forward {
+        0% {
+            width: 0%;
+        }
+
+        25% {
+            width: 50%;
+        }
+
+        50% {
+            width: 75%;
+        }
+
+        75% {
+            width: 85%;
+        }
+
+        100% {
+            width: 100%;
+        }
+    }
+</style>
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="loadingScreen === true">
+    <div class="portlet-body form" style="background-color:white">
+        <div style="display: flex; height: 100vh; align-items: center; justify-content: center; flex-direction: column;gap: 10px 0;"
+             id="loading-screen-text">
+            <h3>Please Wait...</h3>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Show SummaryView Start-->
+<!-- <div *ngIf="showSummaryView"><discharge-summary-view [selectedADT]="selectedDischarge" [showSummaryView]="showSummaryView"  (EditRecordEvent)='IsEditMode($event)'></discharge-summary-view></div>-->
+<!--Show SummaryView End-->
+<!--Show DischargeSummaryAdd Start-->
+<div *ngIf="showDischargeSummary" tabindex="1" [@enterAnimation]>
+    <form [formGroup]="CurrentDischargeSummary_VM.TempDischargeSummaryValidator" class="form-horizontal danphe_horizontal_form">
+        <div class="form-body no-padding">
+            <div *ngIf="!fromClinical">
+                <div class="left-panel">
+                    <div class="">
+                        <h1 class="panel-heading">
+                            <i class="fa fa-user"></i> {{ selectedDischarge.Name ? selectedDischarge.Name:
+                            selectedDischarge.FirstName + ' '+ selectedDischarge.LastName}}
+                            <label>{{selectedDischarge?.Age
+                                }}/{{selectedDischarge?.Gender.charAt(0)}}</label>
+                            <span>({{selectedDischarge?.PatientCode}})</span>
+                        </h1>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p class="patient-hdr-label">
+                                        <b>Address</b>&nbsp;: {{coreService.SortPatientAddress(selectedDischarge)}}
+                                    </p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="patient-hdr-label">
+                                        <b>Contact No</b>&nbsp;: {{ selectedDischarge?.PhoneNumber ? selectedDischarge.PhoneNumber :
+                                        selectedDischarge.ContactNo }}
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="patient-hdr-label">
+                                    <b>Hospital No</b>&nbsp;: {{selectedDischarge.PatientCode}}
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="patient-hdr-label">
+                                    <b>InPatient No</b>&nbsp;: {{selectedDischarge.VisitCode}}
+                                </p>
+                            </div>
+                            <div class="col-md-4" *ngIf="currentModuleName !== 'emergency'">
+                                <p class="patient-hdr-label">
+                                    <b>Guardian</b>&nbsp;: {{selectedDischarge?.GuardianName}} |
+                                    <span>{{selectedDischarge?.GuardianRelation}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="!IsERPatient" class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="patient-hdr-label" *ngIf="currentModuleName !== 'emergency'">
+                                    <b> Admitted On </b>&nbsp;:&nbsp;{{selectedDischarge?.AdmittedDate | DanpheDateTime:'format':'YYYY-MM-DD HH:mm' }}
+                                    AD &nbsp;
+                                    <strong>({{selectedDischarge?.AdmittedDate | nepaliDate}})</strong>
+                                </p>
+                            </div>
+                            <div class="col-md-4" *ngIf="currentModuleName !== 'emergency'">
+                                <p *ngIf="selectedDischarge.ModuleName != 'emergency'" class="patient-hdr-label">
+                                    <b>Ward</b>&nbsp;: {{selectedDischarge.BedInformation?.Ward}}
+                                </p>
+                            </div>
+                            <div class="col-md-4" *ngIf="currentModuleName !== 'emergency'">
+                                <p *ngIf="selectedDischarge.ModuleName != 'emergency'" class="patient-hdr-label">
+                                    <b>Bed Number</b>&nbsp;: {{selectedDischarge?.BedInformation?.BedNumber}}
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="patient-hdr-label" *ngIf="currentModuleName !== 'emergency'">
+                                    <b> Discharged On </b> &nbsp;:&nbsp;
+                                    <ng-container *ngIf="selectedDischarge?.DischargedDate">
+                                        {{ selectedDischarge?.DischargedDate | DanpheDateTime:'format':'YYYY-MM-DD HH:mm' }} AD &nbsp;
+                                        <strong>({{ selectedDischarge?.DischargedDate | nepaliDate }})</strong>
+                                    </ng-container>
+                                </p>
+                            </div>
+
+                            <div class="col-md-4">
+                                <p class="patient-hdr-label" *ngIf="currentModuleName !== 'emergency'">
+                                    <b>Stay Days</b> &nbsp;:&nbsp;
+                                    <ng-container *ngIf="StayDays">
+                                        {{StayDays}} &nbsp;
+                                    </ng-container>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="dischargeSummaryTemplates && dischargeSummaryTemplates.length">
+                <label for="dropdown">Select Template:</label>
+                <select (change)="OnTemplateSelected()" [(ngModel)]="selectedTemplateObj" [ngModelOptions]="{standalone: true}">
+                    <option disabled>Select template</option>
+                    <option [ngValue]="option" *ngFor="let option of dischargeSummaryTemplates">{{option.TemplateName}}
+                    </option>
+                </select>
+
+            </div>
+
+
+
+            <div [ngClass]="fromClinical?dischargeSummaryClassObj.col12:dischargeSummaryClassObj.col12">
+                <div class="row right-panel" style="margin-top: 0">
+                    <!-- <customer-header [header-title]="'Inpatient Discharge Ticket'"></customer-header> -->
+                    <div class="col-md-12" style="padding: 0 !important;">
+                        <!-- <div class="col-md-2"><h5>Discharge Summary of <b>{{selectedDischarge?.Name}}</b>({{selectedDischarge?.PatientCode}})
+                </h5></div>-->
+                        <div *ngIf="!fromClinical">
+                            <div class="form-content-header clearfix">
+                                <input style="width: 200px;height: 35px;margin-right: 10px;float: right;" class="btn blue" type="button"
+                                       (click)="Save()" *ngIf="!update" value="Save" />
+                                <input style="width: 200px;height: 35px;margin-right: 10px;float: right;" class="btn blue" type="button"
+                                       (click)="Update()" *ngIf="update" value="Update" />
+                                <input style="width: 200px;height: 35px;margin-right: 10px;float: right;" class="btn blue" type="button"
+                                       (click)="SubmitAndViewSummary()" *ngIf="update" value="Submit and Print Summary" />
+                            </div>
+                            <!-- <input style="width: 20%;margin-right: 30px;float: right;" class="btn blue" type="button" (click)="ViewBirthCertificate()" *ngIf="update && DeliveryType" value="Edit Birth Certificate" /><input style="width: 20%;margin-right: 30px;float: right;" class="btn blue" type="button" (click)="ViewDeathCertificate()" *ngIf="update && Isdeath" value="Edit Death Certificate" /> -->
+                        </div>
+                    </div>
+                    <div class="col-md-12" *ngIf="selectedTemplateFields && selectedTemplateFields.length">
+                        <div class="row">
+                            <div class="col-md-8 col-xs-8 dischargeSummaryMainDiv">
+
+                                <ng-container *ngFor="let summaryData of TemplatesFromServer"><!--Display the fields name in loop -->
+                                    <div class="form-group" *ngIf="DisplayFields(summaryData)">
+                                        <!-- Hide tha labels conditionally -->
+                                        <label class="control-label col-md-5"
+                                               *ngIf="summaryData.FieldName !== 'DischargeCondition' && summaryData.FieldName !== 'BabyWeight' || (DischargeConditionType && dischSumFieldSettings?.DischargeCondition?.Show) || (dischSumFieldSettings?.BabyWeight?.Show && ShowBabyWeight)">
+                                            {{summaryData.DisplayLabelAtForm}}
+                                            <b class="color-red" *ngIf="summaryData.IsMandatory"> *</b>
+                                            <b style="float: right">:</b>
+                                        </label>
+
+                                        <ng-container
+                                                      [ngSwitch]="summaryData.FieldName"><!--Display the fields if field name matches with the master data -->
+                                            <ng-template [ngSwitchCase]="'DischargeType'">
+                                                <div class="col-md-7">
+                                                    <select class="form-control" [(ngModel)]="DischargeType"
+                                                            formControlName="{{summaryData.FieldName}}" ngModelOptions="{standalone: true}"
+                                                            (change)="OnChangeDischargeType($event.target.value);"
+                                                            (focusout)="focusOut()">
+                                                        <option *ngFor="let type of dischargeTypeList"
+                                                                value="{{type.DischargeTypeName}}">
+                                                            {{type.DischargeTypeName}}
+                                                        </option>
+                                                    </select>
+                                                    <span class="color-red" *ngIf="CurrentDischargeSummary_VM.IsDirty(summaryData.FieldName)"
+                                                          [hidden]="CurrentDischargeSummary_VM.IsValidCheck(summaryData.FieldName,'required')">{{summaryData?.DisplayLabelAtForm}}
+                                                        is required</span>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template [ngSwitchCase]="'DischargeCondition'">
+                                                <div class="col-md-7"
+                                                     *ngIf="DischargeConditionType && dischSumFieldSettings?.DischargeCondition?.Show">
+                                                    <select class="form-control" [(ngModel)]="DischargeCondition"
+                                                            formControlName="{{summaryData.FieldName}}" ngModelOptions="{standalone: true}"
+                                                            (change)="OnChangeDischargeConditionType($event.target.value)"
+                                                            (focusout)="focusOut()">
+                                                        <option *ngFor="let type of FilteredDischargeConditions"
+                                                                value="{{type.Condition}}">
+                                                            {{type.Condition}}
+                                                        </option>
+                                                    </select>
+                                                    <span class="color-red" *ngIf="CurrentDischargeSummary_VM.IsDirty(summaryData.FieldName)"
+                                                          [hidden]="CurrentDischargeSummary_VM.IsValidCheck(summaryData.FieldName,'required')">{{summaryData?.DisplayLabelAtForm}}
+                                                        is required</span>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template [ngSwitchCase]="'Consultant'">
+                                                <div class="col-md-7">
+                                                    <input danphe-auto-complete class="form-control" [(ngModel)]="consultant" [source]="providerList"
+                                                           [list-formatter]="myListFormatter" (focusout)="focusOut();AddConsultant()"
+                                                           placeholder="{{summaryData.DisplayLabelAtForm}} name"
+                                                           display-property-name="FullName"
+                                                           value-property-name="null" (valueChanged)="loadConsultant()" min-chars="0"
+                                                           max-num-list="10"
+                                                           [ngModelOptions]="{standalone: true}" />
+                                                    <span class="color-red"
+                                                          *ngIf="InvalidConsultant">{{summaryData.DisplayLabelAtForm}} is
+                                                        required</span>
+                                                    <div class="col-md-12" *ngIf="selectedConsultants.length>0">
+                                                        <ol>
+                                                            <li *ngFor="let selected of selectedConsultants; let i=index;"> &nbsp;
+                                                                {{selected.FullName}}&nbsp; <i
+                                                                   class="fa fa-times" style="color: #000 !important"
+                                                                   (click)="RemoveConsultant(i)"></i>
+                                                            </li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template [ngSwitchCase]="'DoctorIncharge'">
+                                                <div class="col-md-7">
+                                                    <input danphe-auto-complete class="form-control" (focusout)="focusOut();validateDrIncharge()"
+                                                           [(ngModel)]="drIncharge" [source]="providerList" [list-formatter]="myListFormatter"
+                                                           placeholder="{{summaryData.DisplayLabelAtForm}} name"
+                                                           display-property-name="FullName" value-property-name="DoctorInchargeId"
+                                                           (valueChanged)="loadDrIncharge()" min-chars="0" max-num-list="10"
+                                                           ngModelOptions="{standalone: true}"
+                                                           formControlName="{{summaryData.FieldName}}" />
+                                                    <span class="color-red" *ngIf="CurrentDischargeSummary_VM.IsDirty(summaryData.FieldName)"
+                                                          [hidden]="CurrentDischargeSummary_VM.IsValidCheck(summaryData.FieldName,'required')">{{dischSumFieldSettings?.DoctorIncharge?.DisplayLabelAtForm}}
+                                                        is required</span>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template [ngSwitchCase]="'Anesthetists'">
+                                                <div class="col-md-7">
+                                                    <input danphe-auto-complete class="form-control" [(ngModel)]="anasthetists"
+                                                           [source]="AnasthetistsList"
+                                                           [list-formatter]="ListFormatter"
+                                                           placeholder="{{summaryData.DisplayLabelAtForm}} name" ngModelOptions="{standalone: true}"
+                                                           display-property-name="FullName" value-property-name="AnaesthetistsId"
+                                                           (valueChanged)="loadAnasthetists()" (focusout)="focusOut()" min-chars="0" max-num-list="10"
+                                                           formControlName="{{summaryData.FieldName}}" />
+                                                    <span class="color-red"
+                                                          *ngIf="CurrentDischargeSummary_VM.IsDirty(summaryData.FieldName) && summaryData.IsMandatory"
+                                                          [hidden]="CurrentDischargeSummary_VM.IsValidCheck(summaryData.FieldName,'required') ">{{summaryData.DisplayLabelAtForm}}
+                                                        is required</span>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template [ngSwitchCase]="'BabyWeight'">
+                                                <div class="col-md-7" *ngIf="dischSumFieldSettings?.BabyWeight?.Show && ShowBabyWeight">
+                                                    <input class="form-control" [(ngModel)]="BabyWeight"
+                                                           placeholder="Baby Weight (in gm)" ngModelOptions="{standalone: true}"
+                                                           formControlName="{{summaryData.FieldName}}" />
+                                                    <span class="color-red"
+                                                          *ngIf="CurrentDischargeSummary_VM.IsDirty(summaryData.FieldName) && summaryData.IsMandatory"
+                                                          [hidden]="CurrentDischargeSummary_VM.IsValidCheck(summaryData.FieldName,'required') ">{{summaryData.DisplayLabelAtForm}}
+                                                        is required</span>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template [ngSwitchCase]="'ResidentDr'">
+                                                <div class="col-md-7">
+                                                    <input danphe-auto-complete class="form-control" [(ngModel)]="residenceDr" [source]="providerList"
+                                                           [list-formatter]="myListFormatter" placeholder="Residence Dr name"
+                                                           display-property-name="FullName"
+                                                           value-property-name="ResidenceDrId" (valueChanged)="loadResidenceDr()"
+                                                           (focusout)="focusOut()" min-chars="0" max-num-list="10"
+                                                           ngModelOptions="{standalone: true}"
+                                                           formControlName="{{summaryData.FieldName}}" />
+                                                    <span class="color-red"
+                                                          *ngIf="CurrentDischargeSummary_VM.IsDirty(summaryData.FieldName) && summaryData.IsMandatory"
+                                                          [hidden]="CurrentDischargeSummary_VM.IsValidCheck(summaryData.FieldName,'required') ">{{summaryData.DisplayLabelAtForm}}
+                                                        is required</span>
+                                                </div>
+                                            </ng-template>
+
+                                            <ng-template [ngSwitchCase]="'SelectDiagnosis'">
+                                                <div class="col-md-7">
+                                                    <!-- <div class="form-group" style="padding:10px;"> -->
+                                                    <input danphe-auto-complete autocomplete="off" class="form-control" [(ngModel)]="diagnosis"
+                                                           [source]="icd10List" [list-formatter]="DiagnosisFormatter"
+                                                           (focusout)="focusOut();MakeDiagnosisList();"
+                                                           placeholder="Select {{icdVersionDisplay}}(s) for {{summaryData.DisplayLabelAtForm}}"
+                                                           display-property-name="icd10Description" value-property-name="ICD10Id"
+                                                           ngModelOptions="{standalone: true}"
+                                                           (valueChanged)="loadICDs();"
+                                                           min-chars="0" max-num-list="10" formControlName="{{summaryData.FieldName}}" />
+                                                    <span class="color-red"
+                                                          *ngIf="CurrentDischargeSummary_VM.IsDirty(summaryData.FieldName) && dischSumFieldSettings?.SelectDiagnosis?.IsMandatory"
+                                                          [hidden]="CurrentDischargeSummary_VM.IsValidCheck(summaryData.FieldName,'required') ">{{dischSumFieldSettings?.SelectDiagnosis?.DisplayLabelAtForm}}
+                                                        is required</span>
+
+                                                </div>
+                                                <div class="col-md-5">
+                                                </div>
+                                                <div class="col-md-12" *ngIf="summaryData.IsActive">
+                                                    <ul class="select-list">
+                                                        <!-- <i class="fa fa-circle" aria-hidden="true"></i> -->
+                                                        <li class="fa fa-circle" *ngFor="let diagnosis of selectedDiagnosisList; let i=  index;">
+                                                            &nbsp;
+                                                            {{diagnosis?.icd10Description}} &nbsp; <i class="fa fa-times"
+                                                               style="color: #000 !important"
+                                                               (click)="RemoveDiagnosis(i)"></i>
+                                                            <br>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template [ngSwitchCase]="'ProvisionalDiagnosis'">
+                                                <div class="col-md-7">
+                                                    <!-- <div class="form-group" style="padding:10px;"> -->
+                                                    <input danphe-auto-complete autocomplete="off" class="form-control"
+                                                           [(ngModel)]="provisionalDiagnosis"
+                                                           [source]="icd10List" [list-formatter]="DiagnosisFormatter"
+                                                           (focusout)="focusOut();MakeProvisionalDiagnosisList();"
+                                                           placeholder="Select {{icdVersionDisplay}}(s) for {{dischSumFieldSettings?.SelectDiagnosis?.DisplayLabelAtForm}}"
+                                                           display-property-name="icd10Description" value-property-name="ICD10Id"
+                                                           (valueChanged)="loadICDs();" ngModelOptions="{standalone: true}"
+                                                           min-chars="0" max-num-list="10" formControlName="{{summaryData.FieldName}}" />
+                                                    <span class="color-red"
+                                                          *ngIf="CurrentDischargeSummary_VM.IsDirty(summaryData.FieldName) && dischSumFieldSettings?.SelectDiagnosis?.IsMandatory"
+                                                          [hidden]="CurrentDischargeSummary_VM.IsValidCheck(summaryData.FieldName,'required') ">{{dischSumFieldSettings?.SelectDiagnosis?.DisplayLabelAtForm}}
+                                                        is required</span>
+
+                                                </div>
+                                                <!-- <div class="form-group" *ngIf="dischSumFieldSettings?.SelectDiagnosis?.Show">
+                                                    <ul class="select-list">
+                                                        <li class="fa fa-circle" *ngFor="let diagnosis of selectedDiagnosisList; let i=  index;">
+                                                            &nbsp;
+                                                            {{diagnosis?.icd10Description}} &nbsp; <i class="fa fa-times"
+                                                               style="color: #000 !important"
+                                                               (click)="RemoveDiagnosis(i)"></i>
+                                                            <br>
+                                                        </li>
+                                                    </ul>
+                                                </div> -->
+                                                <div class="col-md-12" *ngIf="dischSumFieldSettings?.ProvisionalDiagnosis?.Show">
+                                                    <ul class="select-list">
+                                                        <!-- <i class="fa fa-circle" aria-hidden="true"></i> -->
+                                                        <li class="fa fa-circle" *ngFor="let diagnosis of selectedProviDiagnosisList; let i=  index;">
+                                                            &nbsp;
+                                                            {{diagnosis?.icd10Description}} &nbsp; <i class="fa fa-times"
+                                                               style="color: #000 !important"
+                                                               (click)="RemoveProvisonalDiagnosis(i)"></i>
+                                                            <br>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </ng-template>
+                                            <!-- <ng-template [ngSwitchCase]="'LabTests'" style="background-color: #afafaf;">
+
+                                                <div class="show-report-btn" *ngIf="summaryData.IsActive" style="background: antiquewhite;">
+                                                    <span style="font-weight: 500; color: #272727;">Show Result on Report &nbsp;
+                                                        <input [(ngModel)]="IsReportWithResult" name="IsReportWithResult"
+                                                               width="100" type="radio" [ngModelOptions]="{standalone: true}"
+                                                               [value]="true" (click)="showChooseTestResultPopup=true;"
+                                                               id="IsReportWithResultYes" />
+                                                        <label for="IsReportWithResultYes">Yes</label> &ensp; <input
+                                                               [(ngModel)]="IsReportWithResult" name="IsReportWithResult" width="100"
+                                                               type="radio" id="IsReportWithResultNo"
+                                                               [ngModelOptions]="{standalone: true}" [value]="false" />
+                                                        <label for="IsReportWithResultNo">No</label>
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="labRequests && summaryData.IsActive" style="padding-top: 10px;background: antiquewhite;">
+                                                    <table class="table-responsive" style="width: 100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="50%" align="center">Lab Tests <b class="color-red"
+                                                                       *ngIf="summaryData.IsMandatory"> *</b>
+                                                                </th>
+                                                                <th width="50%" align="center">Add New Tests</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="height: 170px; overflow: auto">
+                                                            <tr>
+                                                                <td>
+                                                                    <table>
+                                                                        <tbody>
+                                                                            <tr *ngFor="let tst of labRequests;let i=index;">
+                                                                                <td width="70%">
+                                                                                    <ul>
+                                                                                        <li>
+                                                                                            <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                                            {{tst.TestName}}
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </td>
+                                                                                <td style="border-right: 1px solid #eee">
+                                                                                    <input class="zoomcheckbox" [(ngModel)]="tst.IsSelectTest"
+                                                                                           name="IsSelected"
+                                                                                           width="100" type="checkbox"
+                                                                                           ng-checked="tst.IsSelectTest=true"
+                                                                                           (change)="LabTestSelection(i)"
+                                                                                           [ngModelOptions]="{standalone: true}" />
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                                <td>
+                                                                    <input autocomplete="off" danphe-auto-complete class="form-control"
+                                                                           [(ngModel)]="labtest"
+                                                                           [source]="LabTestList" [list-formatter]="labTestFormatter"
+                                                                           placeholder="Add New Test"
+                                                                           onClick="this.select();" display-property-name="LabTestName"
+                                                                           value-property-name="LabTestId"
+                                                                           (focusout)="loadlabTest()" min-chars="0" max-num-list="10"
+                                                                           [ngModelOptions]="{standalone: true}" />
+                                                                    <table style="padding: 10px" *ngIf="AddedTests">
+                                                                        <tr *ngFor="let tst of AddedTests;let i=index;" style="padding: 2px">
+                                                                            <td style="padding-left: 5px">
+                                                                                <ul>
+                                                                                    <li>
+                                                                                        <i class="fa fa-check"></i>{{tst.TestName}}
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </td>
+                                                                            <td align="right">
+                                                                                <input type="button" style="border-radius: 1px"
+                                                                                       class="btn btn-danger btn-sm"
+                                                                                       (click)="RemoveAddedTest(i)" value="X" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </ng-template> -->
+                                            <!--Investigation Starts Here-->
+                                            <!-- <ng-template [ngSwitchCase]="'Investigations'">
+                                                <div *ngIf="summaryData.IsActive" style="margin-top: 15px">
+                                                    <table class="table-bordered" style="width: 100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="180" align="center">
+
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+
+                                                    </table>
+                                                </div> -->
+                                            <!-- </ng-template> -->
+                                            <!--Investigation Ends Here-->
+                                            <!--Imaging Details Starts Here-->
+                                            <!-- <ng-template [ngSwitchCase]="'Imagings'">
+                                                <div *ngIf="summaryData.IsActive" style="margin-top: 15px">
+                                                    <table class="table-bordered" style="width: 100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="180" align="center">
+                                                                   
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tr *ngFor="let img of imagingResults; let i = index;">
+                                                            <td>
+                                                                <input value="{{img.ImagingItemName}}" readonly="readonly"
+                                                                       style="border: 1px solid #afafaf; width: 100%" />
+                                                            </td>
+                                                            <td style="border-right: 1px solid #eee">
+                                                                <input class="zoomcheckbox" [(ngModel)]="img.IsImagingSelected"
+                                                                       name="IsImagingSelected"
+                                                                       width="100" type="checkbox" ng-checked="tst.IsImagingSelected=true"
+                                                                       (change)="ImagingSelection(i)" [ngModelOptions]="{standalone: true}"
+                                                                       style="border: 1px solid #afafaf" />
+                                                            </td> -->
+                                            <!--<td><input value="{{img.ImagingTypeName}}" readonly="readonly" /></td><td><input value="{{img.ReportText}}" readonly="readonly" /></td>-->
+                                            <!--tr-->
+                                            <!-- </tr>
+                                                    </table>
+                                                </div>
+                                            </ng-template> -->
+                                            <!--Imaging Details Ends Here-->
+                                            <!-- <ng-template [ngSwitchCase]="'Medications'">
+                                                <div class="" style="padding-top: 10px" *ngIf="summaryData.IsActive">
+                                                    <table class="table-responsive" style="width: 100%"> -->
+
+                                            <!-- </table><table class="table-bordered" style="width:95%"> -->
+                                            <!-- <div class="col-md-12">
+                                                            <div class="col-md-4" style="display: none"> -->
+                                            <!-- <select [(ngModel)]="medicationtype" title="Select Medicine Type"
+                                            [ngModelOptions]="{standalone: true}" style="width:160px;height:30px;"><option value="0">New Medicines</option><option value="1">Continue Old Medicines</option><option value="2">Stop Old Medicines</option></select> -->
+                                            <!-- <label title="New Medicines" max="10"
+                                                                       style="width: 160px; overflow: hidden">New Medicines</label>
+                                                            </div>
+                                                            <div class="col-md-12 medication-list" style="padding-left: 0px">
+                                                                <tr *ngFor="let med of NewMedications;let i=index">
+                                                                    <td class="form-group" style="width: 78%;"> -->
+                                            <!-- <form [formGroup]="med.DischargeSummaryMedicationValidator"> -->
+                                            <!-- <input type="test" style="width: 100%" title="Enter Medicine"
+                                                                               [(ngModel)]="med.Medicine"
+                                                                               [id]="'MedicineInput'+i" max="100"
+                                                                               [ngModelOptions]="{standalone: true}"
+                                                                               (focusout)="focusOut()"
+                                                                               (keyup.enter)="OnMedicineEnterKeyClick()"
+                                                                               placeholder="Enter Medicines"
+                                                                               name="Medicine" />
+                                                                        <br />
+
+                                                                    <td class="form-group" style="padding-left: 5px; text-align: right;">
+                                                                        <input type="button" style="border-radius: 1px"
+                                                                               class="btn btn-info btn-sm"
+                                                                               title="Add new Medicine" (click)="AddMedicine(0)" value="+" />
+                                                                        <input type="button" style="border-radius: 1px"
+                                                                               title="Delete Medicine"
+                                                                               class="btn btn-danger btn-sm" (click)="RemoveMedicine(i,0)"
+                                                                               value="X" />
+                                                                    </td>
+                                                                </tr>
+                                                            </div>
+                                                        </div>
+
+                                                    </table>
+                                                </div>
+                                            </ng-template> -->
+                                            <ng-template [ngSwitchCase]="'CheckedBy'">
+                                                <div class="col-md-7">
+                                                    <input danphe-auto-complete class="form-control" [(ngModel)]="CheckedBy" [source]="UserList"
+                                                           [list-formatter]="userListFormatter" formControlName="{{summaryData.FieldName}}"
+                                                           placeholder="{{summaryData.DisplayLabelAtForm}} name"
+                                                           display-property-name="EmployeeName" value-property-name="null"
+                                                           (valueChanged)="CheckedByChanged()" (focusout)="focusOut()" min-chars="0"
+                                                           max-num-list="10" />
+                                                </div>
+                                            </ng-template>
+
+                                            <ng-container *ngSwitchDefault>
+                                                <div class="col-md-7">
+                                                    <textarea class="form-control" maxlength="5000" formControlName="{{summaryData.FieldName}}"
+                                                              spellcheck="true" lang="en"
+                                                              (focusout)="focusOut()"
+                                                              placeholder="{{summaryData.DisplayLabelAtForm}} name"></textarea>
+                                                    <span class="color-red"
+                                                          *ngIf="CurrentDischargeSummary_VM.IsDirty(summaryData.FieldName) && summaryData.IsMandatory"
+                                                          [hidden]="CurrentDischargeSummary_VM.IsValidCheck(summaryData.FieldName, 'required')">
+                                                        {{summaryData.DisplayLabelAtForm}} is required
+                                                    </span>
+                                                    <br />
+                                                </div>
+                                            </ng-container>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div class="col-md-4 col-xs-4 ">
+                                <div class="col-md-12 col-xs-12">
+                                    <div class="investigation-panel">
+                                        <label class="panel-heading" style="font-size: 14px; width: 100%"
+                                               *ngIf="dischSumFieldSettings?.Investigations?.Show">
+                                            <i class="fa fa-bars"></i>{{dischSumFieldSettings?.Investigations?.DisplayLabelAtForm}}<b
+                                               class="color-red"
+                                               *ngIf="dischSumFieldSettings?.Investigations?.IsMandatory"> *</b>
+                                            &nbsp; </label>
+                                        <div class="show-report-btn" *ngIf="dischSumFieldSettings?.Investigations?.Show">
+                                            <span style="font-weight: 500; color: #272727;">Show Result on Report &nbsp;
+                                                <input [(ngModel)]="IsReportWithResult" name="IsReportWithResult"
+                                                       width="100" type="radio" [ngModelOptions]="{standalone: true}"
+                                                       [value]="true" (click)="showChooseTestResultPopup=true;"
+                                                       id="IsReportWithResultYes" />
+                                                <label for="IsReportWithResultYes">Yes</label> &ensp; <input
+                                                       [(ngModel)]="IsReportWithResult" name="IsReportWithResult" width="100"
+                                                       type="radio" id="IsReportWithResultNo"
+                                                       [ngModelOptions]="{standalone: true}" [value]="false" />
+                                                <label for="IsReportWithResultNo">No</label>
+                                            </span>
+                                        </div>
+                                        <div *ngIf="labRequests && dischSumFieldSettings?.LabTests?.Show" style="padding-top: 10px">
+                                            <table class="table-responsive" style="width: 100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="50%" align="center">Lab Tests <b class="color-red"
+                                                               *ngIf="dischSumFieldSettings?.LabTests?.IsMandatory"> *</b>
+                                                        </th>
+                                                        <th width="50%" align="center">Add New Tests</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="height: 170px; overflow: auto">
+                                                    <tr>
+                                                        <td>
+                                                            <table>
+                                                                <tbody>
+                                                                    <tr *ngFor="let tst of labRequests;let i=index;">
+                                                                        <td width="70%">
+                                                                            <ul>
+                                                                                <li>
+                                                                                    <i class="fa fa-circle" aria-hidden="true"></i> {{tst.TestName}}
+                                                                                </li>
+                                                                            </ul>
+                                                                        </td>
+                                                                        <td style="border-right: 1px solid #eee">
+                                                                            <input class="zoomcheckbox" [(ngModel)]="tst.IsSelectTest"
+                                                                                   name="IsSelected"
+                                                                                   width="100" type="checkbox" ng-checked="tst.IsSelectTest=true"
+                                                                                   (change)="LabTestSelection(i)"
+                                                                                   [ngModelOptions]="{standalone: true}" />
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <input autocomplete="off" danphe-auto-complete class="form-control" [(ngModel)]="labtest"
+                                                                   [source]="LabTestList" [list-formatter]="labTestFormatter"
+                                                                   placeholder="Add New Test"
+                                                                   onClick="this.select();" display-property-name="LabTestName"
+                                                                   value-property-name="LabTestId"
+                                                                   (focusout)="loadlabTest()" min-chars="0" max-num-list="10"
+                                                                   [ngModelOptions]="{standalone: true}" />
+                                                            <table style="padding: 10px" *ngIf="AddedTests">
+                                                                <tr *ngFor="let tst of AddedTests;let i=index;" style="padding: 2px">
+                                                                    <td style="padding-left: 5px">
+                                                                        <ul>
+                                                                            <li>
+                                                                                <i class="fa fa-check"></i>{{tst.TestName}}
+                                                                            </li>
+                                                                        </ul>
+                                                                    </td>
+                                                                    <td align="right">
+                                                                        <input type="button" style="border-radius: 1px" class="btn btn-danger btn-sm"
+                                                                               (click)="RemoveAddedTest(i)" value="X" />
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!--Imaging Details Starts Here-->
+                                        <div *ngIf="imagingResults && dischSumFieldSettings?.Imagings?.Show" style="margin-top: 15px">
+                                            <table class="table-bordered" style="width: 100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="180" align="center">{{dischSumFieldSettings?.Imagings?.DisplayLabelAtForm}}<b
+                                                               class="color-red" *ngIf="dischSumFieldSettings?.Imagings?.IsMandatory"> *</b>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tr *ngFor="let img of imagingResults; let i = index;">
+                                                    <td>
+                                                        <input value="{{img.ImagingItemName}}" readonly="readonly"
+                                                               style="border: 1px solid #afafaf; width: 100%" />
+                                                    </td>
+                                                    <td style="border-right: 1px solid #eee">
+                                                        <input class="zoomcheckbox" [(ngModel)]="img.IsImagingSelected" name="IsImagingSelected"
+                                                               width="100" type="checkbox" ng-checked="tst.IsImagingSelected=true"
+                                                               (change)="ImagingSelection(i)" [ngModelOptions]="{standalone: true}"
+                                                               style="border: 1px solid #afafaf" />
+                                                    </td>
+                                                    <!--tr-->
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <!--Imaging Details Ends Here-->
+                                        <div class="" style="padding-top: 10px" *ngIf="dischSumFieldSettings?.Medications?.Show">
+                                            <table class="table-responsive" style="width: 100%">
+                                                <div class="col-md-12">
+                                                    <h5 class="panel-heading">
+                                                        <i class="fa fa-bars"></i>{{dischSumFieldSettings?.Medications?.DisplayLabelAtForm}}<b
+                                                           class="color-red"
+                                                           *ngIf="dischSumFieldSettings?.Medications?.IsMandatory"> *</b>
+                                                    </h5>
+
+                                                </div>
+                                                <!-- </table><table class="table-bordered" style="width:95%"> -->
+                                                <div class="col-md-12">
+                                                    <div class="col-md-4">
+                                                        <label title="New Medicines" max="10" style="width: 160px; overflow: hidden">New
+                                                            Medicines</label>
+                                                    </div>
+                                                    <div class="col-md-12 medication-list" style="padding-left: 0px">
+                                                        <tr *ngFor="let med of NewMedications;let i=index">
+                                                            <td class="form-group" style="width: 78%;">
+                                                                <input type="test" style="width: 100%" title="Enter Medicine"
+                                                                       [(ngModel)]="med.Medicine"
+                                                                       [id]="'MedicineInput'+i" max="100" [ngModelOptions]="{standalone: true}"
+                                                                       (focusout)="focusOut()" (keyup.enter)="OnMedicineEnterKeyClick()"
+                                                                       placeholder="Enter Medicines"
+                                                                       name="Medicine" />
+                                                                <br />
+
+                                                            <td style="padding-left: 5px; text-align: right;">
+                                                                <input type="button" style="border-radius: 1px" class="btn btn-info btn-sm"
+                                                                       title="Add new Medicine" (click)="AddMedicine(0)" value="+" />
+                                                                <input type="button" style="border-radius: 1px" title="Delete Medicine"
+                                                                       class="btn btn-danger btn-sm" (click)="RemoveMedicine(i,0)" value="X" />
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                </div>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" *ngIf="!fromClinical" style="
+                margin-top: 50px !important;
+                margin-bottom: 50px !important;">
+                            <input style="width: 200px; height: 35px; margin-right: 30px; float: right;" class="btn blue" type="button"
+                                   (click)="Save()" *ngIf="!update" value="Save" />
+                            <input style="width: 200px;height: 35px;margin-right: 30px;float: right;" class="btn blue" type="button"
+                                   (click)="Update()" *ngIf="update" value="Update" />
+                            <input style="width: 200px;height: 35px;margin-right: 30px;float: right;" class="btn blue" type="button"
+                                   (click)="SubmitAndViewSummary()" *ngIf="update" value="Submit and Print Summary" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--Model Box Starting Here-->
+    <div class="popup-static portlet box portlet-fullscreen" *ngIf="showUnpaidPopupBox">
+        <div class="portlet-body form">
+            <!--Model Box Body Start-->
+            <div class="form-body">
+                <div class="col-md-12">
+                    <div class="col-md-2 hidden-xs hidden-sm" style="margin-right: 24px"></div>
+                    <div class="col-md-7 col-sm-12 col-xs-12 modelbox-div" style="margin-right: 24px">
+                        <div class="col-md-12">
+                            <b>
+                                <u style="color: #bd8111"> Alert ! This patient has unpaid bills, Please clear them and
+                                    proceed to discharge. </u>
+                                <br />
+                                <button type="button" class="btn btn-primary btn-sm" (click)="Close()"> OK </button>
+                            </b>
+                            <hr />
+                        </div>
+                        <br />
+                        <div class="col-md-12" style="padding-bottom: 18px">
+                            <b>Proceed with pending bills ? </b>
+                            <br /> Remarks *: <textarea class="form-control" maxlength="100" [(ngModel)]="admission.DischargeRemarks"
+                                      placeholder="Remarks"></textarea>
+                            <br />
+                            <div class="color-red" *ngIf="!admission.DischargeRemarks"> DischargeRemarks is mandatory.
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm" (click)="DischargeWithPendingBills()">
+                                Discharge Anyway </button>
+                        </div>
+                    </div>
+                    <!--<div class="col-md-2 hidden-xs hidden-sm" style="margin-right: 24px;"></div>-->
+                </div>
+            </div>
+            <!--Model Box Body End-->
+        </div>
+    </div>
+    <!--Model Box End Here-->
+</div>
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="showChooseTestResultPopup">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="modelbox-div clearfix">
+                        <a class="btn btn-danger del-btn" (click)="showChooseTestResultPopup=false;">X</a>
+                        <div class="form-body">
+                            <p>Click the Components to show the results on report</p>
+                            <ul class="list-group">
+                                <li class="list-group-item" style="text-align: right;">
+                                    <input type="checkbox" (change)="LabTestsSelectUnselectALL()" [(ngModel)]="selectUnselectAllLabTests"
+                                           name="list_name" value="true" />
+                                    <strong>Select All</strong>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li *ngFor="let tst of labRequests;let i=index;">
+                                    <label [attr.for]="i+'lbtest'"
+                                           style="background-color: #f1f1f1; padding: 10px 15px; border-radius: 5px !important;">
+                                        {{tst.TestName}} &nbsp;&nbsp; <span
+                                              *ngIf="(tst.labComponents && tst.labComponents.length == 1)">
+                                            <i *ngFor="let cmpt of tst.labComponents; let ci= index;"> {{cmpt.Value}}
+                                                &nbsp;&nbsp; {{cmpt.Unit}}</i>
+                                        </span>
+                                        <input class="zoomcheckbox" [(ngModel)]="tst.IsSelectTest" name="IsSelected"
+                                               width="100" type="checkbox" [id]="i+'lbtest'"
+                                               ng-checked="tst.IsSelectTest=true" (change)="LabTestSelection(i)"
+                                               [ngModelOptions]="{standalone: true}" />
+                                        <div class="clearfix"></div>
+                                    </label>
+                                    <ul *ngIf="(tst.labComponents && tst.labComponents.length > 1)">
+                                        <li *ngFor="let cmpt of tst.labComponents; let ci= index;">
+                                            <label [attr.for]="cmpt.TestComponentResultId+'lbtestCmpt'">{{cmpt.ComponentName}}
+                                                &nbsp;&nbsp; <span>{{cmpt.Value}}</span> &nbsp;
+                                                <span>{{cmpt.Unit}}</span> &nbsp;&nbsp; <input class="zoomcheckbox"
+                                                       [(ngModel)]="cmpt.IsCmptSelected" name="IsCmptSelected" width="100"
+                                                       [id]="cmpt.TestComponentResultId+'lbtestCmpt'" type="checkbox"
+                                                       ng-checked="cmpt.IsCmptSelected=true"
+                                                       (change)="LabTestComponentSelection(i,ci,cmpt.ComponentName)"
+                                                       [ngModelOptions]="{standalone: true}" />
+                                            </label>
+                                            <!-- (change)="LabTestComponentSelection(i,ci,cmpt.ComponentName)" -->
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="panel-footer text-right">
+                            <input class="btn btn-primary" type="button" value="OK" (click)="showChooseTestResultPopup=false;">
+                        </div>
+                    </div>
+                    <!-- End: Choose Popup for Show Test with Result  -->

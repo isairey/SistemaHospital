@@ -1,0 +1,214 @@
+<style>
+    .form-section {
+        margin-bottom: 20px;
+    }
+
+    .form-section h5 {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .custom-checkbox {
+        margin-bottom: 10px;
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+</style>
+<div class="container mt-4" style="width: 100%;">
+    <form [formGroup]="TreatmentCardexPlanForm">
+        <div class="form-group-row">
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="id_Status" class="col-sm-2 col-form-label">Status:<sup class="color-red">*</sup></label>
+                <div class="col-sm-3">
+                    <select onwheel="this.blur();" formControlName="Status" id="id_Status" class="form-control">
+                        <option *ngFor="let status of MedicationStatus" [value]="status">{{status}}</option>
+                    </select>
+                    <div *ngIf="StatusControl.Status?.touched && StatusControl.Status?.invalid" class="text-danger mt-2">
+                        Status is required.
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="margin-top: 20px;" *ngIf="!IsNewPlan">
+                <label for="id_Prescriber" class="col-sm-2 col-form-label">Prescribed By:</label>
+                <div class="col-sm-4">
+                    <input type="text" appFocusTextbox class="form-control" id="id_Prescriber"
+                           formControlName="Prescriber">
+                </div>
+            </div>
+        </div>
+        <div class="form-section" style="margin-top: 10px;">
+            <div class="form-group-row">
+                <h5 class="col-sm-12 col-form-label">Medicine Detail</h5>
+            </div>
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Generic Name</th>
+                        <th>Brand Name <sup class="color-red">*</sup></th>
+                        <th>Strength<sup class="color-red">*</sup></th>
+                        <th>Dosage<sup class="color-red"></sup></th>
+                        <th>Route<sup class="color-red">*</sup></th>
+                        <th>Frequency<sup class="color-red">*</sup></th>
+                        <th>Medication Schedule<sup class="color-red">*</sup></th>
+                        <th>Duration (In days)<sup class="color-red">*</sup></th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="form-control" [readonly]="true" formControlName="GenericName">
+                        </td>
+                        <td>
+                            <input danphe-auto-complete class="form-control cstm-form-control"
+                                   formControlName="ItemName" [source]="AllMedicineList" placeholder="MedicationName"
+                                   path-to-data="Results" display-property-name="MedicineName"
+                                   value-property-name="ItemName" [list-formatter]="MyListFormatter"
+                                   onClick="this.select()" (keyup.enter)="FocusOnInputField('id_dosage')"
+                                   (valueChanged)="OnMedicationSelected($event)" max-num-list="10" [readOnly]="IsUpdateCardexPlan">
+                        </td>
+                        <td> <input appFocusTextbox type="text" id="id_Strength" class="form-control"
+                                   placeholder="Strength" formControlName="Strength"
+                                   (keyup.enter)="FocusOnInputField('id_dosage')">
+                        </td>
+                        <td> <input appFocusTextbox type="text" id="id_dosage" class="form-control"
+                                   placeholder="Dosage" formControlName="Doses"
+                                   (keyup.enter)="FocusOnInputField('id_route')">
+                        </td>
+                        <td>
+                            <select (keyup.enter)="FocusOnInputField('id_frequency')" onwheel="this.blur();"
+                                    formControlName="Route" id="id_route" class="form-control">
+                                <option *ngFor="let route of MedRouteList" [value]="route">{{ route }}</option>
+                            </select>
+                        </td>
+                        <td>
+
+                            <select (keyup.enter)="FocusOnInputField('id_intake')" onwheel="this.blur();"
+                                    formControlName="Frequency" id="id_frequency" class="form-control">
+                                <option *ngFor="let frequency of FrequencyList"
+                                        [value]="frequency.FrequencyDisplayName">{{
+                                    frequency.FrequencyDisplayName }}
+                                </option>
+                            </select>
+
+                        </td>
+                        <td>
+                            <select (keyup.enter)="FocusOnInputField('id_duration')" onwheel="this.blur();"
+                                    formControlName="MedicationSchedule" id="id_intake" class="form-control">
+                                <option *ngFor="let r of MedicationIntakeList" [value]="r.IntakeDisplayName">{{
+                                    r.IntakeDisplayName}}</option>
+                            </select>
+                        </td>
+                        <td><input type="number" class="form-control" id="id_duration" placeholder="Duration"
+                                   formControlName="Duration" (ngModelChange)="OnChangeDuration()"
+                                   (keyup.enter)="FocusOnInputField('id_remarks')" min="0"
+                                   (wheel)="coreService.PreventNumberChangeOnScroll($event)">
+                        </td>
+                        <td><input type="text" appFocusTextbox class="form-control" placeholder="Remarks"
+                                   formControlName="Remarks" id="id_remarks" (keyup.enter)="FocusOnInputField('id_isPrn')">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="form-section">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5><strong>Medication Timing Instructions</strong></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row align-items-center">
+                        <label for="medicationStartDate" class="col-md-3 col-form-label">Start Date</label>
+                        <div class="col-md-1">:</div>
+                        <div class="col-md-8">
+                            <danphe-date-picker id="medicationStartDate" name="medicationStartDate" ngDefaultControl
+                                                [isFromToDateSelect]="true" [(ngModel)]="MedicationStartDate" [showTime]="true"
+                                                [CalendarTypes]="'en,np'" aria-describedby="startDateHelp"
+                                                [ngModelOptions]="{standalone: true}" [allow-future-date]="true"
+                                                (ngModelChange)="OnChangeDuration()">
+                            </danphe-date-picker>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row align-items-center">
+                        <label for="medicationEndDate" class="col-md-3 col-form-label">End Date</label>
+                        <div class="col-md-1">:</div>
+                        <div class="col-md-8">
+                            <danphe-date-picker id="medicationEndDate" name="medicationEndDate" ngDefaultControl
+                                                [isFromToDateSelect]="true" [(ngModel)]="MedicationEndDate" [showTime]="true"
+                                                [CalendarTypes]="'en,np'" aria-describedby="endDateHelp"
+                                                [ngModelOptions]="{standalone: true}" [allow-future-date]="true">
+                            </danphe-date-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <div class="form-group row">
+                <div class="form-group col-md-6">
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="id_isPrn" formControlName="IsPRN"
+                               (keyup.enter)="FocusOnInputField('id_prnNote')" (click)="IsPRNCheck()"
+                               style="transform: scale(1.5); margin-right:10px">
+                        <label class="form-check-label" for="id_isPrn">Is PRN?</label>
+                    </div>
+                    <div class="form-group col-md-12" *ngIf="ShowPRNNotesTextArea">
+                        <label for="id_PrnNotes" class="col-sm-4 col-form-label">PRN Notes:</label>
+                        <div class="col-sm-8">
+                            <textarea appFocusTextbox type="text" class="form-control" id="id_PrnNotes"
+                                      placeholder="PRN Notes" formControlName="PRNNotes">
+                        </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="id_useAlternateMedicine"
+                               formControlName="UseAlternateMedicine" (click)="IsUseAlternateMedicine()"
+                               style="transform: scale(1.5); margin-right:10px">
+                        <label class="form-check-label" for="id_useAlternateMedicine">Use Alternate Medicine</label>
+                    </div>
+                    <div class="form-group col-md-12" *ngIf="ShowAlterMedicineField">
+                        <label for="AlternateMedicine" class="col-sm-4 col-form-label">Alternate Medicine Name:</label>
+                        <div class="col-sm-8">
+                            <input type="text" appFocusTextbox class="form-control" id="id_AlternateMedicine"
+                                   formControlName="AlternateMedicine">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-12">
+                    <label for="id_cardexNote" class="col-sm-2 col-form-label">Cardex Note:</label>
+                    <div class="col-sm-10">
+                        <textarea appFocusTextbox type="text" class="form-control" id="id_cardexNote"
+                                  placeholder="Cardex Note" formControlName="CardexNote">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group-row" style="text-align:right">
+                <div class="form-group col-md-12" *ngIf="!IsUpdateCardexPlan">
+                    <button type="submit" class="btn btn-primary float-right" style="margin-top: 20px;"
+                            (click)="AddNewPlan()">Add to
+                        Plan</button>
+                </div>
+                <div class="form-group col-md-12" *ngIf="IsUpdateCardexPlan">
+                    <button type="submit" class="btn btn-primary float-right" style="margin-top: 20px;"
+                            (click)="UpdateCurrentCardexPlan()">Update
+                        Plan</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

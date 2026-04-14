@@ -1,0 +1,135 @@
+<div class="container">
+  <div class="form-container">
+    <form [formGroup]="DischargeInfo.DischargeInfoValidator">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="dischargeType">Discharge Type<span class="text-danger">*</span></label>
+            <select class="form-control" id="dischargeType" formControlName="DischargeTypeId" (change)="OnDischargeTypeChange($event.target.value)">
+              <option>Select Discharge Type</option>
+              <option *ngFor="let DischargeType of DischargeTypeList" [value]="DischargeType.DischargeTypeId">
+                {{ DischargeType.DischargeTypeName }}
+              </option>
+            </select>
+          </div>
+
+
+          <div class="form-group">
+            <label for="doctorInCharge">Doctor In Charge<span class="text-danger">*</span></label>
+            <select class="form-control" id="doctorInCharge" formControlName="DoctorInchargeId">
+              <option>Select In Charge Dr.</option>
+              <option *ngFor="let Doctor of DoctorList" [value]="Doctor.EmployeeId">
+                {{ Doctor.EmployeeName }}</option>
+
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="residentDr">Resident Dr.</label>
+            <select class="form-control" id="residentDr" formControlName="ResidentDrId">
+              <option>Select Resident Dr</option>
+              <option *ngFor="let ResidentDr of DoctorList" [value]="ResidentDr.EmployeeId">
+                {{ ResidentDr.EmployeeName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="nurse">Nurse</label>
+            <select class="form-control" id="nurse" formControlName="DischargeNurseId">
+              <option>Select Nurse Incharge</option>
+              <option *ngFor="let Nurse of NurseList" [value]="Nurse.EmployeeId">
+                {{ Nurse.EmployeeName }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div *ngIf="FilteredDischargeConditionTypeList && FilteredDischargeConditionTypeList.length > 0 " class="form-group">
+            <label for="dischargeCondition">Discharge Condition</label>
+            <select class="form-control" id="dischargeCondition" formControlName="SubDischargeTypeId">
+              <option>Select Discharge Condition</option>
+              <option *ngFor="let condition of FilteredDischargeConditionTypeList" [value]="condition.DischargeConditionId">
+                {{ condition.Condition }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-4" style="padding-left: 0px;
+            padding-right: 20px;">Consultant(s)<b style="float: right">:</b></label>
+            <div *ngIf="IsConsultant">
+              <danphe-multiselect *ngIf="DoctorList.length > 0" [ddl-data]="DoctorList" [pre-selected]="PreConsultants"
+                                  [placeholder-text]="'--Select Consultants --'" [value-property-name]="'EmployeeId'"
+                                  (selected-items-list)="ConsultantChkOnChange($event)"
+                                  [display-property-name]="'EmployeeName'" [single-selection]="false">
+              </danphe-multiselect>
+
+            </div>
+            <div *ngIf="!IsConsultant">
+              <danphe-multiselect *ngIf="DoctorList.length > 0" [ddl-data]="DoctorList" [pre-selected]="PreConsultants"
+                                  [placeholder-text]="'--Select Consultants --'" [value-property-name]="'EmployeeId'"
+                                  (selected-items-list)="ConsultantChkOnChange($event)"
+                                  [display-property-name]="'EmployeeName'" [single-selection]="false">
+              </danphe-multiselect>
+
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="checkedBy">Checked By</label>
+            <select class="form-control" id="checkedBy" formControlName="CheckdById">
+              <option>Select Checked By</option>
+              <option *ngFor="let CheckedByDoctor of DoctorList" [value]="CheckedByDoctor.EmployeeId">
+                {{ CheckedByDoctor.EmployeeName }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="checkedBy">Anaesthetist</label>
+            <select class="form-control" id="AnaesthetistId" formControlName="AnaesthetistId">
+              <option>Select Checked By</option>
+              <option *ngFor="let Anaesthetist of Anaesthetist" [value]="Anaesthetist.EmployeeId">
+                {{ Anaesthetist.EmployeeName }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="ot-details mt-4">
+        <h5>OT Details</h5>
+        <div class="row align-items-center">
+          <div class="col-md-2">
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input larger-checkbox" id="isOt" (change)="ToggleOTDetails($event)"
+                     formControlName="IsOtPatient">
+              <label class="form-check-label" for="isOt">Is OT?</label>
+            </div>
+
+          </div>
+          <div *ngIf="IsOTChecked" class="col-md-5">
+            <div class="form-group">
+              <label for="otType">OT Type<span class="text-danger">*</span></label>
+              <select class="form-control" id="otType" formControlName="OperationType">
+                <option>Select OT Type</option>
+                <option *ngFor="let operationType of OperationType" [value]="operationType.OperationName">
+                  {{ operationType.OperationName }}</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="IsOTChecked" class="col-md-5">
+            <div class="form-group">
+              <label for="otDateTime">OT DateTime<span class="text-danger">*</span></label>
+              <danphe-date-picker [(ngModel)]="OTDateTime" formControlName="OperationDate" [CalendarTypes]="'en,np'" ngDefaultControl>
+              </danphe-date-picker>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <input type="button" id="add" class="btn green btn-success margin-7-hr" (click)="AddDischargeInformation()" value="Save" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

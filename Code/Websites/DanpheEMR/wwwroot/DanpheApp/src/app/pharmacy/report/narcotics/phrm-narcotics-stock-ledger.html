@@ -1,0 +1,118 @@
+<div class="row">
+  <div class="form-body">
+    <div class="col-md-12">
+      <div class="caption custom-caption"> <i class="glyphicon glyphicon-asterisk"></i>
+        <span class="caption-subject">Narcotic Ledger Report</span>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'narcotic-report'"> </from-to-date-select>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group row">
+            <label class="control-label col-md-4">Name of Drug in Generic Name<b style="float:right;">:</b><sup
+                   style="color: red;">*</sup></label>
+            <div class="col-md-6 autocomplete-item">
+              <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedGeneric" [source]="AllGenericList"
+                     [list-formatter]="myGenericListFormatter" placeholder="--Select Generic--" display-property-name="GenericName"
+                     match-formatted="true" [grid-sort]="'GenericName'" value-property-name=null onClick="this.select();"
+                     (ngModelChange)="onChangeGeneric($event)" max-num-list="10" min-chars="0"
+                     style="width:100%;" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label class="control-label col-md-4">Name of Manufacturer<b style="float:right;">:</b><sup
+                 style="color: red;">*</sup></label>
+          <div class="col-md-6 autocomplete-item">
+            <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedCompany" [source]="AllCompanyList"
+                   [list-formatter]="myCompanyListFormatter" placeholder="--Select Manufacturer--"
+                   display-property-name="CompanyName"
+                   match-formatted="true" [grid-sort]="'CompanyName'" value-property-name="CompanyName" onClick="this.select();"
+                   (ngModelChange)="onChangeCompany($event)" max-num-list="10" min-chars="0"
+                   style="width:100%;" />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group row">
+          <label class="control-label col-md-4">Trade Name<b style="float:right;">:</b></label>
+          <div class="col-md-6 autocomplete-item">
+            <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedSupplier" [source]="AllSupplierList"
+                   [list-formatter]="mySupplierListFormatter" placeholder="--Select Trade--" display-property-name="SupplierName"
+                   match-formatted="true" [grid-sort]="'SupplierName'" value-property-name=null onClick="this.select();"
+                   (ngModelChange)="onChangeSupplier($event)" max-num-list="10" min-chars="0"
+                   style="width:100%;" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 col-xs-12">
+        <div class="form-group">
+          <button class="btn blue" type="button" (click)="GetAllNarcotics()"> Show Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display: flex; justify-content: flex-end;margin-bottom: 15px;">
+  <button class="btn blue" id="btnPrintPhrmInvoice" class="btn green btn-success" (click)="Print()">
+    Print
+    <i class="glyphicon glyphicon-print"></i>
+  </button>
+  <button class="btn green btn-success btn-sm hidden-print" (click)="ExportToExcel()" title="export to excel">
+    Export
+    <i class="fa fa-file-excel-o" style="margin-left:10px;"></i>
+  </button>
+</div>
+
+<div id="narcotic-table" style="white-space: pre-line;">
+  <table style="border-collapse:collapse ; width:100%;">
+    <tr>
+      <td colspan="3">Name of Drug in Generic Name:{{this.GenericName}}</td>
+      <td colspan="4">Name of Manufacturer:{{this.CompanyName}}</td>
+      <td colspan="4">Trade Name:{{this.SupplierName}}</td>
+    </tr>
+  </table>
+  <br>
+  <div>
+    <table id="dataTable">
+      <thead>
+        <tr style="background-color: #f2f2f2; border-bottom: 1px solid black;">
+          <th style="padding: 8px; border: 1px solid black;">Date</th>
+          <th style="padding: 8px; border: 1px solid black;">Batch No. Mfg.Date & Exp. Date</th>
+          <th style="padding: 8px; border: 1px solid black;">Qty. Received</th>
+          <th style="padding: 8px; border: 1px solid black;">Supplier’s Name</th>
+          <th style="padding: 8px; border: 1px solid black;">Patient’s Name</th>
+          <th style="padding: 8px; border: 1px solid black;">Quantity Dispensed</th>
+          <th style="padding: 8px; border: 1px solid black;">Prescribed By</th>
+          <th style="padding: 8px; border: 1px solid black;">Name & Sig. of Recipient</th>
+          <th style="padding: 8px; border: 1px solid black;">Dispenser’s Name & Sig.</th>
+          <th style="padding: 8px; border: 1px solid black;">Qty. in Stock</th>
+          <th style="padding: 8px; border: 1px solid black;">Remarks</th>
+        </tr>
+      </thead>
+      <tbody class="narcotic-body">
+        <tr *ngFor="let data of NarcoticDetails; let i = index;" style="background-color: #f2f2f2; border-bottom: 1px solid black;">
+          <td style="padding: 8px; border: 1px solid black;">{{data.BatchNo}} | {{data.MfgDate | date:'yyyy-MM-dd'}} | {{data.ExpiryDate |
+            date:'yyyy-MM-dd'}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.PurchaseDate | date:'yyyy-MM-dd'}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.QntyReceived}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.SupplierName}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.PatientName}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.QntyDispensed}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.PrescribedByDoctorNmcNo}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.RecipientName}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.DispenserName}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.QntyInStock}}</td>
+          <td style="padding: 8px; border: 1px solid black;">{{data.Remarks}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <new-print-page *ngIf="openBrowserPrintWindow" [print-data]="PrintContentObj">
+  </new-print-page>
+</div>

@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="form-group col-md-6" style="margin-bottom:0px !important;">
+      <label class="control-label no-padding col-md-6">
+        <h4 style="color:rgb(0, 4, 8)"><b>Members List</b></h4>
+      </label>
+    </div>
+  </div>
+  <br>
+  <div class="col-md-12">
+    <div class="col-md-1" style="width: min-content;">
+      <a class="btn green btn-success" style="background-color:#337ab7;" (click)="AddMedicareMember()" name="name">
+        <span class="glyphicon glyphicon-plus"></span> Add New Member
+      </a>
+    </div>
+    <div class="col-md-1" style="width: min-content;margin-right: 10%;">
+      <a class="btn green btn-success" style="background-color:#337ab7;" (click)="AddMedicareDependent()" name="name">
+        <span class="glyphicon glyphicon-plus"></span>New Dependent
+      </a>
+    </div>
+    <div class="col-md-1" style="margin-right: -25px;">
+      <label class="mt-checkbox mt-checkbox-outline">
+        <input name="showMedicareMembers" type="radio" checked="checked" (change)="ToggleMedicareMemberList('all')">
+        <span> </span> <b> All </b> </label> <label *ngIf="TotalMedicare>0">({{TotalMedicare}}) </label>
+    </div>
+    <div class="col-md-1" style="width: max-content;padding: initial;">
+      <label class="mt-checkbox mt-checkbox-outline mapped mapped-outline">
+        <input name="showMedicareMembers" type="radio" (change)="ToggleMedicareMemberList('true')">
+        <span> </span> <b> Active Only </b> </label> <label *ngIf="ActiveMedicare>0">
+        ({{ActiveMedicare}}) </label>
+    </div>
+    <div class="col-md-1" style="width: fit-content;padding: initial;margin-right: 5%;">
+      <label class="mt-checkbox mt-checkbox-outline mapped mapped-outline">
+        <input name="showMedicareMembers" type="radio" (change)="ToggleMedicareMemberList('false')">
+        <span> </span> <b> InActive Only </b> </label>
+    </div>
+    <div class="control-label col-md-3" *ngIf="CategoryList && CategoryList.length >0">
+      <label class="control-label col-md-3" style="margin-top: 5px;">
+        Category:</label>
+      <div class="control-label col-md-9" style="padding-right: 0%;">
+        <danphe-multiselect [ddl-data]="CategoryList"
+                            [placeholder-text]="'--Select Category--'"
+                            [value-property-name]="'MedicareTypeId'"
+                            [pre-selected]="SelectedCategoryList"
+                            (selected-items-list)="AssignCategories($event)"
+                            [display-property-name]="'MedicareTypeName'"
+                            [single-selection]="false">
+        </danphe-multiselect>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 col-xs-12 col-sm-12" style="margin-left: 10px;padding:30px">
+    <danphe-grid [grid-colDefaults]="MedicarePatientGridColumns" [grid-data]="MedicarePatientsList"
+                 [grid-exportOptions]="gridExportOptions" [grid-showExport]="true"
+                 (grid-actions)="MedicarePatientsGridAction($event)">
+    </danphe-grid>
+  </div>
+</div>
+<app-dependent *ngIf="ShowAddDependentPage"
+               [rowData]="DependentDetails"
+               [isUpdate]="isEditForm"
+               (callback-add-dependent)="CallBackAdd($event)"></app-dependent>
+
+<app-patient-medicare-member *ngIf="ShowAddMemberPage"
+                             [isEditForm]="isEditForm"
+                             [rowData]="MemberDetails"
+                             (callback-add-member)="CallBackAddMember($event)"></app-patient-medicare-member>

@@ -1,0 +1,67 @@
+.calendarrow {
+    margin-bottom: 15px;
+}
+
+.calendarcol {
+    padding-left: 10px;
+}
+
+.searchpatients {
+    padding-top: 7px;
+}
+
+.patientcol {
+    text-align: right;
+    padding-top: 5px !important;
+}
+
+.searchpatientinput {
+    padding-right: 2px;
+}
+
+.wardrow {
+    margin-bottom: 15px;
+}
+
+.wardname {
+    padding-left: 3px;
+    margin-top: 5px;
+}
+
+.wardcol {
+    padding-left: 0px;
+}
+
+.bedfeaturecol {
+    padding-right: 0px !important;
+}
+
+.bedfeature {
+    padding-left: 3px;
+    margin-top: 5px;
+}
+
+.bed {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.admstats {
+    padding-right: 0px !important;
+}
+
+.admstatscol {
+    padding-left: 3px;
+    margin-top: 5px;
+    padding-left: 8%;
+}
+
+.admission {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.showrpt {
+    float: right;
+    margin-right: 5px;
+}

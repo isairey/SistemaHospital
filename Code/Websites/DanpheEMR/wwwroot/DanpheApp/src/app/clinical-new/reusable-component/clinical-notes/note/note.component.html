@@ -1,0 +1,452 @@
+<style>
+  .p-field {
+    margin-left: 12px;
+
+  }
+
+  .p-field-data-container {
+    margin: 4px;
+  }
+
+
+  .p-field-title {
+    font-size: 1.6rem;
+    margin: 0px;
+    padding: 0px;
+    background: #0773bc9e;
+    width: 100%;
+    color: white;
+    padding: 6px;
+    margin-top: 4px !important;
+  }
+
+  .p-print-data {
+    font-size: 1.2rem;
+  }
+
+  .p-questionary {
+    margin-left: 8px;
+  }
+
+
+  .customize-label {
+    font-size: 14px;
+    margin: 4px;
+    font-weight: bold;
+  }
+
+  .data-label {
+    width: 100%;
+  }
+
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table-bordered th,
+  .table-bordered td {
+    border: 1px solid #ddd;
+  }
+
+  .cockpit-components {
+    display: flex;
+  }
+
+  .btn-print {
+    margin-left: auto;
+  }
+
+  .data-checkbox {
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+</style>
+
+
+<div class="cockpit-components">
+  <label>Customize
+    <input type="checkbox" [(ngModel)]="IsCustomizable">
+  </label>
+
+  <button class="btn btn-success btn-print" (click)="ShowPrintPopUp()">
+    <span style="margin-right:4px;">Print</span> <i class="glyphicon glyphicon-print"></i>
+  </button>
+</div>
+<div class="p-field" *ngFor="let field of DataContext">
+  <div>
+    <div *ngIf="field.InputType === ENUMClinicalFieldInputType.Textbox">
+      <div>
+        <label class="p-field-title">
+          <input *ngIf="IsCustomizable" (change)="OnSelectField(field)" type="checkbox" [(ngModel)]="field.IsPrintable">
+          {{field.FieldDisplayName}}
+        </label>
+      </div>
+      <div class="table-container" style="margin-top: 5px;">
+        <table class="table table-bordered">
+          <tbody>
+            <tr *ngFor="let answer of field.Answers; let i = index">
+              <td style="width: 100%; color:black;">
+                <label class="data-label">
+                  <input *ngIf="IsCustomizable" class="data-checkbox" type="checkbox" [(ngModel)]="answer.IsPrintable">
+                  {{answer.Answer}}
+                </label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="field.InputType === ENUMClinicalFieldInputType.FreeType">
+      <div>
+        <label class="p-field-title">
+          <input *ngIf="IsCustomizable" (change)="OnSelectField(field)" type="checkbox" [(ngModel)]="field.IsPrintable">
+          {{field.FieldDisplayName}}
+        </label>
+      </div>
+      <div class="table-container" style="margin-top: 5px;">
+        <table class="table table-bordered">
+          <tbody>
+            <tr *ngFor="let answer of field.Answers; let i = index">
+              <td style="width: 100%; color:black;">
+                <label class="data-label">
+                  <input *ngIf="IsCustomizable" class="data-checkbox" type="checkbox" [(ngModel)]="answer.IsPrintable">
+                  <freetype-html-renderer [htmlContent]="answer.Answer"></freetype-html-renderer>
+                </label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="field.InputType === ENUMClinicalFieldInputType.Number">
+      <div>
+        <label class="p-field-title">
+          <input *ngIf="IsCustomizable" (change)="OnSelectField(field)" type="checkbox" [(ngModel)]="field.IsPrintable">
+          {{field.FieldDisplayName}}
+        </label>
+      </div>
+      <div class="table-container" style="margin-top: 5px;">
+        <table class="table table-bordered">
+          <tbody>
+            <tr *ngFor="let answer of field.Answers; let i = index">
+              <td style="width:50%; color:black;">
+                <label class="data-label">
+                  <input *ngIf="IsCustomizable" class="data-checkbox" type="checkbox" [(ngModel)]="answer.IsPrintable">
+                  {{answer.Answer}}
+                </label>
+              </td>
+              <td style="width:50%; color:black;">{{answer.Remark}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="field.InputType === ENUMClinicalFieldInputType.SingleSelection ||  field.InputType === ENUMClinicalFieldInputType.MultipleSelect">
+      <div>
+        <label class="p-field-title">
+          <input *ngIf="IsCustomizable" (change)="OnSelectField(field)" type="checkbox" [(ngModel)]="field.IsPrintable">
+          {{field.FieldDisplayName}}
+        </label>
+      </div>
+      <div class="table-container" style="margin-top: 5px;">
+        <table class="table table-bordered">
+          <tbody>
+            <tr *ngFor="let optionList of field.Options; let i = index">
+              <!-- <td></td> -->
+              <td style="width:50%; color:black;">
+                <label class="data-label">
+                  <input *ngIf="IsCustomizable" class="data-checkbox" type="checkbox" [(ngModel)]="optionList.IsPrintable">
+                  {{ optionList.Options | CommaSeparated }}
+                </label>
+              </td>
+              <td style="width:50%; color:black;">
+                <span *ngIf="optionList.Remark">
+                  {{optionList.Remark}}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div *ngIf="field.InputType === ENUMClinicalFieldInputType.SmartTemplate || field.InputType === ENUMClinicalFieldInputType.SmartPrintableForm">
+      <div>
+        <label class="p-field-title">
+          <input *ngIf="IsCustomizable" type="checkbox" [(ngModel)]="field.IsPrintable">
+          {{field.FieldDisplayName}}
+        </label>
+      </div>
+      <clinical-reusable-elements *ngIf="field" [field]="field">
+
+      </clinical-reusable-elements>
+    </div>
+    <div *ngIf="field.InputType === ENUMClinicalFieldInputType.Questionnaire">
+      <div>
+        <label class="p-field-title">
+          <input *ngIf="IsCustomizable" (change)="OnSelectField(field)" type="checkbox" [(ngModel)]="field.IsPrintable">
+          {{field.FieldDisplayName}}
+        </label>
+      </div>
+
+      <div class="p-questionary">
+        <div *ngFor="let question of field.Questions">
+          <div>
+            <div *ngIf="question.AnswerType === ENUMClinicalFieldInputType.Textbox">
+              <div>
+                <label class="p-field-title">
+                  <input *ngIf="IsCustomizable" (change)="OnSelectQuestion(question)" type="checkbox" [(ngModel)]="question.IsPrintable">
+                  {{question.Question}}
+                </label>
+              </div>
+              <div class="table-container" style="margin-top: 5px;">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr *ngFor="let answer of question.Answers; let i = index">
+                      <td style="width: 100%; color:black;">
+                        <label class="data-label">
+                          <input *ngIf="IsCustomizable" class="data-checkbox" type="checkbox"
+                                 [(ngModel)]="answer.IsPrintable">{{answer.Answer}}
+                        </label>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div *ngIf="question.AnswerType === ENUMClinicalFieldInputType.FreeType">
+              <div>
+                <label class="p-field-title">
+                  <input *ngIf="IsCustomizable" (change)="OnSelectQuestion(question)" type="checkbox" [(ngModel)]="question.IsPrintable">
+                  {{question.Question}}
+                </label>
+              </div>
+              <div class="table-container" style="margin-top: 5px;">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr *ngFor="let answer of question.Answers; let i = index">
+                      <td style="width: 100%; color:black;">
+                        <label class="data-label">
+                          <input *ngIf="IsCustomizable" class="data-checkbox" type="checkbox" [(ngModel)]="answer.IsPrintable">
+                          <freetype-html-renderer [htmlContent]="answer.Answer">
+                          </freetype-html-renderer>
+                        </label>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div
+                 *ngIf="question.AnswerType === ENUMClinicalFieldInputType.SingleSelection ||  question.AnswerType === ENUMClinicalFieldInputType.MultipleSelect">
+              <div>
+                <label class="p-field-title">
+                  <input *ngIf="IsCustomizable" (change)="OnSelectQuestion(question)" type="checkbox" [(ngModel)]="question.IsPrintable">
+                  {{question.Question}}
+                </label>
+              </div>
+
+              <div class="table-container" style="margin-top: 5px;">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr *ngFor="let optionList of question.Options; let i = index">
+                      <td style="width:50%; color:black">
+                        <label class="data-label">
+                          <input *ngIf="IsCustomizable" class="data-checkbox" type="checkbox" [(ngModel)]="optionList.IsPrintable">
+                          {{optionList.Options | CommaSeparated }}
+                        </label>
+                      </td>
+                      <td style="width:50%; color:black">
+                        <span *ngIf="optionList.Remark">
+                          {{optionList.Remark}}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowPrintPagePopUp">
+  <div class="portlet-body form">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div">
+        <div id="printableContent">
+          <table style="width:100%">
+            <thead>
+              <tr>
+                <td>
+                  <smart-printable-hospital-header></smart-printable-hospital-header>
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <patient-details-card></patient-details-card>
+                  <div class="p-field" *ngFor="let field of PrintableNoteFields">
+                    <div>
+                      <div *ngIf="field.InputType === ENUMClinicalFieldInputType.Textbox">
+                        <p class="p-field-title" *ngIf="field.IsDisplayTitle">{{field.FieldDisplayName}}</p>
+                        <div class="table-container" style="margin-top: 5px;">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr *ngFor="let answer of field.Answers; let i = index">
+                                <td class="col-details" style="color:black">{{answer.Answer}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div *ngIf="field.InputType === ENUMClinicalFieldInputType.FreeType">
+                        <p class="p-field-title" *ngIf="field.IsDisplayTitle">{{field.FieldDisplayName}}</p>
+                        <div class="table-container" style="margin-top: 5px;">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr *ngFor="let answer of field.Answers; let i = index">
+                                <td class="col-details" style="color:black">
+                                  <freetype-html-renderer [htmlContent]="answer.Answer"></freetype-html-renderer>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div *ngIf="field.InputType === ENUMClinicalFieldInputType.Number">
+                        <p class="p-field-title" *ngIf="field.IsDisplayTitle">{{field.FieldDisplayName}}</p>
+                        <div class="table-container" style="margin-top: 5px;">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr *ngFor="let answer of field.Answers; let i = index">
+                                <td style="width:50%; color:black;">{{answer.Answer}}</td>
+                                <td style="width:50%; color:black;">{{answer.Remark}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div
+                           *ngIf="field.InputType === ENUMClinicalFieldInputType.SingleSelection ||  field.InputType === ENUMClinicalFieldInputType.MultipleSelect">
+                        <p class="p-field-title" *ngIf="field.IsDisplayTitle">{{field.FieldDisplayName}}</p>
+                        <div class="table-container" style="margin-top: 5px;">
+                          <table class="table table-bordered tbl_hover table-condensed">
+                            <tbody>
+                              <tr *ngFor="let optionList of field.Options; let i = index">
+                                <td style="width:50%; color:black;">
+                                  {{ optionList.Options | CommaSeparated }}
+                                </td>
+                                <td style="width:50%; color:black;">
+                                  <span *ngIf="optionList.Remark">
+                                    {{optionList.Remark}}
+                                  </span>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div
+                           *ngIf="field.InputType === ENUMClinicalFieldInputType.SmartTemplate || field.InputType === ENUMClinicalFieldInputType.SmartPrintableForm">
+                        <p class="p-field-title" *ngIf="field.IsDisplayTitle">{{field.FieldDisplayName}}</p>
+                        <clinical-reusable-elements *ngIf="field" [field]="field">
+
+                        </clinical-reusable-elements>
+                      </div>
+                      <div *ngIf="field.InputType === ENUMClinicalFieldInputType.Questionnaire">
+
+                        <p class="p-field-title" *ngIf="field.IsDisplayTitle">{{field.FieldDisplayName}}</p>
+                        <div class="p-questionary">
+                          <div *ngFor="let question of field.Questions">
+                            <div>
+                              <div
+                                   *ngIf="question.AnswerType === ENUMClinicalFieldInputType.Textbox">
+                                <p class="p-field-title">{{question.Question}}</p>
+                                <div class="table-container" style="margin-top: 5px;">
+                                  <table class="table table-bordered">
+                                    <tbody>
+                                      <tr *ngFor="let answer of question.Answers; let i = index">
+                                        <td class="col-details" style="color:black">{{answer.Answer}}</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                              <div *ngIf="question.AnswerType === ENUMClinicalFieldInputType.FreeType">
+                                <p class="p-field-title">{{question.Question}}</p>
+                                <div class="table-container" style="margin-top: 5px;">
+                                  <table class="table table-bordered">
+                                    <tbody>
+                                      <tr *ngFor="let answer of question.Answers; let i = index">
+                                        <td class="col-details" style="color:black">
+                                          <freetype-html-renderer [htmlContent]="answer.Answer">
+                                          </freetype-html-renderer>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                              <div
+                                   *ngIf="question.AnswerType === ENUMClinicalFieldInputType.SingleSelection ||  question.AnswerType === ENUMClinicalFieldInputType.MultipleSelect">
+                                <p class="p-field-title">{{question.Question}}</p>
+                                <div class="table-container" style="margin-top: 5px;">
+                                  <table class="table table-bordered tbl_hover table-condensed">
+                                    <tbody>
+                                      <tr *ngFor="let optionList of question.Options; let i = index">
+                                        <td style="width:50%; color:black">
+                                          {{ optionList.Options | CommaSeparated }}
+                                        </td>
+                                        <td style="width:50%; color:black">
+                                          <span *ngIf="optionList.Remark">
+                                            {{optionList.Remark}}
+                                          </span>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row">
+            <clinical-footer-signatories (Doctor-Selected)="OnDoctorSelected($event)"
+                                         (Nurse-Selected)="OnNurseSelected($event)"
+                                         (CheckedBy-Selected)="OnCheckedBySelected($event)"
+                                         (PreparedBy-Selected)="OnPreparedBySelected($event)"></clinical-footer-signatories>
+          </div>
+          <smart-printable-form-footer></smart-printable-form-footer>
+        </div>
+        <div class="close-modelbox">
+          <button class="btn btn-danger" (click)="ClosePopup()">
+            X
+          </button>
+        </div>
+        <div class="modelbox-footer">
+          <div class="all-buttons text-right">
+            <button class="btn green btn-success btn-sm hidden-print" (click)="PrintClinicalData()" value="Print"
+                    title="Print Page">
+              Print <i class="fa fa-print" style="margin-left:10px;"></i>
+            </button>
+            <button type="button" class="btn btn orange btn-success" (click)="ClosePopup()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

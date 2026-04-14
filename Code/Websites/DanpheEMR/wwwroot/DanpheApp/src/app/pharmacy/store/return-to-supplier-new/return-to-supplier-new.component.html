@@ -1,0 +1,308 @@
+<style>
+  .custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    padding: 5px;
+  }
+</style>
+<div class="row">
+  <div class="col-md-10">
+    <div class="col-md-12" style="padding: 10px;">
+      <div class="col-md-4">
+        <label for="supplier-name">Supplier:<sup style="color: red;">*</sup></label>
+        <div style="display: inline-block;">
+          <div>
+            <input danphe-auto-complete onClick="this.select()" [(ngModel)]="SelectedSupplier" [source]="Suppliers"
+                   placeholder="-- Select Supplier --" [list-formatter]="SupplierListFormatter" display-property-name="SupplierName"
+                   value-property-name="null" max-num-list="15" (ngModelChange)="OnSupplierChange()"
+                   [ngModelOptions]="{standalone: true}" />
+            <span style="display: inline-block;" class="color-red font-sm" *ngIf="IsInvalidSupplier">
+              Invalid Supplier.
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="return-date">Return Date:</label>
+        <div style="display: inline-block;">
+          <form [formGroup]="ReturnToSupplier.ReturnValidator">
+            <danphe-date-picker [(ngModel)]="ReturnToSupplier.ReturnDate" ngDefaultControl [CalendarTypes]="'np,en'" formControlName="ReturnDate"
+                                [previous-fiscal-year]="PreviousFiscalYear">
+            </danphe-date-picker>
+            <span class="color-red font-sm" *ngIf="ReturnToSupplier.IsDirty('ReturnDate')"
+                  [hidden]="ReturnToSupplier.IsValidCheck('ReturnDate','required')">
+              Invalid Date.
+            </span>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label for="txt-credit-note-id">Credit Note No: <sup style="color: red;">*</sup></label>
+        <div style="display: inline-block;">
+          <form [formGroup]="ReturnToSupplier.ReturnValidator">
+            <input type="text" name="txt-credit-note-id" id="txt-credit-note-id" [(ngModel)]="ReturnToSupplier.CreditNoteId"
+                   formControlName="CreditNoteId">
+            <span class="color-red font-sm" *ngIf="ReturnToSupplier.IsDirty('CreditNoteId')"
+                  [hidden]="ReturnToSupplier.IsValidCheck('CreditNoteId','required')">
+              Invalid NoteId.
+            </span>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <table class="table table-striped table-hover inv_table table-bordered table-form">
+        <thead>
+          <tr>
+            <!-- <th>GenericName</th> -->
+            <th>ItemName <sup style="color: red;">*</sup></th>
+            <th>Batch</th>
+            <th>Expiry</th>
+            <th>Available Qty</th>
+            <th>Cost Price</th>
+            <th>Return Qty <sup style="color: red;">*</sup></th>
+            <th>Return Rate <sup style="color: red;">*</sup></th>
+            <th>SubTotal</th>
+            <th>Return Dis Amt.</th>
+            <th>Return VAT Amt.</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <!-- <td>
+                            <input danphe-auto-complete class=" form-control" id="generic" [(ngModel)]="SelectedGeneric" [source]="FilteredGenericList" [list-formatter]="GenericListFormatter" placeholder="--Select Generic Name--" display-property-name="GenericName" value-property-name=null onClick="this.select();" (valueChanged)="OnGenericSelect()" [grid-sort]="'GenericName'" match-formatted="true" (keyup.enter)="coreService.FocusInputById('item-box')" style="width:250px;">
+                        </td> -->
+            <td>
+              <form [formGroup]="ReturnSupplierItem.ReturnItemsValidator">
+                <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedSupplierWiseItem" [source]="FilteredSupplierWiseAvailableStocks"
+                       [list-formatter]="ItemListFormatter" placeholder="--Select Medicine--" display-property-name="ItemName"
+                       value-property-name=null onClick="this.select();" (valueChanged)="OnItemSelect($event)" max-num-list="100" style="width:250px;"
+                       id="item-box" [grid-sort]="'ItemName'" match-formatted="true" autocomplete="off" formControlName="ItemName"
+                       [ngClass]="{'border-red': ReturnSupplierItem.IsDirty('ItemName')}" />
+              </form>
+            </td>
+            <td>{{ReturnSupplierItem.BatchNo}}</td>
+            <td>{{ReturnSupplierItem.ExpiryDate}}</td>
+            <td>{{ReturnSupplierItem.AvailableQuantity}}</td>
+            <td>{{ReturnSupplierItem.CostPrice}}</td>
+            <td>
+              <form [formGroup]="ReturnSupplierItem.ReturnItemsValidator"><input class="form-control" type="number" name="txt-return-quantity"
+                       id="txt-return-quantity" [(ngModel)]="ReturnSupplierItem.Quantity" onclick="this.select()"
+                       (wheel)="coreService.PreventNumberChangeOnScroll($event)" (focusout)="ItemLevelCalculation()" formControlName="Quantity"
+                       [ngClass]="{'border-red': ReturnSupplierItem.IsDirty('Quantity')}">
+              </form>
+            </td>
+            <td>
+              <form [formGroup]="ReturnSupplierItem.ReturnItemsValidator"><input class="form-control" type="number" name="txt-return-rate"
+                       id="txt-return-rate" [(ngModel)]="ReturnSupplierItem.ReturnRate" (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                       (focusout)="ItemLevelCalculation()" formControlName="ReturnRate"
+                       [ngClass]="{'border-red': ReturnSupplierItem.IsDirty('Quantity')}" onclick="this.select()">
+              </form>
+            </td>
+            <td>{{ReturnSupplierItem.SubTotal}}</td>
+            <td>
+              <form [formGroup]="ReturnSupplierItem.ReturnItemsValidator"><input class="form-control" type="number" name="txt-return-discount"
+                       id="txt-return-discount" [(ngModel)]="ReturnSupplierItem.DiscountedAmount"
+                       (wheel)="coreService.PreventNumberChangeOnScroll($event)" (focusout)="ItemLevelCalculation()"
+                       formControlName="DiscountedAmount" [ngClass]="{'border-red': ReturnSupplierItem.IsDirty('DiscountedAmount')}"
+                       onclick="this.select()">
+              </form>
+            </td>
+            <td>
+              <form [formGroup]="ReturnSupplierItem.ReturnItemsValidator"><input class="form-control" type="number" name="txt-return-vat"
+                       id="txt-return-vat" [(ngModel)]="ReturnSupplierItem.VATAmount" (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                       (focusout)="ItemLevelCalculation()" formControlName="VATAmount"
+                       [ngClass]="{'border-red': ReturnSupplierItem.IsDirty('VATAmount')}" onclick="this.select()">
+              </form>
+            </td>
+            <td>{{ReturnSupplierItem.TotalAmount}}</td>
+            <td>
+              <button type="button" (click)="AddReturnItem()" class="btn green"><i class="fa fa-plus"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <form [formGroup]="ReturnSupplierItem.ReturnItemsValidator">
+        <div class="error-message alert alert-danger error-message-alert"
+             *ngIf="(ReturnSupplierItem.IsDirty('Quantity')) || (ReturnSupplierItem.IsDirty('ItemName')) || (ReturnSupplierItem.IsDirty('ReturnRate'))">
+          <span class="color-red font-sm" *ngIf="ReturnSupplierItem.IsDirty('Quantity')"
+                [hidden]="(ReturnSupplierItem.IsValidCheck('Quantity','invalidNumber')) || (ReturnSupplierItem.IsValidCheck('Quantity','wrongDecimalValue'))">
+            Invalid Quantity.
+          </span>
+          <span class="color-red font-sm" *ngIf="ReturnSupplierItem.IsDirty('ReturnRate')"
+                [hidden]="(ReturnSupplierItem.IsValidCheck('ReturnRate','invalidNumber'))">
+            Invalid Rate.
+          </span>
+          <span class="color-red font-sm" [hidden]="ReturnSupplierItem.IsValidCheck('ItemName','invalidItem')">
+            Invalid Item.
+          </span>
+          <span class="color-red font-sm" *ngIf="ReturnSupplierItem.IsDirty('DiscountedAmount')"
+                [hidden]="ReturnSupplierItem.IsValidCheck('DiscountedAmount','required') && ReturnSupplierItem.IsValidCheck('DiscountedAmount','min')">
+            Invalid Discount.
+          </span>
+
+          <span class="color-red font-sm" *ngIf="ReturnSupplierItem.IsDirty('VATAmount')"
+                [hidden]="ReturnSupplierItem.IsValidCheck('VATAmount','required') && ReturnSupplierItem.IsValidCheck('VATAmount','min')">Invalid
+            VAT.</span>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-12">
+      <div class="table-wrap">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th></th>
+              <th>#</th>
+              <th>GenericName</th>
+              <th>ItemName</th>
+              <th>Expiry</th>
+              <th>Batch</th>
+              <th>Qty</th>
+              <th>Return Rate</th>
+              <th>SubTotal</th>
+              <th>Discount Amt.</th>
+              <th>VAT Amt.</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let returnItem of ReturnSupplierItems; let i =index;">
+              <td><button type="button" (click)="RemoveReturnItem(i)" class="btn btn-danger"><i class="fa fa-times"></i></button>
+              </td>
+              <td>{{i+1}}</td>
+              <td>{{returnItem.GenericName}}</td>
+              <td>{{returnItem.ItemName}}</td>
+              <td>{{returnItem.ExpiryDate | date: 'MMM yyy'}}</td>
+              <td>{{returnItem.BatchNo}}</td>
+              <td>{{returnItem.Quantity}}</td>
+              <td>{{returnItem.ReturnRate}}</td>
+              <td>{{returnItem.SubTotal}}</td>
+              <td>{{returnItem.DiscountedAmount}}</td>
+              <td>{{returnItem.VATAmount}}</td>
+              <td>{{returnItem.TotalAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="row">
+      <table class="custom-table">
+        <tbody>
+          <tr>
+            <td><label for="main-level-subtotal">SubTotal:</label></td>
+            <td>
+              <input type="number" class="form-control" name="main-level-subtotal" id="main-level-subtotal" [(ngModel)]="ReturnToSupplier.SubTotal"
+                     disabled>
+            </td>
+          </tr>
+
+          <tr>
+            <td><label for="main-level-discount-percentage">Discount %:</label></td>
+            <td>
+              <form [formGroup]="ReturnToSupplier.ReturnValidator">
+                <input type="number" class="form-control" name="main-level-discount-percentage" id="main-level-discount-percentage"
+                       (wheel)="coreService.PreventNumberChangeOnScroll($event)" [(ngModel)]="ReturnToSupplier.DiscountPercentage"
+                       formControlName="DiscountPercentage" (focusout)="OnMainLevelDiscountChange(0,ReturnToSupplier.DiscountPercentage)">
+                <span class="color-red font-sm" *ngIf="ReturnToSupplier.IsDirty('DiscountPercentage')"
+                      [hidden]="ReturnSupplierItem.IsValidCheck('DiscountPercentage','required') && ReturnSupplierItem.IsValidCheck('DiscountPercentage','min') && ReturnSupplierItem.IsValidCheck('DiscountPercentage','max')">Invalid
+                  Discount.</span>
+              </form>
+            </td>
+          </tr>
+
+          <tr>
+            <td><label for="main-level-discount-amount">Discount Amount:</label></td>
+            <td>
+              <form [formGroup]="ReturnToSupplier.ReturnValidator">
+                <input type="number" class="form-control" name="main-level-discount-amount" id="main-level-discount-amount"
+                       (wheel)="coreService.PreventNumberChangeOnScroll($event)" [(ngModel)]="ReturnToSupplier.DiscountAmount"
+                       formControlName="DiscountAmount" (focusout)="OnMainLevelDiscountChange(ReturnToSupplier.DiscountAmount, 0)">
+                <span class="color-red font-sm" *ngIf="ReturnToSupplier.IsDirty('DiscountAmount')"
+                      [hidden]="ReturnSupplierItem.IsValidCheck('DiscountAmount','required') && ReturnSupplierItem.IsValidCheck('DiscountAmount','min')">Invalid
+                  Discount.</span>
+              </form>
+            </td>
+          </tr>
+
+          <tr>
+            <td><label for="main-level-vat-percentage">VAT %:</label></td>
+            <td>
+              <form [formGroup]="ReturnToSupplier.ReturnValidator">
+                <input type="number" class="form-control" name="main-level-vat-percentage" id="main-level-vat-percentage"
+                       (wheel)="coreService.PreventNumberChangeOnScroll($event)" [(ngModel)]="ReturnToSupplier.VATPercentage"
+                       formControlName="VATPercentage" (focusout)="OnMainLevelVATChange(0, ReturnToSupplier.VATPercentage)">
+                <span class="color-red font-sm" *ngIf="ReturnToSupplier.IsDirty('VATPercentage')"
+                      [hidden]="ReturnSupplierItem.IsValidCheck('VATPercentage','required') && ReturnSupplierItem.IsValidCheck('VATPercentage','min') && ReturnSupplierItem.IsValidCheck('VATPercentage','min')">Invalid
+                  VAT.</span>
+              </form>
+            </td>
+          </tr>
+
+          <tr>
+            <td><label for="main-level-vat-amount">VAT Amount:</label></td>
+            <td>
+              <form [formGroup]="ReturnToSupplier.ReturnValidator">
+                <input type="number" class="form-control" name="main-level-vat-amount" id="main-level-vat-amount"
+                       (wheel)="coreService.PreventNumberChangeOnScroll($event)" [(ngModel)]="ReturnToSupplier.VATAmount" formControlName="VATAmount"
+                       (focusout)="OnMainLevelVATChange(ReturnToSupplier.VATAmount,0)">
+                <span class="color-red font-sm" *ngIf="ReturnToSupplier.IsDirty('VATAmount')"
+                      [hidden]="ReturnSupplierItem.IsValidCheck('VATAmount','required') && ReturnSupplierItem.IsValidCheck('VATAmount','min')">Invalid
+                  VAT.</span>
+              </form>
+            </td>
+          </tr>
+
+          <tr>
+            <td><label for="main-level-total">Total:</label></td>
+            <td>
+              <input type="number" class="form-control" name="main-level-total" id="main-level-total" [(ngModel)]="ReturnToSupplier.TotalAmount"
+                     disabled>
+            </td>
+          </tr>
+
+          <tr>
+            <td><label for="main-level-remarks">Remarks: <sup style="color:red;">*</sup></label></td>
+            <td>
+              <form [formGroup]="ReturnToSupplier.ReturnValidator">
+                <textarea name="main-level-remarks" id="main-level-remarks" class="form-control" [(ngModel)]="ReturnToSupplier.Remarks"
+                          formControlName="Remarks"></textarea>
+                <span class="color-red font-sm" *ngIf="ReturnToSupplier.IsDirty('Remarks')"
+                      [hidden]="ReturnSupplierItem.IsValidCheck('Remarks','required')">Remarks required.</span>
+              </form>
+            </td>
+          </tr>
+
+          <tr>
+            <td><label for="main-level-return-status">Return Status: <sup style="color:red;">*</sup></label></td>
+            <td>
+              <form [formGroup]="ReturnToSupplier.ReturnValidator">
+                <select class="form-control" name="main-level-return-status" id="main-level-return-status" formControlName="ReturnStatus"
+                        [(ngModel)]="ReturnToSupplier.ReturnStatus">
+                  <option value="1">Breakage</option>
+                  <option value="2">Expiry</option>
+                  <option value="3">Breakage and Expiry</option>
+                  <option value="4">Others</option>
+                </select>
+                <span class="color-red font-sm" *ngIf="ReturnToSupplier.IsDirty('ReturnStatus')"
+                      [hidden]="ReturnSupplierItem.IsValidCheck('ReturnStatus','required')">Return Status required.</span>
+              </form>
+            </td>
+          </tr>
+
+          <tr>
+            <button type="button" (click)="SaveReturnToSupplier()" class="btn green">Save
+            </button>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div>

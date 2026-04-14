@@ -1,0 +1,39 @@
+<div>
+  <div style="display: flex; justify-content: space-between; margin: 5px 15px 0px 15px;">
+    <div style="display: flex;">
+      <!-- <label style="vertical-align: top;margin-top: 10px; margin-right: 10px;">Booking Date: </label> -->
+      <select name="dateFilter" id="id_dateFilter" [(ngModel)]="IsOTStartDate" style="margin-top: 2px;">
+        <option [value]="true">OTStartDate</option>
+        <option [value]="false">OTConcludeDate</option>
+      </select>
+      <div style="display: inline-block; margin-left: 15px;">
+        <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'ot-booking-list'">
+        </from-to-date-select>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <input
+             danphe-auto-complete class="form-control" [source]="OTPrescriberList"
+             [list-formatter]="PrescriberFormatter" placeholder="Search By Surgeon"
+             display-property-name="PrescriberName" value-property-name="PrescriberId"
+             [min-chars]="0" max-num-list="10"
+             id="id_txt_prescriber" [(ngModel)]="CurrentPrescriber"
+             (focusout)="OnPrescriberSelect()" />
+    </div>
+    <div>
+      <button
+              [disabled]="Loading" class="btn green btn-success pull-right"
+              (click)="this.GetOTFinancialReport()">Load
+        <i class="fa fa-refresh"></i>
+      </button>
+    </div>
+
+  </div>
+  <div class="wrapper">
+    <danphe-grid [grid-colDefaults]="OTFinancialReportColumns" [grid-data]="OTFinancialReportData"
+                 [grid-exportOptions]="GridExportOptions" [grid-showExport]="true"
+                 [report-for]="'ot'" [grid-date-range]="DateRange">
+      (grid-actions)="OTBookingListGidActions($event)"
+    </danphe-grid>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<!-- <div>
+    This is Scheme-PriceCategory-Select Common Component
+</div> -->
+
+<div class="row">
+  <div class="col-md-12" style="padding-top:10px; border:1px solid #dddd !important">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-md-6">
+                <scheme-select [show-community]="false"
+                               [is-mandatory]="true" [selected-id]="selectedSchemePriceCategory.SchemeId"
+                               (on-membership-change)="OnSchemeChanged($event)">
+                </scheme-select>
+              </div>
+              <div class="col-md-6">
+                <price-category-select [selected-priceCategoryId]="selectedSchemePriceCategory.PriceCategoryId"
+                                       (on-category-change)="OnPriceCategoryChange($event)">
+                </price-category-select>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-4">
+            <div *ngIf="currentSchemeParams.SelectEmployer">
+              Employer<b>:</b>
+              <input danphe-auto-complete class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="SelectedSsfEmployer"
+                     [list-formatter]="SFFEmployerListFormatter" [source]="SsfEmployer" placeholder="Select Employer"
+                     display-property-name="name"
+                     value-property-name=null (focusout)="AssignSSFEmployerDetail()" onClick="this.select();" />
+            </div>
+          </div>
+          <div class="col-md-3" *ngIf="insPatient && insPatient.Ins_FirstServicePoint && insPatient.Ins_FirstServicePoint.trim()">
+            <div class="row">
+              <label>First Service Point:<b>{{insPatient.Ins_FirstServicePoint}}</b></label>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px;padding-bottom: 10px;">
+          <div class="col-md-6">
+            <div *ngIf="currentSchemeParams.ShowMemberNo">
+              <label>
+                {{currentSchemeParams.MemberNoLabelName}} <sup *ngIf="this.currentRegSchemeDto.IsMemberNumberCompulsory"> *</sup> <b>:</b>
+              </label>
+              <input *ngIf="currentSchemeParams.EnterMemberNumber; else memberNoValueLabel"
+                     id="txtMembershipNo" [(ngModel)]="currentRegSchemeDto.MemberNo"
+                     placeholder="Enter {{currentSchemeParams.MemberNoLabelName}}" maxlength="30" type="text"
+                     (keyup.enter)="GoToNextElementFromMemberNoElement()"
+                     (focusout)="OnMemberNumberChange();CheckAndProceedToEmit()" />
+              <ng-template #memberNoValueLabel> <label>{{currentRegSchemeDto.MemberNo}}</label> </ng-template>
+
+              <button *ngIf="currentSchemeParams.ShowMembershipLoadButton && (IsClaimSuccessful || DisplayMembershipLoadButton)"
+                      style="margin-left:10px;"
+                      id="id_load_memberInfo" class="btn green btn-success" [disabled]="loading"
+                      (click)="loadFromSSFServer = true;LoadMemberInformationClicked()">
+                {{currentSchemeParams.MembershipLoadButtonDisplayName}}
+              </button>
+              <button *ngIf="currentSchemeParams.ShowNGHISLoadButton && IsNSHIParameterEnabled"
+                      style="margin-left:10px;"
+                      id="id_load_memberInfo" class="btn green btn-success" [disabled]="loading"
+                      (click)="LoadFromHIBServer = true;LoadNGHISPatientInformation()">
+                {{currentSchemeParams.MembershipLoadButtonDisplayName}}
+              </button>
+              <span *ngIf="loading">Please Wait...</span>
+              <span *ngIf="(!IsSsfEmployerAssigned && SsfEmployer && SsfEmployer.length > 0 && currentSchemeParams.SchemeParameterName === 'SSF')"
+                    style="color:rgb(241, 20, 20)">
+                Please choose Employer for this SSF Patient.</span>
+              <span *ngIf="FetchSsfDetailLocally && !DisplayMembershipLoadButton" style="color:rgb(241, 20, 20)"> Please Wait Fetching Details...
+              </span>
+              <span *ngIf="currentSchemeParams.EnterClaimCode" style="margin-left:10px;">
+                <label>Claim Code<b>:</b></label>
+                <input *ngIf="currentSchemeParams.EnterClaimCode"
+                       id="id_txt_claimCode" [(ngModel)]="currentRegSchemeDto.ClaimCode"
+                       placeholder="Enter Claim Code" type="number"
+                       (keyup.enter)="GoToNextElementFromClaimCodeNoElement()" (focusout)="CheckAndProceedToEmit()" />
+              </span>
+
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="col-md-8" *ngIf="currentSchemeParams.ShowSSFCaseSelections">
+              <label>SSF Case <sup> * </sup><b>:</b> </label>
+              <select name="schemeTypeProduct" id="id_select_schemeTypeProduct_appointment" (change)="selectSSFSchemeTypeSubProduct($event)">
+                <option value="">--Select Scheme SubProduct--</option>
+                <option *ngFor="let item of SchemeTypeSubProduct" value="{{ item.value }}"> {{ item.name }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <div *ngIf="currentSchemeParams.ShowOpIpBalance && !currentRegSchemeDto.IsGeneralCreditLimited">
+                <label> OPD Balance: {{currentRegSchemeDto.CreditLimitObj.OpCreditLimit}}</label>
+                <label style="margin-left:10px;"> IPD Balance: {{currentRegSchemeDto.CreditLimitObj.IpCreditLimit}}</label>
+              </div>
+              <div
+                   *ngIf="currentSchemeParams.ShowGeneralBalance && currentRegSchemeDto.IsGeneralCreditLimited">
+                <label> General Balance: {{currentRegSchemeDto.CreditLimitObj.GeneralCreditLimit}}</label>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-md-4">
+            <div *ngIf="currentSchemeParams.ShowOpIpBalance && !currentRegSchemeDto.IsGeneralCreditLimited">
+              <label> OPD Balance: {{currentRegSchemeDto.CreditLimitObj.OpCreditLimit}}</label>
+              <label style="margin-left:10px;"> IPD Balance: {{currentRegSchemeDto.CreditLimitObj.IpCreditLimit}}</label>
+            </div>
+            <div *ngIf="currentSchemeParams.ShowAvailableBalance">
+              <label> Available Balance: {{insPatient.eligibilityInfo.AllowedMoney }}</label>
+            </div>
+            <div
+                 *ngIf="currentSchemeParams.ShowGeneralBalance && currentRegSchemeDto.IsGeneralCreditLimited && !currentSchemeParams.ShowAvailableBalance ">
+              <label> General Balance: {{currentRegSchemeDto.CreditLimitObj.GeneralCreditLimit}}</label>
+            </div>
+
+          </div> -->
+          <!-- <div class="col-md-1">
+
+          </div> -->
+        </div>
+        <div class="row" style="margin-top:10px;padding-bottom: 10px; display: flex;flex-direction: row;margin-left: 0px;"
+             *ngIf="DisplaySubSchemeSelection">
+          <div>SubScheme: </div>
+          <div class="col-md-3">
+            <input type="text" id="is_registration_subScheme"
+                   danphe-auto-complete class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="SelectedSubScheme"
+                   [list-formatter]="SubSchemeListFormatter" [source]="BillingSubSchemes" placeholder="Select SubScheme"
+                   display-property-name="SubSchemeName" [match-formatted]="true" [min-chars]="1"
+                   onClick="this.select();" [match-property-csv]="'SubSchemeName'" [grid-sort]="'SubSchemeName'"
+                   value-property-name=null (valueChanged)="AssignSelectedSubScheme($event)" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2" *ngIf="PatientImage">
+        <div style="display: flex; justify-content: center; align-items: center;">
+          <img id="id_embed_patient_image" width="60%" height="115" [src]="PatientImage" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

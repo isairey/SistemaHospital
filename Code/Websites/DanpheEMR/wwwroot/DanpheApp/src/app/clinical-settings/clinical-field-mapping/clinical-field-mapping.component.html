@@ -1,0 +1,16 @@
+<a feature="button" class="btn blue bordered" (click)="AddNewUserFieldMAppings()"><i class="fa fa-plus"></i>Add Medical Component Mapping</a>
+
+<div *ngIf="ShowUserFieldMappingGrid" class="row">
+
+  <div class="col-md-12 col-xs-12 col-sm-12">
+    <danphe-grid [grid-colDefaults]="ClinicalUserFieldMappingGridCols" [grid-data]="ClnUserMappingList"
+                 (grid-actions)="ClinicalHeadingGridActions($event)" [paginationPageSize]="100" [show-print-button]="false">
+    </danphe-grid>
+  </div>
+  <div style="margin-top:60px;" *ngIf="ShowAddUpdateMappingPage">
+    <add-update-field-mappings [update-cln-User-mappings]="ClnUserFieldMappingToEdit" [show-update-UserMapping-Page]="Update"
+                               (callback-add)=" getDataFromAdd($event) " (callback-close)="GetDataFromClose()">
+
+    </add-update-field-mappings>
+  </div>
+</div>

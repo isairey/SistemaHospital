@@ -1,0 +1,106 @@
+<div class="wrapper">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="caption custom-caption"> <i class="glyphicon glyphicon-asterisk"></i> <b><span
+                class="caption-subject">Patient Bed Details Report</span></b> </div>
+    </div>
+  </div>
+  <div class="row calendarrow">
+    <div class="col-md-6 calendarcol">
+      <div>
+        <common-fiscal-year-calendar [ShowMonthCalendar]="true" (fiscalYearDate)="OnDateSelect($event)">
+        </common-fiscal-year-calendar>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="col-md-4">
+        <label for="id_search_patient" style="font-size:16px !important">Search Patients:</label>
+      </div>
+      <div class="col-md-8 ">
+        <input danphe-auto-complete id="id_search_patient" class="form-control searchtbx searchpatients " [(ngModel)]="searchText"
+               [list-formatter]="PatientListFormatter" [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+               placeholder="search by HospitalNo, Patient Name, Phone Number" display-property-name="ShortName" value-property-name=null
+               (ngModelChange)="assignPatientData()" onClick="this.select();" max-num-list="500"
+               [min-chars]="3" match-formatted="true"
+               [grid-sort]="'ShortName'" style="width: 100% !important;" />
+      </div>
+    </div>
+  </div>
+
+  <div class="row wardrow">
+    <div class="col-md-3 col-xs-12">
+      <div class="form-group">
+        <label class="control-label col-md-4 wardname">Ward Name<b style="float: right;">:</b></label>
+        <div class="col-md-8 wardcol">
+          <input
+                 class="form-control"
+                 danphe-auto-complete
+                 [(ngModel)]="ward"
+                 [ngModelOptions]="{standalone: true}"
+                 [list-formatter]="WardListFormatter"
+                 [source]="WardList"
+                 placeholder="Select Ward"
+                 display-property-name="WardName"
+                 value-property-name="null"
+                 onclick="this.select()"
+                 (focusout)="AssignWardId()" />
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-xs-12 bedfeaturecol">
+      <div class="form-group">
+        <label class="control-label col-md-4 bedfeature">Bed Feature<b style="float: right;">:</b></label>
+        <div class="col-md-8 bed">
+          <input
+                 class="form-control"
+                 danphe-auto-complete
+                 [(ngModel)]="bedFeature"
+                 [ngModelOptions]="{standalone: true}"
+                 [list-formatter]="BedFeatureListFormatter"
+                 [source]="BedFeatureList"
+                 placeholder="Select Bed Feature"
+                 display-property-name="BedFeatureName"
+                 value-property-name="null"
+                 onclick="this.select()"
+                 (focusout)="AssignBedFeatureId()" />
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-xs-12 admstats">
+      <div class="form-group">
+        <label class="control-label col-md-5 admstatscol">Admission Status<b
+             style="float: right;">:</b></label>
+        <div class="col-md-7 admission">
+          <select [(ngModel)]="admissionStatus" style="width:100%;">
+            <option selected value=null>All</option>
+            <option value="admission">Admitted</option>
+            <option value="transfer">Transfer</option>
+            <option value="discharged">Discharged</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-2 col-xs-12">
+      <div class="form-group">
+        <button class="btn blue showrpt" type="button" (click)="Load()"> <i class="fa fa-search"></i>
+          Show Report </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row" *ngIf="showGrid">
+    <div class="col-lg-12 col-sm-12">
+      <danphe-grid
+                   [grid-colDefaults]="PatientBedDetailsColumns"
+                   [grid-data]="PatientBedDetailsData"
+                   [grid-exportOptions]="gridExportOptions"
+                   [grid-showExport]="true"
+                   [NepaliDateInGridParams]="NepaliDateInGridSettings">
+      </danphe-grid>
+    </div>
+  </div>
+
+</div>

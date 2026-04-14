@@ -1,0 +1,141 @@
+<div class="row">
+  <div class="form-body">
+    <div class="col-md-12">
+      <div class="col-md-12">
+        <div class="caption custom-caption" style="float: left;">
+          <i class="glyphicon glyphicon-asterisk"></i>
+          <span class="caption-subject">Bill-wise Sales Report</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-6">
+            <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'billing-reports'">
+            </from-to-date-select>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-md-6 col-xs-12">
+                <div class="form-group row">
+                  <label class="control-label col-md-4">Select Patient<b style="float:right;">:</b></label>
+                  <div class="col-md-8">
+                    <div class="div-relative autocomplete-item">
+                      <input id="SearchPatientBox" autocomplete="off" danphe-auto-complete class="form-control"
+                             [(ngModel)]="SearchedPatient" [source]="AllPatientSearchAsync.bind(this)"
+                             [path-to-data]="'Results'" (valueChanged)="OnPatientChanged()"
+                             [list-formatter]="patientListFormatter" placeholder="-- Search Patient --"
+                             display-property-name="ShortName" value-property-name=null onClick="this.select();"
+                             max-num-list="500" min-chars="3" match-formatted="true" [grid-sort]="'ShortName'">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <div class="form-group row">
+                  <label class="control-label col-md-3"><b>Scheme:</b></label>
+                  <div class="col-md-8">
+                    <div style="display: inline-block;">
+                      <select id="Scheme" class=" form-control membership-list" [(ngModel)]="selMembershipId" (change)="MembershipTypeChange()">
+                        <option value="null">--select--</option>
+                        <option *ngFor="let membership of membershipList" value="{{membership.SchemeId}}">
+                          {{membership.MembershipDisplayName}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="col-md-3 col-xs-12">
+            <div class="form-group row">
+              <label class="control-label col-md-4">Invoice Number<b style="float:right;">:</b></label>
+              <div class="col-md-8">
+                <input class="form-control" type="number" value="" [(ngModel)]="InvoiceNumber"
+                       placeholder="Enter Invoice Number" />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <label><b>Visit Type:</b></label>
+            <div style="display: inline-block;">
+              <select class="form-control" [(ngModel)]="VisitType">
+                <option *ngFor="let option of VisitTypes" [ngValue]="option.value">{{option.label}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-5 col-xs-12">
+            <label><b>Sales Type:</b><sup style="color: red;">*</sup></label>
+            <div style="display: inline-block; width: inherit;">
+              <danphe-multiselect [ddl-data]="SalesTypes" [placeholder-text]="'Select Sales Type'"
+                                  [value-property-name]="'value'" (selected-items-list)="OnSalesTypeSelected($event)"
+                                  [display-property-name]="'label'">
+              </danphe-multiselect>
+            </div>
+
+          </div>
+          <div class="col-md-2 col-xs-12">
+            <div class="form-group">
+              <button class="btn blue" type="button" (click)="GetReportData()" [disabled]="loading">
+                <i class="fa fa-search"></i>&nbsp;
+                <span *ngIf="!loading">Show Report</span>
+                <span *ngIf="loading">Loading...</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-lg-12 col-sm-12">
+    <danphe-grid [grid-colDefaults]="PHRMBillingReportColumns" [grid-data]="PHRMBillingReportData"
+                 [grid-exportOptions]="gridExportOptions" [grid-showExport]="true"
+                 [NepaliDateInGridParams]="NepaliDateInGridSettings" [grid-footer-content]="footerContent"
+                 [grid-date-range]="dateRange" [report-for]="'pharmacy'" [show-header]="true"
+                 [report-title]="'Bill-wise Sales Report'" [filter-parameters]="FilterParameters">
+    </danphe-grid>
+  </div>
+</div>
+<!-- Summary -->
+<br><br><br>
+
+<div class=" col-sm-12 col-md-12" style="margin-bottom: 10px !important; display: flex;justify-content: center;"
+     *ngIf="PHRMBillingReportData.length > 0">
+  <div class="table-responsive table-wrapper" id="print_summary">
+    <table class="table table-bordered table-hover table-condensed custom_table padLess_table" border="1">
+      <thead>
+        <tr>
+          <th colspan="8" style="text-align: center;">
+            <span style="font-size:large;"> Summary </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container>
+          <tr>
+            <td> </td>
+            <td style="font-weight:bold; color:blue"> SubTotal Amount </td>
+            <td style="font-weight:bold; color:blue"> Discount Amount </td>
+            <td style="font-weight:bold; color:blue"> Total Amount </td>
+            <td style="font-weight:bold; color:blue"> Credit Amount </td>
+          </tr>
+          <tr *ngFor="let store of storeWiseBillingSummary;">
+            <td style="font-weight:bold; color:blue">{{store.StoreName}}</td>
+            <td> {{store.SubTotal | number}} </td>
+            <td> {{store.Discount | number}} </td>
+            <td> {{store.TotalAmount | number}} </td>
+            <td> {{store.CreditAmount | number}} </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+<br>
+<br>

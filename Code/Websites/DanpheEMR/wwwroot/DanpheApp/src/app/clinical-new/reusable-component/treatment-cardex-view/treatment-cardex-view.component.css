@@ -1,0 +1,88 @@
+.card-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.card {
+    flex: 1;
+    margin: 0 10px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.card-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.card-info-label {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    width: 35%
+}
+
+.card-info-value {
+    font-style: italic;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card-actions button {
+    margin-left: 5px;
+}
+
+.card-actions .taken-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.entry-form {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    width: 30%
+}
+
+.form-group {
+    margin-bottom: 5px;
+    /* Adjust this value as needed */
+}
+
+.row {
+    margin-bottom: 2px;
+    /* Add this line to control bottom margin */
+}
+
+.status-banner {
+    color: red !important;
+    cursor: pointer;
+    padding: 0px 10px;
+    border-radius: 5px !important;
+    background-color: #fbe1e3 !important;
+}

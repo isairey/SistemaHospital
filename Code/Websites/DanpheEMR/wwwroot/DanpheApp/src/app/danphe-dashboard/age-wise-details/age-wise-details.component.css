@@ -1,0 +1,171 @@
+.agewise-header {
+  display: flex;
+  height: 35px;
+  margin-top: -10px;
+}
+
+.agewiseheading {
+  margin-right: 5px;
+  font-size: 16px;
+  color: #666; /* Text color */
+  font-weight: bold;
+}
+
+.viewagewisedetails {
+  margin-right: 3px;
+  color: #777;
+  margin-left: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.viewdetails {
+  border: 1px solid #888;
+  border-radius: 5px !important;
+  height: 27px;
+  justify-content: center;
+  /* width: 45%; */
+  float: right;
+  margin-left: 0px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding-left: 5px;
+  padding-right: 0px;
+}
+
+.agewisedetails {
+  display: flex;
+  justify-content: flex-end;
+}
+
+label {
+  margin-left: 5px;
+  color: #666;
+}
+
+input[type="checkbox"] {
+  height: 20px;
+  width: 20px;
+}
+
+.chart-box {
+  width: 95%;
+  height: 400px;
+  padding: 20px;
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-left: 30px;
+}
+.chart-size {
+  width: 65%;
+  height: 90%;
+}
+
+/* For Tooltip */
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  width: 150px; /* Increased width for better display */
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left; /* Adjusted text alignment */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Added box-shadow for better visibility */
+}
+
+.hover-text:hover .tooltip-text {
+  visibility: visible;
+}
+
+.hover-text {
+  position: relative;
+  display: inline-block;
+  margin: 40px;
+  font-family: Arial;
+  text-align: center;
+}
+
+.info {
+  color: #666;
+  margin-top: 12px;
+}
+
+.arrowicon {
+  color: #666;
+  font-weight: 700;
+}
+
+.graphrow {
+  height: 480px;
+}
+
+.viewdetails:hover {
+  cursor: pointer;
+  background-color: #0773bc;
+}
+
+.viewdetails:active {
+  background-color: #0056a3;
+  transform: scale(0.98);
+}
+
+.viewdetails:hover .viewagewisedetails {
+  color: white;
+}
+
+.viewdetails:hover .arrowicon {
+  color: white !important;
+}
+
+@media only screen and (max-width: 1468px) and (min-width: 768px) {
+  .agewiseheading {
+    margin-right: 5px;
+    font-size: 12px;
+    color: #666;
+    font-weight: bold;
+    margin-top: 3px;
+    /* width: 60%; */
+  }
+  .span {
+    width: 40%;
+    float: left;
+  }
+  .info {
+    font-size: 12px;
+    margin-top: 3px;
+  }
+
+  .viewdetails {
+    /* width: 75px; */
+    height: 20px;
+  }
+
+  .viewagewisedetails {
+    margin-right: 2px;
+    color: #777;
+    margin-left: 2px;
+    font-size: 9px;
+    font-weight: bold;
+    margin-top: 6px;
+  }
+  .agewise-header {
+    display: flex;
+  }
+
+  .topcontainer {
+    padding-left: 5px;
+    padding-right: 0px;
+  }
+  .graphrow {
+    height: 35px;
+  }
+
+  .chart-box {
+    height: 350px;
+  }
+}

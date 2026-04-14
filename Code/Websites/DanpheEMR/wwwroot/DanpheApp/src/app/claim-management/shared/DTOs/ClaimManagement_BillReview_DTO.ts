@@ -1,0 +1,34 @@
+export class ClaimBillReviewDTO {
+    CreditStatusId: number = 0;
+    ClaimCode: number = 0;
+    InvoiceRefId: number = 0;
+    FiscalYearId: number = 0;
+    HospitalNo: string = ``;
+    PatientName: string = ``;
+    PatientId: number = 0;
+    AgeSex: string = ``;
+    MemberNo: string = ``;
+    InvoiceNo: string = ``;
+    InvoiceDate: string = ``;
+    SchemeName: string = ``;
+    SchemeId: number = 0;
+    CreditOrganizationId: number = 0;
+    TotalAmount: number = 0;
+    NetCreditAmount: number = 0;
+    NonClaimableAmount: number = 0;
+    ClaimStatus: string = ``;
+    VisitType: string = ``;
+    AdmissionDate: string = ``;
+    DischargeDate: string = ``;
+    CreditModule: string = ``;
+    IsClaimable: boolean = false;
+    IsSelected: boolean = false;
+    ClaimSubmissionId: number = 0;
+    IsDocumentGenerated: boolean = false;
+    PatientVisitId: number = 0;
+    IsPharmacySelected: boolean = false;
+    IsBillingSelected: boolean = false;
+    DocumentStatus: string = '';
+    Remarks: string = '';
+    IsDocumentReceived: boolean = false;
+}

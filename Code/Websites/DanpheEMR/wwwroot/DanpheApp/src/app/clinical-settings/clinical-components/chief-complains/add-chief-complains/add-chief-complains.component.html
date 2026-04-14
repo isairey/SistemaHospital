@@ -1,0 +1,116 @@
+<style>
+  .caption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .caption span {
+    text-align: center;
+  }
+</style>
+<div class="popup-static portlet box portlet-fullscreen custom_modal"
+     *ngIf="ShowNewChiefComplainPage">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div ref_modal_div clearfix">
+          <div class="caption custom-caption no-margin">
+            <h3>
+              <span>
+                <span *ngIf="!UpdateChiefComplain">Add New Chief Complaint</span>
+                <span *ngIf="UpdateChiefComplain">Edit Chief Complaint</span>
+              </span>
+            </h3>
+            <a class="btn btn-danger" (click)="Close()">X</a>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <form [formGroup]="CLNChiefComplain.chiefComplainValidator" class="form-horizontal hm-form">
+                <div class="form-body col-md-12 hm-form">
+                  <div class="form-group">
+                    <label for="Name" class="control-label col-md-5">Complaint Name <sup>*</sup><b>:</b></label>
+                    <div class="col-md-7">
+                      <input
+                             class="form-control"
+                             maxlength="100"
+                             type="text"
+                             id="id_CLNChiefComplain_ChiefComplain"
+                             formControlName="ChiefComplain"
+                             placeholder="Chief Complaint Name"
+                             (input)="OnComplaintNameChange()" />
+                      <span
+                            class="color-red font-sm"
+                            *ngIf="
+                     CLNChiefComplain.chiefComplainValidator.get(
+                     'ChiefComplain'
+                   ).invalid &&
+                   CLNChiefComplain.chiefComplainValidator.get(
+                     'ChiefComplain'
+                   ).touched
+                    ">Complaint Name is required</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="Remarks " class="control-label col-md-5">Remarks<b>:</b></label>
+                    <div class="col-md-7">
+                      <textarea
+                                id="id_CLNChiefComplain_Remarks"
+                                row="6"
+                                col="50"
+                                style="resize: none"
+                                class="form-control"
+                                placeholder="Remarks"
+                                formControlName="Remarks"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <form [formGroup]="CLNChiefComplain.chiefComplainValidator" class="form-horizontal hm-form">
+                <div class="form-body col-md-12 hm-form">
+                  <div class="form-group">
+                    <label for="MedicalCode " class="control-label col-md-3">
+                      Code<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <input
+                             formControlName="MedicalCode"
+                             id="id_CLNChiefComplain_MedicalCode"
+                             (keyup.enter)="SetFocusById('Remarks')"
+                             class="form-control"
+                             placeholder="MedicalCode"
+                             type="text" />
+
+                      <span
+                            class="color-red font-sm"
+                            *ngIf="
+                     CLNChiefComplain.chiefComplainValidator.get(
+                     'MedicalCode'
+                   ).invalid &&
+                   CLNChiefComplain.chiefComplainValidator.get(
+                     'MedicalCode'
+                   ).touched
+                 ">Medical Code is required</span>
+
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modelbox-footer">
+            <div class="all-buttons text-right">
+              <input type="button" id="add" class="btn green btn-success margin-7-hr" *ngIf="!UpdateChiefComplain"
+                     (click)="AddChiefComplains()" value="Add" />
+              <input type="button" id="add"
+                     class="btn green btn-success margin-7-hr" (click)="UpdateChiefComplains()"
+                     value="Update" *ngIf="UpdateChiefComplain" />
+              <input type="button" id="close" class="btn red btn-danger margin-7-hr" (click)="Close()" value="Close" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

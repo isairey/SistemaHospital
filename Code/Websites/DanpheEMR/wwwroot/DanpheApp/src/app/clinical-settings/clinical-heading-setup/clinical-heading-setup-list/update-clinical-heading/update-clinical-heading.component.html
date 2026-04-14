@@ -1,0 +1,181 @@
+<style>
+  .caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .caption span {
+    text-align: center;
+  }
+
+  .custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 10px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    display: block;
+  }
+
+  .custom-checkbox:checked::before {
+    content: "\2713";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    color: #007bff;
+  }
+
+  .checkbox-group {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+  }
+
+  .checkbox-group label {
+    margin-left: 5px;
+  }
+</style>
+<div class="popup-static portlet box portlet-fullscreen custom_modal">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div ref_modal_div clearfix">
+          <div class="caption custom-caption no-margin">
+            <h3>
+              <span>
+                <span *ngIf="(ShowAddNewPage || ShowDocumentSectionPage) && !Update && !UpdateSection">Add Document/Section</span>
+                <span *ngIf="Update || UpdateSection">Edit Document</span>
+
+              </span>
+            </h3>
+            <a class="btn btn-danger" (click)="Close()">X</a>
+          </div>
+          <form [formGroup]="ClinicalHeadings.CLNHeadingValidator" class="form-horizontal hm-form">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-body col-md-12 hm-form">
+                  <div class="form-group">
+                    <label class="control-label col-md-4">Select Type<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <div *ngFor="let heading of HeadingTypes; let i = index" class="checkbox-group">
+                        <input type="radio" class="form-check-input custom-checkbox" [id]="'checkbox' + i"
+                               [attr.disabled]="(ShowDocumentSectionPage && heading === 'Document') || Update ? '' : null"
+                               (change)="OnHeadingTypeChange($event, heading)"
+                               [checked]="SelectedHeadingType === heading || (Update && heading === 'Document')">
+                        <label [for]="'checkbox' + i">{{ heading }}</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="Update || SelectedHeadingType">
+                    <div class="form-group" *ngIf="!ShowHeadingTypeName">
+                      <label for="ClinicalHeadingName" class="control-label col-md-4">Document<sup>*</sup><b>:</b></label>
+                      <div class="col-md-8">
+                        <input class="form-control" maxlength="100" type="text" id="ClinicalHeadingName" formControlName="ClinicalHeadingName"
+                               placeholder="Clinical Heading Name" (keyup.enter)="SetFocusById('DisplayName')" />
+                        <span class="color-red font-sm"
+                              *ngIf="ClinicalHeadings.CLNHeadingValidator.get('ClinicalHeadingName').invalid && ClinicalHeadings.CLNHeadingValidator.get('ClinicalHeadingName').touched">Document
+                          Name is required</span>
+                      </div>
+                    </div>
+                    <div class="form-group" *ngIf="ShowHeadingTypeName">
+                      <label for="ClinicalHeadingName" class="control-label col-md-4">Section<sup>*</sup><b>:</b></label>
+                      <div class="col-md-8">
+                        <input class="form-control" maxlength="100" type="text" id="ClinicalHeadingName" formControlName="ClinicalHeadingName"
+                               placeholder="Clinical Section Name" (keyup.enter)="SetFocusById('DisplayName')" />
+                        <span class="color-red font-sm"
+                              *ngIf="ClinicalHeadings.CLNHeadingValidator.get('ClinicalHeadingName').invalid && ClinicalHeadings.CLNHeadingValidator.get('ClinicalHeadingName').touched">Section
+                          Name is required</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="IsDefault" class="control-label col-md-4">IsDefault<b>:</b></label>
+                      <div class="col-md-8">
+                        <input type="checkbox" id="IsDefault" class="form-check-input custom-checkbox" (ngModelChange)="onDefaultChange($event)"
+                               formControlName="IsDefault">
+                        <span *ngIf="IsDefaultAlreadyExists" class="color-red font-sm">Default heading already exists.</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group" *ngIf="ShowDocumentSectionPage">
+                      <label for="IsActive" class="control-label col-md-4">IsActive?<b>:</b></label>
+                      <div class="col-md-8">
+                        <input type="checkbox" id="IsActive" class="form-check-input custom-checkbox"
+                               formControlName="IsActive">
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-md-6">
+                <div class="form-body col-md-12 hm-form">
+                  <div *ngIf="Update || SelectedHeadingType">
+                    <div class="form-group">
+                      <label for="DisplayName" class="control-label col-md-4">DisplayName<sup>*</sup><b>:</b></label>
+                      <div class="col-md-8">
+                        <input class="form-control" type="text" id="DisplayName" formControlName="DisplayName" placeholder="DisplayName"
+                               (keyup.enter)="SetFocusById('IsDefault')" />
+                        <span class="color-red font-sm"
+                              *ngIf="ClinicalHeadings.CLNHeadingValidator.get('DisplayName').invalid && ClinicalHeadings.CLNHeadingValidator.get('DisplayName').touched">Display
+                          Name is required</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group" *ngIf="ShowHeadingTypeName">
+                      <label for="ParentId" class="control-label col-md-4">Document <b>:</b></label>
+                      <div class="col-md-8">
+                        <select id="ParentId" class="form-control" formControlName="ParentId">
+                          <option value="" selected>Select Document</option>
+                          <option *ngFor="let parent of ParentHeadingNames" [value]="parent.ParentId">{{ parent.ParentHeadingName }}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="DisplayOrder" class="control-label col-md-4">Display Sequence<sup>*</sup><b>:</b></label>
+                      <div class="col-md-8">
+                        <input class="form-control" type="number" id="DisplayOrder" formControlName="DisplayOrder" placeholder="Display Order"
+                               (keyup.enter)="SetFocusById('ParentId')" (wheel)="coreService.PreventNumberChangeOnScroll($event)" />
+                        <span class="color-red font-sm"
+                              *ngIf="ClinicalHeadings.CLNHeadingValidator.get('DisplayOrder').invalid && ClinicalHeadings.CLNHeadingValidator.get('DisplayOrder').touched">
+
+                          <span *ngIf="ClinicalHeadings.CLNHeadingValidator.get('DisplayOrder').hasError('required')">Display Order is required</span>
+
+
+                          <span *ngIf="ClinicalHeadings.CLNHeadingValidator.get('DisplayOrder').hasError('min')">Display Order Can't be Zero Or
+                            Negative Value</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modelbox-footer">
+              <div class="all-buttons text-right">
+
+                <input type="button" id="add" class="btn green btn-success margin-7-hr" (click)="UpdateClinicalHeading()" value="Update"
+                       *ngIf="Update || UpdateSection" />
+                <input type="button" id="add" class="btn green btn-success margin-7-hr" (click)="AddClinicalHeading()" value="Add"
+                       *ngIf="(ShowAddNewPage || ShowDocumentSectionPage) && !Update && !UpdateSection" />
+                <input type="button" id="add" class="btn  btn-danger margin-7-hr" (click)="Close()" value="Close" />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

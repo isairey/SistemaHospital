@@ -1,0 +1,226 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+header {
+  background-color: #1F449B;
+  padding: 0.5rem 0;
+  position: relative;
+  top: auto;
+  width: 100%;
+  height: 7rem;
+}
+
+.header-wrapper {
+  background-color: #1F449B;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 6rem;
+}
+
+.header-wrapper .total-patient {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.header-wrapper h2 {
+  font-size: 34px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.header-wrapper .today-date {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+footer {
+  background-color: #3455f5;
+  /* padding: 1rem;
+  margin-top: 1rem; */
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  border-top: 1px solid #FFF;
+}
+
+.footer-wrapper {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+
+.footer-wrapper h4 {
+  flex: 70px 0 0;
+}
+
+.footer-wrapper marquee a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.queue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F3F3F3;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  gap: 0.5rem;
+}
+
+.queue-header .header-item {
+  width: 100%;
+}
+
+.queue-header .header-item h4 {
+  font-weight: 700;
+  color: #444444;
+  font-size: 1.25rem;
+}
+
+.queue-header .header-item:first-child {
+  width: 70px;
+}
+
+.queue-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  gap: 0.5rem;
+  padding: 0.5rem 0 0 0;
+}
+
+.queue-body .queue-item {
+  padding: 0.25rem 1rem;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.queue-body .queue-item p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #444444;
+}
+
+.queue-body .queue-item p span {
+  font-size: 1.25rem;
+  display: block;
+  font-weight: 700;
+  color: #1F449B;
+}
+
+.queue-body .queue-item:first-child {
+  width: 70px;
+}
+
+.table-wrapper table {
+  text-align: left;
+  color: #444444;
+}
+
+.table-wrapper table thead {
+  background-color: #2b9529;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table-wrapper table thead tr th {
+  padding: 1rem;
+  font-weight: 600;
+}
+
+.table-wrapper table tbody tr td {
+  padding: 2rem;
+}
+
+.table-wrapper table tbody tr td span {
+  background-color: #d9eeda;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1.875rem;
+  color: #4CAF50;
+  font-size: 12px;
+}
+
+.table-wrapper table tbody tr:nth-child(even) {
+  background-color: #bbc1cd;
+}
+
+.table-wrapper table tbody tr:first-child td {
+  /* font-weight: 600;
+  color: #1F449B; */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  position: relative;
+  padding-bottom: 1.5rem;
+  padding-top: 4.25rem;
+}
+
+.container-fluid {
+  padding: 0 1rem;
+}
+
+.table-wrapper table .custom-thead {
+  background-color: #2b9529;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table-wrapper table .custom-thead th {
+  padding: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #2b9529 !important;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 6rem;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back-icon {
+  order: 1;
+}
+
+.icons {
+  display: flex;
+  gap: 10px;
+
+}
+
+.collapse,
+.fullscreen {
+  order: 2;
+
+}
+
+.table-wrapper table tbody {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.table-wrapper {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/*# sourceMappingURL=style.css.map */

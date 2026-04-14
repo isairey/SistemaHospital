@@ -1,0 +1,32 @@
+export class RequestedMedicationItemDto {
+    PrescriptionItemId: number;
+    PrescriptionId: number;
+    PatientId: number;
+    PatientVisitId: number;
+    PrescriberId: number | null;
+    MedicationItemId: number;
+    Quantity: number | null;
+    Frequency: string | null;
+    StartingDate: string | null;
+    Duration: number;
+    FrequencyAbbreviation: string;
+    MedicationSchedule: string;
+    IsPRN: boolean;
+    PRNNotes: string;
+    Notes: string;
+    CreatedBy: number;
+    CreatedOn: string;
+    OrderStatus: string;
+    Doses: string;
+    Strength: string;
+    GenericId: number;
+    ModifiedBy: number | null;
+    ModifiedOn: string | null;
+    DiagnosisId: number | null;
+    RouteOfAdministration: string;
+    ItemName: string;
+    GenericName: string;
+    PerformerId: number;
+    IsAddedToPlan: boolean = false;
+    Prescriber: string;
+}

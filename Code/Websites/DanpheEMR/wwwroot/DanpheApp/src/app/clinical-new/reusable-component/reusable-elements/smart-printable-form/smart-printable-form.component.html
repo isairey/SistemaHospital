@@ -1,0 +1,18 @@
+<div class="col-md-12" style="padding: 0px; margin: 0px;" *ngIf="ShowTemplate">
+    <div class="container">
+        <div *ngIf="IsPrintButton" class="no-print row" style="padding: 0px 15px; justify-content: flex-end;">
+            <button class="btn green btn-success" type="button" (click)="PrintForm()">
+                <i class="fa fa-print"></i>
+                Print
+            </button>
+        </div>
+        <div class="content-section" style="width: 100%; margin: 20px 0px 0px 0px; padding: 10px">
+            <div id="consentForm" #smartPrintableFormContent style="width: 100%">
+                <div *ngIf="Template.PrintHospitalHeader" class="print-only" style="margin: 0px 0px 25px 0px;">
+                    <smart-printable-hospital-header></smart-printable-hospital-header>
+                </div>
+                <div [innerHTML]="TemplateHTMLContent"></div>
+            </div>
+        </div>
+    </div>
+</div>

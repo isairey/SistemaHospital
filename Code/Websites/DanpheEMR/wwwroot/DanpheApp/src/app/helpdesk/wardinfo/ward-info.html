@@ -1,0 +1,35 @@
+﻿<!-- <div class="col-lg-12 col-sm-12">
+    <danphe-grid [grid-colDefaults]="wardinfoGridColumns" [grid-data]="wardinfo" (grid-actions)="gridAction($event)">
+    </danphe-grid>
+</div> -->
+
+<div id="dvPrint_WardWiseList" *ngIf="showWardList">
+    <h4 style="color:#532c7b;">List of Wards:</h4>
+    <div class="table-responsive">
+        <table class="table table-bordered tbl_hover table-condensed" id="bedFeature">
+            <thead>
+                <tr style="background-color: #599be0; color: white;">
+                    <th>Ward Name</th>
+                    <th>Occupied</th>
+                    <th>Vacant</th>
+                    <th>Reserved</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row1 of wardinfo; let i=index">
+                    <td><a [routerLink]="" (click)="onWardSelected(row1.WardId)"
+                           style="font-size: 15px;">{{row1.WardName}}</a></td>
+                    <td>{{row1.Occupied}}</td>
+                    <td>{{row1.Vacant}}</td>
+                    <td>{{row1.Reserved}}</td>
+                    <td>{{row1.Total}}</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<ward-detailed-info *ngIf="this.selectedWardId" [selectedWardId]="this.selectedWardId"
+                    [WardPreview]="this.WardPreview" [showWardList]="this.showWardList"
+                    [SelectedWard]="this.SelectedWardInfo "></ward-detailed-info>

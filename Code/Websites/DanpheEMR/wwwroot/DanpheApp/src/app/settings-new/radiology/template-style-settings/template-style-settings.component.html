@@ -1,0 +1,70 @@
+<!--Start Grid List show-->
+<a feature="button" class="btn blue bordered" (click)="NewTemplateStyle()"><i class="fa fa-plus"></i>New Template Style</a>
+<div class="row">
+  <div class="col-md-12 col-xs-12 col-sm-12">
+    <danphe-grid [grid-colDefaults]="TemplateStyleGridColumns" [grid-data]="TemplateStyleList" (grid-actions)="TemplateGridActions($event)"
+                 [NepaliDateInGridParams]="NepaliDateInGridSettings"
+                 [show-print-button]="false"> </danphe-grid>
+  </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowPopup">
+  <div class="portlet-body form">
+    <!--Model Box Body Start-->
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div clearfix">
+          <div class="caption custom-caption" style="margin-left: auto;">
+            <h3> <span *ngIf="!IsUpdate">Add Template Style</span> <span *ngIf="IsUpdate">Edit Template Style</span> </h3>
+            <a class="btn btn-danger" (click)="ClosePopUp()" title="Cancel">X</a>
+          </div>
+          <div class="form-body form-horizontal hm-form">
+            <!-- start validatorform group   -->
+            <div>
+              <form [formGroup]="NewTemplateStyleObj.TemplateStyleFormValidator">
+                <div class="row">
+                  <label class="col-md-2" style="margin-top: 5px;">
+                    Select Template<sup>*</sup>:
+                  </label>
+                  <div class="col-md-6">
+                    <select class="form-control" formControlName="TemplateId">
+                      <!-- <option selected [value]=" 0">Default</option> -->
+                      <option *ngFor="let template of RadTemplateNameList" [value]="template.TemplateId">
+                        {{ template.TemplateName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-md-2">Header Style</label><br>
+                  <div class="col-md-12">
+                    <textarea class="form-control" rows="15" placeholder="Enter header style here" formControlName="HeaderStyle"
+                              type="string"></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-md-2">Footer Style:</label><br>
+                  <div class="col-md-12">
+                    <textarea class="form-control" rows="15" placeholder="Enter footer style here" formControlName="FooterStyle"
+                              type="string"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- end validator form group -->
+            <div class="row">
+              <div class="col-md-12" style=" text-align: right;margin: 5px;">
+                <button class="btn green btn-success margin-7-hr" *ngIf="!IsUpdate"
+                        [disabled]="NewTemplateStyleObj.TemplateStyleFormValidator.invalid"
+                        (click)="AddTemplateStyle()">Save</button>
+                <button class="btn green btn-success margin-7-hr" *ngIf="IsUpdate" [disabled]="NewTemplateStyleObj.TemplateStyleFormValidator.invalid"
+                        (click)="UpdateTemplateStyle()">Update</button>
+                <button class="btn red btn-danger margin-7-hr" (click)="DiscardTemplate()">Discard</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

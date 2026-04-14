@@ -1,0 +1,20 @@
+export class GetClnVitalsTXN_DTO {
+    TxnVitalsId: number = 0;
+    PatientId: number = 0;
+    PatientVisitId: number = 0;
+    VitalsId: number = 0;
+    VitalsValue: string = "";
+    Unit: string = "";
+    OtherVariable: string = "";
+    Remarks: string = "";
+    CreatedBy: number = 0;
+    CreatedOn: string = "";
+    ModifiedOn: string = "";
+    ModifiedBy: number = 0;
+    IsActive: boolean = false;
+    VitalsGroup: string = "";
+    DisplayOrder: number = 0;
+    VitalsType: string = "";
+    InputType: string = "";
+    VitalsName: string = "";
+}

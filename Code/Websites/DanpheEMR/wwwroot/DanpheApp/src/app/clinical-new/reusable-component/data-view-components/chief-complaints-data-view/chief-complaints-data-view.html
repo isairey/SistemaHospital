@@ -1,0 +1,20 @@
+<div class="table-container" style="margin-top: 5px;">
+  <table class="table table-bordered tbl_hover table-condensed">
+    <thead>
+      <tr style="background-color: #599be0; color: white;">
+        <th>Complaint</th>
+        <th>Duration</th>
+        <th>Units</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let complaint of PatientComplaintList">
+        <td>{{complaint.ChiefComplain}}</td>
+        <td>{{complaint.Duration || 'None'}}</td>
+        <td>{{complaint.DurationType || 'None'}}</td>
+        <td>{{complaint.Notes || 'None'}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

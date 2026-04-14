@@ -1,0 +1,45 @@
+<style>
+  li.horizontal-bar:hover>a {
+    background: none;
+  }
+
+  li.bil-hr-bar:hover ul.dropdown-menu li a {
+    background: none;
+    color: #6f6f6f !important;
+  }
+
+  .dropdown.bil-hr-bar.open a.dropdown-toggle {
+    background: linear-gradient(to bottom, #006687 0%, #035671 50%, #034256 100%);
+    border-radius: 4px !important;
+  }
+
+  .dropdown.bil-hr-bar.open ul.bil-hr-dropdown li a {
+    color: #6f6f6f;
+  }
+
+  .hr-ddlCstm {
+    border-bottom: 1px solid #c5cbc5;
+  }
+
+  .bil-hr-dropdown li a:hover {
+    font-weight: 700;
+  }
+</style>
+<base href="/">
+<div class="page-bar fixed-top-bar">
+  <ul class="page-breadcrumb" *ngIf="ValidRoutes != undefined">
+    <li *ngFor="let route of PrimaryNavItems"> <a routerLink="{{route.RouterLink}}" [routerLinkActive]="'link3-active'"
+         *ngIf="route.IsSecondaryNavInDropdown !== 1"> {{route.DisplayName}} <i class="{{route.Css}}"></i> </a> </li>
+    <li *ngIf="SecondaryNavItems && SecondaryNavItems.length>0" class="dropdown bil-hr-bar" style="display:inline-block;"> <a class="dropdown-toggle"
+         data-toggle="dropdown" aria-expanded="false"> More... <span class="caret"></span> </a>
+      <ul class="dropdown-menu bil-hr-dropdown">
+        <li class="hr-ddlCstm" *ngFor="let route of SecondaryNavItems"> <a routerLink="{{route.RouterLink}}" [routerLinkActive]="'link3-active'">
+            {{route.DisplayName}} <i class="{{route.Css}}"></i> </a> </li>
+      </ul>
+    </li>
+  </ul>
+  <!-- <span class="preview-feature">Preview Feature</span> -->
+</div>
+<div class="wrapper">
+  <router-outlet></router-outlet>
+</div>

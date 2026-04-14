@@ -1,0 +1,16 @@
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="showeditPage">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1" style="margin-top: 70px;">
+                <div class="modelbox-div clearfix">
+                    <div class="modelbox-body">
+                        <new-voucher-entry (callback-function)="Close($event)"></new-voucher-entry>
+                    </div>
+                    <div class="close-modelbox">
+                        <button class="btn btn-danger del-btn" (click)="Close()">X</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

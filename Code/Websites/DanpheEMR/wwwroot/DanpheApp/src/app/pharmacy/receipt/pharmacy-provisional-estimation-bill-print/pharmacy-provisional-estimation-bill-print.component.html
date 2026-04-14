@@ -1,0 +1,237 @@
+<style>
+    @page {
+        size: A5 landscape;
+        margin-top: 8px;
+        margin-bottom: 10px;
+        margin-left: 20px;
+        font-size: 12px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    table td,
+    table th {
+        padding: 0 !important;
+        font-size: 12px;
+    }
+
+    .column {
+        float: left;
+        padding: 5px;
+    }
+
+    .box-body {
+        padding: 0px 10px 0 10px;
+    }
+
+    .c_name {
+        font-size: 12px !important;
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    .c_paragraphs {
+        font-size: 12px !important;
+        margin: 0 0 0 0;
+        padding: 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+    }
+
+    table td,
+    table th {
+        text-align: left;
+        vertical-align: top !important;
+        padding: 0 !important;
+        font-weight: normal !important;
+    }
+</style>
+
+<div>
+    <div>
+        <div id="provisional-estimation-invoice-print" class="invoice-receipt">
+            <div class="box-body invoice header">
+                <table border="0" style="width: 100%; margin: 0 auto;" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td colspan="3" width="25%">
+                            <img class="img-responsive" style="max-height:70px; position: relative; top: 10px;"
+                                 src="../../../themes/theme-default/images/hospital-logo-phrm.PNG" />
+                        </td>
+                        <td colspan="6" width="50%" style="color: #000 !important;">
+                            <h3 class="c_name" style="text-align: center;"><strong>{{headerDetail.hospitalName}}</strong></h3>
+                            <p class="c_paragraphs" style="text-align: center;">{{headerDetail.address}}</p>
+                            <p class="c_paragraphs" style="text-align: center;">{{ headerDetail.tel}}</p>
+                            <p class="c_paragraphs" style="text-align: center;">{{ headerDetail.DDA}}</p>
+                        </td>
+                        <td colspan="3" width="25%" style="text-align: right; vertical-align: top;">
+                            <p *ngIf="headerDetail.PANno!==''" class="c_paragraphs"
+                               style="text-align: right; margin-top: 10px; margin: 0; color: #000 !important;">
+                                <strong>PAN No.
+                                    : {{headerDetail.PANno}}</strong>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                <table border="0" style="width: 100%; margin: 0 auto;" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td colspan="12" style="text-align: center; color: #000 !important;">
+                            <p><strong>PHARMACY UNITS</strong></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="12" style="text-align: center; color: #000 !important;">
+                            <p><strong>Estimation Bill</strong></p>
+                        </td>
+                    </tr>
+                    <tr style="border: 1px solid #ccc; color:black!important;">
+                        <td colspan="12" style="padding: 5px!important;">
+                            <table style="width: 100%; margin-bottom: 0;">
+                                <tr>
+                                    <td colspan="6" style="text-align: left;">
+                                        <p class="c_paragraphs"><strong>Hospital No :
+                                            </strong>{{ProvisionalEstimationBillInvoice.PatientInfo.PatientCode}}</p>
+                                    </td>
+                                    <td colspan="6" style="text-align: right;" *ngIf="ProvisionalEstimationBillInvoice.PatientInfo.VisitCode">
+                                        <p class="c_paragraphs"><strong>IP No : </strong>{{ProvisionalEstimationBillInvoice.PatientInfo.VisitCode}}
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" style="text-align: left;">
+                                        <p class="c_paragraphs"><strong>Patient's Name:
+                                            </strong>{{ProvisionalEstimationBillInvoice.PatientInfo.ShortName}}</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" style="text-align: left;">
+                                        <p class="c_paragraphs"><strong>Address: </strong>
+                                            {{coreService.SortPatientAddress(ProvisionalEstimationBillInvoice.PatientInfo)}}
+                                        </p>
+                                    </td>
+                                    <td colspan="6" style="text-align: right;">
+                                        <p class="c_paragraphs"><strong> Age/Sex :</strong>{{ProvisionalEstimationBillInvoice.PatientInfo.DateOfBirth
+                                            | DanpheDateTime:'age'
+                                            }}/{{ProvisionalEstimationBillInvoice.PatientInfo.Gender}}</p>
+                                    </td>
+                                </tr>
+                                <tr
+                                    *ngIf="ProvisionalEstimationBillInvoice.PatientInfo.ClaimCode || ProvisionalEstimationBillInvoice.PatientInfo.PolicyNo">
+                                    <td colspan="6" style="text-align: left;">
+                                        <p class="c_paragraphs"><strong> ClaimCode:</strong>
+                                            {{ProvisionalEstimationBillInvoice.PatientInfo.ClaimCode}}</p>
+                                    </td>
+                                    <td colspan="6" style="text-align: right;">
+                                        <p class="c_paragraphs"><strong>PolicyNo: </strong>{{ProvisionalEstimationBillInvoice.PatientInfo.PolicyNo}}
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" style="text-align: left;">
+                                        <p class="c_paragraphs"><strong>Contact No:
+                                            </strong>{{ProvisionalEstimationBillInvoice.PatientInfo.PhoneNumber}}</p>
+                                    </td>
+                                    <td colspan="6" style="text-align: right;">
+                                        <p class="c_paragraphs"><strong>Scheme: </strong>{{ProvisionalEstimationBillInvoice.PatientInfo.SchemeName}}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr style="color:black!important;">
+                        <th style="padding: 3px 5px !important;"><strong>SN.</strong></th>
+                        <th colspan="3" style="padding: 3px 5px !important;"> <strong>Particular(s)</strong></th>
+                        <th style="padding: 3px 5px !important;"><strong>HS Code</strong></th>
+                        <th style="padding: 3px 5px !important;"><strong>Qty</strong></th>
+                        <th colspan="2" style="padding: 3px 5px !important;"><strong>Expiry</strong></th>
+                        <th colspan="2" style="padding: 3px 5px !important;"><strong>Batch</strong></th>
+                        <th *ngIf="showRackNoInPrint" style="padding: 3px 5px !important;"><strong>Rack No.</strong></th>
+                        <th style="padding: 3px 5px !important;"><strong>Rate</strong></th>
+                        <th style="padding: 3px 5px !important; text-align: right;"><strong>Amount</strong></th>
+                    </tr>
+                    <tr *ngFor="let row of ProvisionalEstimationBillInvoice.ProvisionalEstimationBillInvoiceItems; let i=index"
+                        style="color:black!important;">
+                        <td style="padding: 3px 5px !important; ">{{i+1}}</td>
+                        <td colspan="3" style="padding: 3px 5px !important;">{{row.ItemDisplayName}} </td>
+                        <td style="padding: 3px 5px !important; ">{{row.HSCode}}</td>
+                        <td style="padding: 3px 10px !important; ">{{row.Quantity}}</td>
+                        <td colspan="2" style="padding: 3px 5px !important; ">{{row.ExpiryDate | date: 'dd MMM yyy'}}</td>
+                        <td colspan="2" style="padding: 3px 5px !important; ">{{row.BatchNo}}</td>
+                        <td *ngIf="showRackNoInPrint" style="padding: 3px 5px !important; ">{{row.RackNo}}</td>
+                        <td style="padding: 3px 5px !important; ">{{row.SalePrice | number: "1.2-4"}} </td>
+                        <td style="padding: 3px 5px !important; text-align: right; ">{{row.SubTotal | number: "1.2-4"}}</td>
+                    </tr>
+                    <tr style="border-top: 1px solid #ccc; color:black!important;">
+                        <td colspan="8" style="padding: 5px!important;">
+                            <p class="c_paragraphs"><strong>In Words :{{ProvisionalEstimationBillInvoice.TotalAmount | NumberInWords}} <span
+                                          *ngIf="ProvisionalEstimationBillInvoice.TotalAmount !=0">Only</span></strong></p>
+                        </td>
+                        <td colspan="3" style="padding: 5px!important; text-align: right;">
+                            <p class="c_paragraphs"><strong>SubTotal: </strong></p>
+                            <p *ngIf="ProvisionalEstimationBillInvoice.DiscountAmount" class="c_paragraphs">
+                                <strong>Discount:</strong>
+                            </p>
+                            <p *ngIf="ProvisionalEstimationBillInvoice.VATAmount" class="c_paragraphs"><strong>VAT:</strong></p>
+                            <p *ngIf="ProvisionalEstimationBillInvoice.CoPaymentCashAmount" class="c_paragraphs"><strong>CoPay Cash Amount: </strong>
+                            </p>
+                            <p *ngIf="ProvisionalEstimationBillInvoice.CoPaymentCreditAmount" class="c_paragraphs"><strong>CoPay Credit Amount:
+                                </strong></p>
+                            <p class="c_paragraphs"><strong>Total Amount: </strong></p>
+                        </td>
+                        <td style="padding: 5px!important; text-align: right;">
+                            <p class="c_paragraphs">{{ProvisionalEstimationBillInvoice.SubTotal | number: "1.2-4"}}</p>
+                            <p class="c_paragraphs" *ngIf="ProvisionalEstimationBillInvoice.DiscountAmount">
+                                {{ProvisionalEstimationBillInvoice.DiscountAmount |number: "1.2-4"}}</p>
+                            <p class="c_paragraphs" *ngIf="ProvisionalEstimationBillInvoice.VATAmount">{{ProvisionalEstimationBillInvoice.VATAmount |
+                                number:
+                                "1.2-4"}}</p>
+                            <p *ngIf="ProvisionalEstimationBillInvoice.CoPaymentCashAmount" class="c_paragraphs">
+                                {{ProvisionalEstimationBillInvoice.CoPaymentCashAmount | number: "1.2-4"}}</p>
+                            <p *ngIf="ProvisionalEstimationBillInvoice.CoPaymentCreditAmount" class="c_paragraphs">
+                                {{ProvisionalEstimationBillInvoice.CoPaymentCreditAmount | number: "1.2-4"}}
+                            </p>
+                            <p class="c_paragraphs">{{coreService.currencyUnit}}{{ProvisionalEstimationBillInvoice.TotalAmount | number: "1.2-4"}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" style="padding: 5px!important; vertical-align: top;" style="color:black!important;">
+                            <p class="c_paragraphs"><strong>Printed By: </strong>{{UserName}}</p>
+                        </td>
+                        <td colspan="6" style="padding: 5px!important; vertical-align: top; text-align: right;" style="color:black!important;">
+                            <p class="c_paragraphs" style="text-align: right;"><strong>Time: </strong>{{ CurrentDate|
+                                DanpheDateTime:'format':'HH:mm A'}}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="12" style="padding: 5px!important; text-align: center; color:black!important;">
+                            <p class="c_paragraphs" *ngIf="showEnglish">{{englishText}}</p>
+                            <p class="c_paragraphs" *ngIf="showNepali">{{nepaliText}}</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <select-printer [group-name]="'phrm-receipt'" [storage-key]="'phrm-invoice'" (on-printer-change)="OnPrinterChanged($event)">
+        </select-printer>
+        <div style="text-align: center; margin-bottom: 15px;">
+            <button class="btn blue" id="btnPrintPhrmInvoice" class="btn green btn-success" (click)="Print('provisional-estimation-invoice-print')">
+                Print Receipt
+                <i class="glyphicon glyphicon-print"></i>
+            </button>
+        </div>
+    </div>
+    <new-print-page *ngIf="openBrowserPrintWindow" [print-data]="browserPrintContentObj" (print-sucess)="CallBackBillPrint($event)">
+    </new-print-page>
+</div>

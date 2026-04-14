@@ -1,0 +1,16 @@
+.form-horizontal .form-group {
+    margin-bottom: 0;
+}
+.centered-caption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.make-element-float{
+    float: right;
+}
+.give-margin{
+    margin:5px;
+}

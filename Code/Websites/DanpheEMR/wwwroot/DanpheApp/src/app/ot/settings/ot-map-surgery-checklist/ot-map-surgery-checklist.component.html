@@ -1,0 +1,65 @@
+<div class="row" style="border: 1px solid; padding: 5px; margin: 15px;">
+    <div class="col-md-2" style="display: flex; justify-content: space-between;">
+        <label style="margin-top: 5px; font-size: medium;">
+            <b>Surgery</b>
+        </label>
+        <span style="margin-top: 5px; font-size: medium;">:</span>
+    </div>
+    <div class="col-md-3">
+        <input
+               danphe-auto-complete class="form-control" [source]="SurgeryList"
+               [list-formatter]="SurgeryFormatter" placeholder="Select Surgery"
+               display-property-name="SurgeryName" value-property-name="SurgeryId"
+               [min-chars]="0" max-num-list="10"
+               id="id_txt_surgery" [(ngModel)]="CurrentSurgery"
+               (focusout)="OnSurgerySelect()" />
+    </div>
+    <span class="blink-text" style="margin-top: 5px;" *ngIf="!IsSurgerySelected">Select Surgery to proceed mapping with CheckList</span>
+</div>
+<div class="row" *ngIf="IsSurgerySelected" style="margin: 15px;">
+    <div style="padding: 0px; margin: 10px 0px 50px 0px">
+        <button
+                id="id_btn_clear_map_object" style="float: right; margin-left: 10px" class="btn orange btn-success"
+                (click)="ClearMapSurgeryCheckList()">
+            Clear
+        </button>
+        <button
+                id="id_btn_save_map_surgery_checklist" style="float: right;" class="btn green btn-success" (click)="SaveMapSurgeryCheckList()">
+            Save
+        </button>
+    </div>
+    <table class="full-width-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>CheckList Name</th>
+                <th>Display Name</th>
+                <th>Input Type</th>
+                <th>Display Sequence</th>
+                <th>Is Mandatory</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of MapSurgeryCheckListObjectItems" class="alternate-row">
+                <td>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="id_checkbox_mapSurgeryCheckList" style="cursor: pointer; zoom: 1.5;"
+                               [(ngModel)]="item.IsSelected" />
+                    </label>
+                </td>
+                <td>{{item.CheckListName}}</td>
+                <td>{{item.DisplayName}}</td>
+                <td>{{item.InputType}}</td>
+                <td>
+                    <input type="number" id="id_txt_display_sequence" (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                           [(ngModel)]="item.DisplaySequence" />
+                </td>
+                <td>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="id_checkbox_isMandatory" style="cursor: pointer; zoom: 1.5;" [(ngModel)]="item.IsMandatory" />
+                    </label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

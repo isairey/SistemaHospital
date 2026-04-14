@@ -1,0 +1,27 @@
+<!-- <div class="sub-navtab">
+  <ul class="nav nav-tabs">
+    <li><a [ngClass]="{'a-tab-active': showReactionList==true}" (click)="updateView(0)">Manage Reactions</a></li>
+    <li><a [ngClass]="{'a-tab-active': showICD10GroupList==true}" (click)="selectIcd10GroupList()">ICD Groups</a></li>
+    <li><a [ngClass]="{'a-tab-active': showICD10GroupList==true}" (click)="IntakeOutputParametrs()"> Intake/Output
+        Variables</a></li>
+  </ul>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <reaction-list *ngIf="showReactionList"></reaction-list>
+    <icd10-group-list *ngIf="showICD10GroupList"></icd10-group-list>
+    <intake-output-list *ngIf="ShowIntakeOutputParameters"></intake-output-list>
+    <clinical-note-list></clinical-note-list>
+  </div>
+</div> -->
+<div class="sub-navtab">
+  <ul class="nav nav-tabs" *ngIf="validRoutes != undefined">
+    <li *ngFor="let route of validRoutes">
+      <a routerLink="{{route.RouterLink}}" [routerLinkActive]="'a-tab-active'">{{route.DisplayName}}<i class="{{route.Css}}"></i></a>
+    </li>
+  </ul>
+</div>
+<router-outlet>
+
+</router-outlet>

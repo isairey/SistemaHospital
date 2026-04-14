@@ -1,0 +1,14 @@
+<div>
+    <input type="button" class="btn primary-btn m1" (click)="OpenAddConsumptionTypePopupPage()" value="Add New Consumption Type" />
+    <consumption-type *ngIf="ShowAddConsumptionPopupPage" (call-back-popup-close)="CloseAddConsumptionTypePopupPage($event)"
+                      [consumption-type]="ConsumptionType"
+                      [ConsumptionTypes]="ConsumptionTypes"
+                      [is-edit-mode]="IsEditMode"></consumption-type>
+</div>
+<div class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+        <danphe-grid [grid-colDefaults]="ConsumptionTypeGridColumns" [grid-data]="ConsumptionTypes"
+                     (grid-actions)="ConsumptionTypeGridActions($event)">
+        </danphe-grid>
+    </div>
+</div>

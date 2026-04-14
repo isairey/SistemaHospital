@@ -1,0 +1,205 @@
+<div style="padding: 0px; margin: 10px 0px 0px 15px">
+    <button
+            *ngIf="!IsViewOnly && !IsCancelled"
+            id="id_btn_edit-checklist" class="btn green btn-success"
+            (click)="EditCheckList()">
+        Manage Checklist
+    </button>
+</div>
+<div class="wrapper">
+    <danphe-grid
+                 *ngIf="ShowCheckListGrid" [grid-colDefaults]="OTBookingCheckListListColumns" [grid-data]="CheckListOnGrid"
+                 (grid-actions)="OTBookingCheckListGidActions($event)">
+    </danphe-grid>
+</div>
+
+<div *ngIf="ShowAddCheckListPage" class="popup-static portlet box portlet-fullscreen custom_modal">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="modelbox-div clearfix">
+                    <div class="caption custom-caption" style="margin: 0px 0px 15px 0px;">
+                        <h3>
+                            <span> CheckList </span>
+                        </h3>
+                        <a class="btn btn-danger" (click)="CloseCheckListPage()" title="Cancel">X</a>
+                    </div>
+
+                    <div class="row" style="margin: 15px; padding: 10px; border: 1px solid black; background-color: azure;">
+                        <div class="col-md-12" style="padding: 0px;">
+                            <div class="col-md-2" style="display: flex; justify-content: space-between;">
+                                <span>OT Name</span>
+                                <span>:</span>
+                            </div>
+                            <div>
+                                <b>{{ SurgeryName }}</b>
+                            </div>
+                        </div>
+                        <hr>
+                        <span class="col-md-12" style="margin: 0px; font-size: 18px; text-decoration: underline;">Patient
+                            Details</span>
+                        <div class="col-md-12" style="display: flex; justify-content: left; padding: 0px;">
+                            <div class="col-md-4" style="margin-right: 25px;">
+                                <span>Patient Name</span>
+                                <span> : </span>
+                                <span><b>{{ SelectedOTBooking.PatientName }}</b></span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>Hospital Number</span>
+                                <span> : </span>
+                                <span><b>{{ SelectedOTBooking.HospitalNumber }}</b></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- body starts-->
+                    <div class="col-md-12" style="margin-top: 20px; margin-bottom: 20px;">
+                        <form [formGroup]="CheckListFormGroup">
+                            <!-- <div class="col-md-12" *ngFor="let checkList of CheckListFormGroup.get('CheckLists') as FormArray.controls; let i = index" -->
+                            <div class="col-md-12" *ngFor="let checkList of CheckListControls; let i = index"
+                                 style="margin-top: 20px;"
+                                 [formGroup]="checkList">
+                                <div class="col-md-3" style="margin: 0px; padding: 0px; display: flex; justify-content: space-between;">
+                                    <label [for]="'CheckListName'" style="margin-right: 5px;">
+                                        {{ ActiveMSTCheckList[i].DisplayName }}
+                                        <br>
+                                        <div class="file"
+                                             *ngIf="ActiveMSTCheckList[i].InputType === CheckListInputType_File">
+                                            <span
+                                                  [ngClass]="{'file-validation': !IsFileTypeValid}">
+                                                (jpeg, jpg, png)
+                                            </span>
+                                            /
+                                            <span
+                                                  [ngClass]="{'file-validation': !IsFileSizeValid}">
+                                                3MB
+                                            </span>
+                                        </div>
+                                    </label>
+                                    <span>:</span>
+                                </div>
+
+                                <!-- ShortDescription Starts -->
+                                <div class="col-md-5" style="padding: 0px; margin-bottom: 5px; display: flex;">
+                                    <input *ngIf="ActiveMSTCheckList.length > 0 && ActiveMSTCheckList[i].InputType === CheckListInputType_ShortDescription"
+                                           type="text"
+                                           formControlName="CheckListValue"
+                                           (change)="SetValueToFormArray($event, i)"
+                                           id="{{ ActiveMSTCheckList[i].CheckListName }}">
+                                    <!-- ShortDescription Ends -->
+
+                                    <!-- LongDescription Ends -->
+                                    <textarea *ngIf="ActiveMSTCheckList.length > 0 && ActiveMSTCheckList[i].InputType === CheckListInputType_LongDescription"
+                                              type="text"
+                                              formControlName="CheckListValue"
+                                              (change)="SetValueToFormArray($event, i)"
+                                              id="{{ ActiveMSTCheckList[i].CheckListName }}" style="width: 450px;"></textarea>
+                                    <!-- LongDescription Ends -->
+
+                                    <!-- SingleSelection Starts -->
+                                    <select *ngIf="ActiveMSTCheckList.length > 0 && ActiveMSTCheckList[i].InputType === CheckListInputType_SingleSelection"
+                                            type="text"
+                                            formControlName="CheckListValue"
+                                            (change)="SetValueToFormArray($event, i)"
+                                            id="{{ ActiveMSTCheckList[i].CheckListName }}">
+                                        <option value="" selected="true">--Select--</option>
+                                        <option value="{{lookUp}}" *ngFor="let lookUp of ActiveMSTCheckList[i].LookUpList; let i = index;">
+                                            {{lookUp}}
+                                        </option>
+                                    </select>
+                                    <!-- SingleSelection Starts -->
+
+                                    <!-- Multiple Selection Starts -->
+                                    <input *ngIf="ActiveMSTCheckList.length > 0 && ActiveMSTCheckList[i].InputType === CheckListInputType_MultipleSelection"
+                                           danphe-auto-complete [source]="ActiveMSTCheckList[i].LookUpList"
+                                           placeholder="CheckListValue" type="text"
+                                           onclick="this.select()"
+                                           (valueChanged)="OnSelect($event, ActiveMSTCheckList[i].LookUpList, ActiveMSTCheckList[i].CheckListName, i);"
+                                           min-chars="0" max-num-list="10"
+                                           id="{{ ActiveMSTCheckList[i].CheckListName }}">
+                                    <!-- Display selected items -->
+                                    <div
+                                         *ngIf="CheckListFormArray.at(i).get('CheckListValue').value && ActiveMSTCheckList[i].InputType === CheckListInputType_MultipleSelection">
+                                        <ul class="checklist-select__list two-column-list">
+                                            <li class="checklist-select__item"
+                                                *ngFor="let selectedValue of CheckListFormArray.at(i).get('CheckListValue').value?.split(','); let j = index">
+                                                <span class="checklist-select__item--title">
+                                                    {{ selectedValue }}
+                                                </span>
+                                                <button class="checklist-select__item--button"
+                                                        (click)="RemoveItem(ActiveMSTCheckList[j].CheckListName, i, j)">
+                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- Multiple Selection Ends -->
+
+                                    <!-- File Starts -->
+                                    <div *ngIf="ActiveMSTCheckList.length > 0 && ActiveMSTCheckList[i].InputType === CheckListInputType_File"
+                                         style="padding: 0px; margin: 0px;">
+                                        <document-upload (fileUploaded)="OnFileUploaded($event, i)"></document-upload>
+                                        <div>
+                                            <span></span>
+                                            <div *ngIf="UploadedFiles[i]">
+                                                <img style="width: 100px;" [src]="UploadedFiles[i].FileBase64Url" alt="Signature" />
+                                                <button (click)="RemoveFile(i)"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- File Ends -->
+                                </div>
+                                <div class="col-md-3"
+                                     style="padding: 0px !important; margin-left: 15px; display: flex; justify-content: space-between;">
+                                    <label class="col-md-2" [for]="'CheckListName'"
+                                           style="margin-right: 5px;">Remarks</label>
+                                    <span>:</span>
+                                    <input
+                                           type="text"
+                                           formControlName="Remarks"
+                                           (change)="SetRemarksToFormArray($event, i)"
+                                           id="{{ ActiveMSTCheckList[i].CheckListName }}">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- body ends-->
+
+                    <div class="text-right" style="margin: 15px;">
+                        <input type="button" class="btn green btn-success margin-7-hr" (click)="SaveCheckList()"
+                               [value]="'Save CheckList'" id="id_save_checklist" [disabled]="loading" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowImageFilePreviewPopUp">
+    <div class="portlet-body form">
+        <div class="form-body">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-12 col-sm-12 col-xs-12 modelbox-div">
+                    <div class="col-md-12">
+                        <h4 style="text-align:center">
+                            <b>
+                                <a style="float:right; border-radius: 50% !important;
+                                    margin-top: -50px; margin-right: -50px;" class="btn btn-danger  hidden-print"
+                                   (click)="CloseFilePreviewPopUp()" title="Cancel">X</a>
+                            </b>
+                        </h4>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom: 10px;">
+                        <h4 class="margin-0-vr">{{FileName}}</h4>
+                    </div>
+                    <div style="text-align: center;">
+                        <img style="max-width: 100%; max-height: 550px; display: inline-block;" class="img-responsive"
+                             [src]="fileSrc" />
+                    </div>
+                </div>
+                <div class="col-md-1 hidden-xs hidden-sm"> </div>
+            </div>
+        </div>
+    </div>
+</div>

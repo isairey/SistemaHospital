@@ -1,0 +1,14 @@
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 0 5px;
+  margin-bottom: 15px;
+}
+.btn-primary {
+  height: 30px;
+  font-weight: normal;
+  background-color: #3e92e6 !important;
+}
+.btn-primary:hover {
+  background-color: #3786d4 !important;
+}

@@ -1,0 +1,85 @@
+<style>
+  .btn-padding {
+    padding-right: 2rem;
+  }
+
+  .square-div {
+    width: 150px;
+    height: 60px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 3rem;
+    box-sizing: border-box;
+  }
+
+  .h4-mar {
+    margin-left: 10px;
+  }
+
+
+  .filter-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+</style>
+
+<div class="wrapper">
+
+  <Form [formGroup]="Filter_DTO.FilterFormGroup">
+    <div class="row filter-data">
+
+      <div class="col-md-4 col-xs-12">
+        <div class="form-group">
+          <label style="vertical-align: top;margin-top: 7px; margin-right: 10px;">Ward<b>:</b></label>
+          <div style="display: inline-block;">
+            <input danphe-auto-complete class="form-control" [list-formatter]="WardListFormatter" [source]="WardList"
+                   placeholder="Select Ward" formControlName="SelectedWard" display-property-name="WardName" />
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-4 col-xs-12">
+        <div class="form-group">
+          <label style="vertical-align: top;margin-top: 7px; margin-right: 10px;">Department<b>:</b></label>
+          <div style="display: inline-block;">
+            <input danphe-auto-complete class="form-control" [list-formatter]="DepartmentListFormatter" [source]="FilteredDepartment"
+                   [value-formatter]="FormatSelectedDepartment" placeholder="Select Department" formControlName="SelectedDepartment"
+                   display-property-name="DepartmentName"
+                   (ngModelChange)="GetFilteredDoctorList()" />
+
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12">
+        <div class="form-group">
+          <label style="vertical-align: top;margin-top: 7px; margin-right: 10px;">Admitting Doctor<b>:</b></label>
+          <div style="display: inline-block;">
+            <input id="id" danphe-auto-complete class="form-control" [list-formatter]="DoctorListFormatter" [source]="FilteredDoctorList"
+                   placeholder="Select Doctor" formControlName="SelectedEmployee" display-property-name="FullName"
+                   (valueChanged)="GetFilteredDepartmentList()" />
+
+          </div>
+        </div>
+      </div>
+      <div class="pull-right btn-padding">
+        <button class="btn green btn-success margin-7-hr bth-mar" type="submit" (click)="PatientFilter()">
+          <i class="fa fa-refresh"></i>Load
+        </button>
+      </div>
+    </div>
+  </Form>
+  <br>
+  <div class="row">
+    <div>
+      <div class="col-md-12 col-xs-12 col-sm-12">
+        <danphe-grid (grid-actions)="IpAdmittedPatientGridActions($event)" [grid-colDefaults]="IPAdmittedPatGridColumn"
+                     [grid-data]="IPAdmittedPatientList" [NepaliDateInGridParams]="NepaliDateInGridSettings">
+        </danphe-grid>
+      </div>
+    </div>
+  </div>
+</div>

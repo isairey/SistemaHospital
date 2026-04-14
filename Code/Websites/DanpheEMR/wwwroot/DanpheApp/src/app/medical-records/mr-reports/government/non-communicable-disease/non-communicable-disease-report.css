@@ -1,0 +1,118 @@
+.load-button {
+    padding-left: 0px;
+    padding-top: 4px;
+}
+
+.date-select {
+    padding-left: 0px;
+}
+
+.report-wrapper {
+    margin-top: 2%;
+
+}
+
+.container {
+    width: 100%;
+    border: 1px solid black;
+    box-sizing: border-box;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+/* Full-width row styling */
+.top-row-box {
+    width: 100%;
+    border: 1px solid #333;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: aliceblue;
+
+}
+
+.full-width-text {
+    text-align: center;
+    font-size: 16px;
+    word-wrap: break-word;
+}
+
+/* Row container */
+.row {
+    margin-left: 0px;
+
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.col-7 {
+    width: 58.3333%;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.col-5 {
+    width: 41.6667%;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.col-8 {
+    width: 66.66667%;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.col-4 {
+    width: 33.33333%;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.Selected {
+    border: 1px solid black;
+    padding: 0px;
+}
+
+table tr,
+table td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 0px;
+
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+    padding: 0px;
+    border-collapse: collapse;
+}
+
+.table-top-header {
+    border: 1px solid black;
+    text-align: center;
+    background-color: #ffe2ad;
+    border-collapse: collapse;
+
+}
+
+.sub-header {
+    background-color: #ffecc9;
+    height: 3rem;
+
+}
+
+.rotate-text {
+    transform: rotate(180deg);
+    writing-mode: vertical-rl;
+    text-align: center;
+    /* white-space: nowrap; */
+}
+
+.noncommunicablediseasename {
+    background-color: #ffffa4;
+    text-align: center;
+    font-size: 11px;
+
+}

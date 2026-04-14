@@ -1,0 +1,105 @@
+<style>
+    #loading-screen-text h3 {
+        text-align: center;
+        margin: 10px 20px 0 0;
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .progress-bar {
+        position: relative;
+        height: 8px;
+        width: 200px;
+        background: #ffffff;
+        border-radius: 25px !important;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        position: absolute;
+        height: 10px;
+        width: 0%;
+        animation: progress-forward 3s infinite;
+        background: rgb(11, 219, 122);
+        border-radius: 15px;
+    }
+
+
+    @keyframes progress-forward {
+        0% {
+            width: 0%;
+        }
+
+        25% {
+            width: 50%;
+        }
+
+        50% {
+            width: 75%;
+        }
+
+        75% {
+            width: 85%;
+        }
+
+        100% {
+            width: 100%;
+        }
+    }
+</style>
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="loadingScreen === true">
+    <div class="portlet-body form" style="background-color:white">
+        <div style="display: flex; height: 100vh; align-items: center; justify-content: center; flex-direction: column;gap: 10px 0;"
+             id="loading-screen-text">
+            <h3>Please Wait...</h3>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix" id="id_discharge_summary_report">
+    <button (click)="Print()" id="id_btn_print_Dischargesumary" class="btn  btn-small btn-primary" style="float: right;margin-bottom: 15px;">Print
+        This
+        Page</button>
+    <!-- Bibek:8thFeb'24 This button is displayed when Final submission(Save and Print) is not done, and this button is 
+        displayed with the permission so hasEditDischargeSunnaryPermission has to be true to be displayed -->
+    <button *ngIf="(this.hasEditDischargeSummaryPermission || (!this.IsFinalSubmited))"
+            (click)="AllowEditFromView($event)"
+            id="id_btn_edit_Dischargesumary"
+            class="btn  btn-small btn-primary" style="float: right;margin-bottom: 15px; margin-right: 25px;">Edit</button>
+</div>
+<div id="id_discharge_summary_printpage">
+    <div *ngIf="DischargeSummaryHeaderSettings.ShowDischargeSummaryHeader">
+        <table border="0" id="table-header" style="width: 100%; margin: 0 auto;" cellspacing="0" cellpadding="0">
+            <tr>
+                <td colspan="0" style="width:18%" *ngIf="InvoiceDisplaySettings.ShowHospLogo">
+                    <img class="img-responsive" style="position: relative; top: 10px;"
+                         src="../../../themes/theme-default/images/hospital-logo.PNG" />
+                </td>
+                <td colspan="0" *ngIf="headerDetail && InvoiceDisplaySettings.ShowHeader" style="text-align: center; width: 64%;">
+                    <h3 class="c_name" style="text-align: center; font-size:24px; font-weight: bold;">{{headerDetail.CustomerName}}</h3>
+                    <p class="c_paragraphs" style=" text-align: center; font-size:18px; font-weight:500;">{{headerDetail.Address}}</p>
+                    <p class="c_paragraphs" style=" text-align: center; font-size:18px; font-weight:500; ">{{headerDetail.Tel}}</p>
+                </td>
+                <td colspan="0" style="text-align: right; vertical-align: top; width:18%">
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- <div class="fixed-header" *ngIf="!DischargeSummaryHeaderSettings.ShowDischargeSummaryHeader"
+         [style.height.px]="DischargeSummaryHeaderSettings.HeaderGap">
+    </div> -->
+
+    <div *ngIf="this.innerHtml">
+        <div [innerHTML]="getUpdatedContent()"></div>
+    </div>
+</div>
+
+<!-- 3-jan-2024: bikesh here we not using global print because header and other things are customizable over there and their impact is in all invoices so -->
+<!-- <new-print-page *ngIf="openBrowserPrintWindow" [print-data]="browserPrintContentObj">
+</new-print-page> -->

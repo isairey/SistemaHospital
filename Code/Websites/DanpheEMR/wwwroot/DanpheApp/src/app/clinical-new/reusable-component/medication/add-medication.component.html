@@ -1,0 +1,208 @@
+<style>
+    .full-header {
+        background: #eaeaea;
+        color: #3d4957;
+    }
+
+    .temp-header {
+        background: #eaeaea;
+        color: #0f0f10;
+    }
+
+    .table-bordered,
+    .table-bordered>tbody>tr>td,
+    .table-bordered>tbody>tr>th,
+    .table-bordered>tfoot>tr>td,
+    .table-bordered>tfoot>tr>th,
+    .table-bordered>thead>tr>td,
+    .table-bordered>thead>tr>th {
+        border: 1px solid #cccccc;
+    }
+
+    .doc-pagecontent label {
+        margin: 0 5px;
+    }
+
+    .doc-pagecontent input {
+        margin-top: 0;
+    }
+
+    .doc-pagecontent td {
+        vertical-align: middle;
+    }
+
+    .table-temp {
+        table-layout: fixed;
+        /* Ensure a fixed layout for the table */
+    }
+
+    .table-temp td:nth-child(8) {
+        /* Apply styles only to the remarks column */
+        white-space: nowrap;
+        /* Prevent text wrapping */
+        overflow: hidden;
+        /* Hide overflowing content */
+        text-overflow: ellipsis;
+        /* Show an ellipsis (...) for overflow */
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        <div>
+            <div style="margin-top: 5px;">
+                <form [formGroup]="MedicationValidator">
+                    <table class="table table-striped table-hover table-bordered">
+                        <thead style="border-left: 1px solid #3d4957;border-right: 1px solid #3d4957;border-top: 1px solid #3d4957;">
+                        </thead>
+                        <thead style="border-left: 1px solid #3d4957;border-right: 1px solid #3d4957;">
+                            <tr>
+                                <th class="full-header" style="width: 220px;">Generic<sup class="color-red">*</sup></th>
+                                <th class="full-header" style="width: 220px;">Brand-Name<sup class="color-red">*</sup></th>
+                                <th class="full-header" style="width: 70px;">Strength<sup class="color-red">*</sup></th>
+                                <th class="full-header" style="width: 70px;">Dosage<sup class="color-red"></sup></th>
+                                <th class="full-header" style="width: 120px;">Route<sup class="color-red">*</sup></th>
+                                <th class="full-header" style="width: 100px;">Frequency<sup class="color-red">*</sup></th>
+                                <th class="full-header" style="width: 120px;">Intake Timing<sup class="color-red">*</sup></th>
+                                <th class="full-header" style="width: 50px;font-size: 12px;">Duration (days)<sup class="color-red">*</sup></th>
+                                <th class="full-header" style="width: 120px;">Remarks</th>
+                                <th style="width: 120px;"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <!-- <input type="text" class="form-control" [readonly]="true" [disabled]="true" [title]="Medication.GenericName"
+                                           formControlName="GenericName" /> -->
+                                    <input danphe-auto-complete class="form-control cstm-form-control" formControlName="GenericName"
+                                           [source]="GenericItems" placeholder="GenericName" path-to-data="Results"
+                                           display-property-name="GenericName" value-property-name="GenericName"
+                                           [list-formatter]="GenericNameFormatter"
+                                           onClick="this.select()" (keyup.enter)="FocusOnInputField('id_dosage')"
+                                           (focusout)="OnGenericNameSelected()" max-num-list="10" />
+                                </td>
+                                <td>
+                                    <input danphe-auto-complete class="form-control cstm-form-control" formControlName="ItemName"
+                                           [source]="FilteredMedicineList" placeholder="MedicationName" path-to-data="Results"
+                                           display-property-name="MedicineName" value-property-name="ItemName" [list-formatter]="myListFormatter"
+                                           onClick="this.select()" (keyup.enter)="FocusOnInputField('id_dosage')"
+                                           (valueChanged)="onMedicationSelected($event)" max-num-list="10" />
+                                </td>
+
+                                <td>
+                                    <input type="text" appFocusTextbox id="id_NewStrength" (keyup.enter)="FocusOnInputField('id_frequency')"
+                                           formControlName="Strength"
+                                           class="form-control" />
+                                </td>
+                                <td>
+
+                                    <input type="text" appFocusTextbox class="form-control" formControlName="Dosage" />
+                                </td>
+                                <td>
+                                    <select (keyup.enter)="FocusOnInputField('id_frequency')" onwheel="this.blur();" formControlName="Route"
+                                            id="id_route" class="form-control" [title]="Medication.Route">
+                                        <option *ngFor="let route of MedRouteList" [value]="route">{{ route }}</option>
+                                    </select>
+                                </td>
+                                <td>
+
+                                    <select (keyup.enter)="FocusOnInputField('id_intake')" onwheel="this.blur();"
+                                            formControlName="FrequencyAbbreviation" id="id_intake" class="form-control"
+                                            [title]="Medication.Frequency">
+                                        <option *ngFor="let r of FrequencyList" [value]="r.FrequencyDisplayName">{{ r.FrequencyDisplayName }}
+                                        </option>
+                                    </select>
+
+                                </td>
+                                <td>
+
+                                    <select (keyup.enter)="FocusOnInputField('howmanydosage')" onwheel="this.blur();"
+                                            formControlName="TimingOfMedicineTake" id="id_intake" class="form-control"
+                                            [title]="Medication.TimingOfMedicineTake">
+                                        <option *ngFor="let r of MedicationIntakeList" [value]="r.IntakeDisplayName">{{ r.IntakeDisplayName}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" id="howmanydosage" (keyup.enter)="FocusOnInputField('id_remarks')"
+                                           formControlName="HowManyDays" class="form-control" min="0" />
+                                </td>
+                                <td>
+                                    <input type="text" appFocusTextbox id="id_remarks" (keyup.enter)="FocusOnInputField('id_PRNNotes')"
+                                           formControlName="Remarks"
+                                           class="form-control" />
+                                </td>
+                                <td *ngIf="!IsUpdate">
+                                    <i class="btn btn-success fa" id="id_addbutton" style="float:left;" (click)="AddToTemporaryList()">+</i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <div style="margin: 8px 50px 0px 50px;">
+                                    <label for="id_checkbox_IsPRN" class="is-ref mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox" id="id_checkbox_IsPRN" style="cursor: pointer;" formControlName="IsPRN" />
+                                        <span></span>is PRN?
+                                    </label>
+                                </div>
+                                <td *ngIf="MedicationValidator.value.IsPRN;"><label for="id_PRNNotes"
+                                           class="is-ref mt-checkbox mt-checkbox-outline">PRNNotes</label>
+                                    <input type="text" appFocusTextbox id="id_PRNNotes" (keyup.enter)="FocusOnInputField('id_addbutton')"
+                                           formControlName="PRNNotes"
+                                           class="form-control" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table-temp table table-striped table-bordered table-hover"
+                           *ngIf="TemporaryMedicationList && TemporaryMedicationList.length">
+                        <thead>
+                            <tr class="temp-header">
+                                <th style="width: 50px;"></th>
+                                <th style="width: 160px;">Generic</th>
+                                <th style="width: 160px;">Brand-Name</th>
+                                <th style="width: 80px;">Strength</th>
+                                <th style="width: 80px;">Dose</th>
+                                <th style="width: 120px;">Route</th>
+                                <th style="width: 90px;">Frequency</th>
+                                <th style="width: 80px;">Intake</th>
+                                <th style="width: 90px; font-size: 12px;">Duration (days)</th>
+                                <th style="width: 50px;">IsPRN</th>
+                                <th style="width: 80px;">PRNNotes</th>
+                                <th style="width: 80px;">Remarks</th>
+                            </tr>
+
+                        </thead>
+                        <tbody style="max-height: 200px; overflow-y: auto;">
+                            <tr *ngFor="let temp of TemporaryMedicationList; let i = index">
+                                <td style="width:5%;">
+                                    <i class="btn btn-danger fa" (click)="RemoveMedicineItem(i)">X</i>
+                                </td>
+                                <td style="width: 9%;">{{temp.GenericName}} </td>
+                                <td style="width: 9%;">{{temp.ItemName}} </td>
+                                <td style="width: 9%;">{{temp.Strength}} </td>
+                                <td style="width: 9%;">{{temp.Dosage}} </td>
+                                <td style="width: 10%;">{{temp.Route}} </td>
+                                <td style="width: 11%;">{{temp.FrequencyAbbreviation}} </td>
+                                <td style="width: 10%; word-wrap: break-word;">{{temp.TimingOfMedicineTake}} </td>
+                                <td style="width: 9%;">{{temp.HowManyDays}} </td>
+                                <td style="width: 9%;">{{temp.IsPRN}} </td>
+                                <td style="width: 13%;">{{temp.PRNNotes}} </td>
+                                <td style="width: 10%; word-wrap: break-word;">{{temp.Remarks}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="col-lg-12 col-sm-12">
+        <button *ngIf="!IsUpdate" class="btn btn-primary" [disabled]="loading" (click)="loading=true;AddMedication();"
+                style="width: 90px;border-radius: 10px !important;">Add</button>
+        <button *ngIf="IsUpdate" class="btn btn-primary" [disabled]="loading" (click)="loading=true;Update();"
+                style="width: 90px;border-radius: 10px !important;">Update</button>
+        <button class="btn btn-danger" (click)="Discard()" style="border-radius: 10px !important;margin-left:15px;">Discard</button>
+
+    </div>
+</div>

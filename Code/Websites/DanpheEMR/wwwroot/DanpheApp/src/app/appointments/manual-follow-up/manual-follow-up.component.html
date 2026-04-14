@@ -1,0 +1,211 @@
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="!ShowPrintingPopup">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="modelbox-div clearfix">
+          <a class="btn btn-danger del-btn" (click)="Close()">X</a>
+          <div>
+            <div class="col-md-12" style="padding: 15px 5px 0px 30px;">
+
+              <div class="col-lg-12 col-sm-12">
+                <div class="col-md-12">
+                  <!--START: Scheme Selection-->
+                  <div
+                       *ngIf="(SchemePriCeCategoryFromVisit && SchemePriCeCategoryFromVisit.SchemeId > 0 && SchemePriCeCategoryFromVisit.PriceCategoryId > 0)">
+                    <registration-scheme-select [service-billing-context]="ServiceBillingContext"
+                                                [selected-scheme-priceCategory]="SchemePriCeCategoryFromVisit"
+                                                (on-change)="OnRegistrationSchemeChanged($event)">
+
+                    </registration-scheme-select>
+                  </div>
+                  <!--END: Scheme Selection-->
+                  <!--START: Patient Detail Section-->
+                  <div class="page-bar mt10 fs-large patientinfo">
+                    <div class="row" style="margin-bottom:10px;">
+                      <div class="col-md-6 col-sm-6 ">
+                        <span>
+                          <i class="fa fa-user"></i>&nbsp;Patient Name : <b>{{SelectedPatient.ShortName}}</b>
+                        </span>
+                      </div>
+                      <div class="col-md-6 col-sm-6 floatright">
+                        <span>
+                          <i class="fa fa-hospital-o"></i>&nbsp;Hospital No. : <b> {{SelectedPatient.PatientCode}}</b>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6">
+                        <span>
+                          <i class="fa fa-male"></i>&nbsp;Age/Sex : {{SelectedPatient.Age}}/ {{SelectedPatient.Gender}}
+                        </span>
+                      </div>
+                      <div class="col-md-6 col-sm-6 floatright ">
+                        <span *ngIf="SelectedPatient.PhoneNumber">
+                          <i class="fa fa-phone"></i>&nbsp;Contact No : <b>{{SelectedPatient.PhoneNumber}}</b>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--END: Patient Detail Section-->
+
+                  <!--START: Confirm Visit Section-->
+                  <div class="row">
+                    <div class="page-bar mt-18" style="height:120px">
+                      <h4 class="confirmpreviousvisit">Confirm Previous Visit</h4>
+                      <div class="col-md-12 col-sm-12" style="margin-top:5px;">
+                        <div class="col-md-5 col-sm-5 department">
+                          <div class="form-group my-0">
+                            <label class="control-label col-md-4">Department<sup class="color-red"> *</sup></label>
+                            <div class="col-md-8" style="margin-left:-45px;">
+                              <input id="id_manual_follow_up_check_department" class="form-control" danphe-auto-complete
+                                     [(ngModel)]="SelectedDepartment"
+                                     [list-formatter]="MyDepartmentListFormatter" [source]="DepartmentList"
+                                     placeholder="Department Name" display-property-name="DepartmentName" onClick="this.select();"
+                                     (valueChanged)="AssignSelectedDepartment()" match-formatted="true" [grid-sort]="'DepartmentName'"
+                                     max-num-list="10" [min-chars]="1" [disabled]="IsVisitFound" />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-sm-5">
+                          <div class="form-group my-0">
+                            <label class="control-label col-md-2" style="margin-top:7px;">Doctor<sup class="color-red">*</sup></label>
+                            <div class="col-md-10" style="padding-left: 0px;">
+                              <input class="form-control" id="id_manual_follow_up_check_doctor" danphe-auto-complete
+                                     [(ngModel)]="SelectedDoctor" [list-formatter]="DocListFormatter" [source]="FilteredDocList"
+                                     placeholder="Doctor's Name" display-property-name="PerformerName" (ngModelChange)="AssignSelectedDoctor()"
+                                     onClick="this.select();" max-num-list="10" [disabled]="!allowDoctorChange && IsVisitFound" />
+                            </div>
+                          </div>
+                        </div>
+                        <div class=" col-md-1 col-sm-2 checkbutton">
+                          <div class="form-group my-0">
+                            <input *ngIf="!IsVisitFound" type="submit" id="id_btn_check_previous_visit" class="btn btn-primary"
+                                   value="Check"
+                                   (click)="CheckPreviousVisit()">
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-sm-5">
+                        </div>
+                        <div class="col-md-6 col-sm-5" style="margin-top:7px" *ngIf="IsVisitFound && HasChangeDoctorPermission">
+                          <div class="form-group my-0">
+                            <div style="display: flex; align-items: center;">
+                              <input
+                                     id="change-doctor-checkbox"
+                                     type="checkbox"
+                                     style="transform: scale(1.5); margin-right: 8px;"
+                                     [(ngModel)]="ChangedDoctor"
+                                     (ngModelChange)="OnDoctorChange()" />
+                              <label for="change-doctor-checkbox" style="cursor: pointer; color: blue; margin: 0;">Change Doctor?</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--END: Confirm Visit Section-->
+
+                  <!--START: Previous Visit information Section-->
+
+                  <div class="row">
+                    <div class="page-bar bill-p-info mt-18">
+                      <div class="col-md-8 col-md-offset-2">
+                        <div class="visit-information-found" *ngIf="IsVisitChecked && IsVisitFound">
+                          <p>Visit Exists for Patient on {{SelectedVisit.VisitDate | DanpheDateTime: 'format':'YYYY-MM-DD' }}
+                            (<strong>{{SelectedVisitDayCount}} Days Ago</strong>)
+                          </p>
+                        </div>
+                        <div class="visit-information-not-found" *ngIf="IsVisitChecked && !IsVisitFound">
+                          <p>No Visit Exists for Patient with provided details!</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--END: Previous Visit information Section-->
+
+                  <!--START: Visit Date and Time Section-->
+
+                  <div class="row" *ngIf="IsVisitChecked && IsVisitFound && !IsFreeFollowupSelected">
+                    <div class="page-bar bill-p-info mt-18">
+                      <div class="col-md-6" style="padding-left:0px;">
+                        <label class="control-label col-md-2" style="padding-right:0px;">Visit Date<sup class="color-red"> *</sup></label>
+                        <div class="col-md-10" style="padding-left:0px">
+                          <input id="id_visit_date_paid_followup" class="form-control" type="date" name="" value=""
+                                 [(ngModel)]="PaidFollowupVisitDate" />
+
+                        </div>
+                      </div>
+                      <div class="col-md-6" style="padding-left:0px;">
+
+                        <div class="form-group my-0">
+                          <label class="control-label col-md-2">Visit Time</label>
+                          <div class="col-md-10" style="padding-left:0px">
+                            <input class="form-control" type="time" id="id_visit_time_paid_followup" name="" value=""
+                                   [(ngModel)]="PaidFollowupVisitTime" />
+
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!--END: Visit Date and Time Section-->
+
+
+                  <!--START: Billing information Section-->
+
+                  <div class="row" *ngIf="IsVisitChecked && IsVisitFound && !IsFreeFollowupSelected">
+                    <visit-billing-info [billing-transaction]="NewBillTxn"></visit-billing-info>
+                  </div>
+
+                  <!--END: Billing information Section-->
+
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                      <div class="form-group btn-manual-followup">
+                        <input type="submit" id="id_btn_create_followup" class="btn btn-success" value="Create Visit"
+                               [attr.disabled]="(IsVisitFound === false || Loading === true) ? true : null"
+                               (click)="CreateManualFollowup()">
+                        <input type="submit" id="id_btn_discard_followup" class="btn btn-danger" value="Discard" (click)="Close()">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--Start: Invoice Print Popup-->
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowPrintingPopup">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-11">
+        <div class="modelbox-div clearfix">
+          <a class="btn btn-danger del-btn" (click)="CloseInvoicePrint()">X</a>
+
+          <div>
+            <div class="col-md-5" *ngIf="ShowOpdSticker" style="padding: 15px 5px 0px 30px;">
+              <registration-sticker [patientVisitId]="NewPatientVisitId">
+              </registration-sticker>
+            </div>
+            <div class="col-md-7" *ngIf="ShowInvoice">
+              <bil-print-invoice-main [invoiceNumber]="InvoiceDisplayProperties.bil_InvoiceNo"
+                                      [fiscalYrId]="InvoiceDisplayProperties.bil_FiscalYrId"
+                                      [bil-txn-id]="InvoiceDisplayProperties.bil_BilTxnId"
+                                      [from-visit-prints]="true">
+              </bil-print-invoice-main>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End: Invoice Print Popup-->

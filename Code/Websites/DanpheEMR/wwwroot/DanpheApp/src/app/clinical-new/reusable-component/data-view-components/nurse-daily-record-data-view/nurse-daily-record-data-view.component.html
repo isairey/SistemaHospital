@@ -1,0 +1,33 @@
+<style>
+  tbody>tr>td {
+    border: 1px solid #e7ecf1 !important;
+  }
+
+  .boxm {
+    margin: 5px;
+  }
+</style>
+<div class="table-container" style="margin-top: 5px;">
+  <table class="table table-bordered tbl_hover table-condensed">
+    <thead>
+      <tr style="background-color: #599be0; color: white;">
+        <!-- <th>Created On</th> -->
+        <th>Date</th>
+        <th>Time</th>
+        <th *ngFor="let vitalGroup of VitalsList">
+          {{ vitalGroup.VitalsName }}<span *ngIf="vitalGroup.Unit"> ({{ vitalGroup.Unit }})</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let grouped of PatientVitals">
+        <!-- <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A' }}</td> -->
+        <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].Date}}</td>
+        <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].Time}}</td>
+        <td *ngFor="let group of grouped.VitalsGroupsByCreatedOn">
+          {{ group.VitalsData[0].VitalsValue }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

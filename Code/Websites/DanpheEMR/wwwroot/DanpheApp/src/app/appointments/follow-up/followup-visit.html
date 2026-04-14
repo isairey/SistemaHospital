@@ -1,0 +1,78 @@
+<div class="popup-static portlet box portlet-fullscreen inv_modal">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="modelbox-div clearfix">
+          <div class="caption lb-caption">
+            <h3> <span>Followup Visit </span> </h3>
+            <a class="btn btn-danger" (click)="Close()"><i class="fa fa-times"></i></a>
+          </div>
+          <div class="danphe-followup-visit">
+            <table class="table table-striped table-bordered table-hover">
+              <tr>
+                <td> Hospital No: <b> {{parentVisit.Patient.PatientCode}} </b></td>
+                <td> Patient Name: <b> {{parentVisit.Patient.ShortName}}</b></td>
+                <td> Age Sex: <b>{{parentVisit.Patient.DateOfBirth | DanpheDateTime:'age'}}/{{parentVisit.Gender | slice:0:1}}</b></td>
+              </tr>
+              <tr>
+                <td> Last Visit Date: <b>{{parentVisit.VisitDate | DanpheDateTime:'format':'YYYY-MM-DD'}}</b></td>
+                <td> Department : <b> {{parentVisit.Department}}</b></td>
+                <td> Doctor : <b>{{parentVisit.PerformerName}}</b></td>
+              </tr>
+            </table>
+            <div class="col-md-12" *ngIf="changeProvider">
+              <visit-info [visit]="newVisitForChangeDoctor"></visit-info>
+              <visit-billing-info [billing-transaction]="newBillTxn"></visit-billing-info>
+            </div>
+            <div *ngIf="ChangedDoctor" style="margin: 15px; padding: 10px; margin-bottom: 50px;">
+              <div class="col-md-5 col-sm-5 department">
+                <div class="form-group my-0">
+                  <label class="control-label col-md-4" style="margin-top:7px;">Department<sup class="color-red"> *</sup></label>
+                  <div class="col-md-8" style="margin-left:-45px;">
+                    <input id="id_manual_follow_up_check_department" class="form-control" danphe-auto-complete
+                           [(ngModel)]="parentVisit.Department"
+                           [list-formatter]="MyDepartmentListFormatter"
+                           placeholder="Department Name" display-property-name="DepartmentName" onClick="this.select();"
+                           match-formatted="true" [grid-sort]="'DepartmentName'"
+                           max-num-list="10" [disabled]="true" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-5">
+                <div class="form-group my-0">
+                  <label class="control-label col-md-2" style="margin-top:7px;">Doctor<sup class="color-red">*</sup></label>
+                  <div class="col-md-10" style="padding-left: 0px;">
+                    <input class="form-control" id="id_manual_follow_up_check_doctor" danphe-auto-complete
+                           [(ngModel)]="SelectedDoctor" [list-formatter]="DocListFormatter" [source]="FilteredDocList"
+                           placeholder="Doctor's Name" display-property-name="PerformerName" (ngModelChange)="AssignSelectedDoctor()"
+                           onClick="this.select();" max-num-list="10" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="text-align:center;">
+              <button style="border-radius: 7px !important;border: 1px solid #3598dc;" type="button" class="btn blue" (click)="FollowUp()"
+                      [disabled]="loading">
+                Add Followup Visit
+              </button>
+              <div style="display: inline-flex; align-items: center; margin-left: 15px;" *ngIf="HasChangeDoctorPermission">
+                <input id="change-doctor-checkbox" type="checkbox" style="transform: scale(1.5); margin-right: 8px; margin-left: 15px;"
+                       [(ngModel)]="ChangedDoctor" (ngModelChange)="OnDoctorChange()" />
+                <label for="change-doctor-checkbox" style="cursor: pointer; color: blue; margin: 0;">Change Doctor?</label>
+              </div>
+            </div>
+            <div *ngIf="!changeProvider" style="padding-top:10px;padding-bottom:10px;" class="clearfix">
+              <div *ngIf="!ChangedDoctor" class="pull-left"><span> Note : Followup will be created for <span *ngIf="parentVisit.PerformerName"> <span
+                          style="font-weight:bold;text-decoration:underline;"> {{parentVisit.PerformerName}} </span> of </span> <span
+                        style="font-weight:bold;text-decoration:underline;">{{parentVisit.Department}} Department</span> </span></div>
+              <!-- <div class="pull-right">
+                <a (click)="ChangeDepartmentOrDoctor()" title="click to change followup Department."
+                   class="btn btn-danger btn-sm" style="float:right;"> Change Department? </a>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

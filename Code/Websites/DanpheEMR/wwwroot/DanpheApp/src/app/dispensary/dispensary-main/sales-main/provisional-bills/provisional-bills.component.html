@@ -1,0 +1,71 @@
+<div class="row" [ngClass]="!ShowProvisionalDetails ? 'show-div' : 'hide-div'">
+  <div class="col-md-12">
+    <label>Search By: </label>
+    <select [(ngModel)]="SearchProperty">
+      <option value="PatientCode">Hospital Number</option>
+      <option value="ShortName">Patient Name</option>
+      <option value="PhoneNumber">Contact Number</option>
+    </select>
+    <div style="display: inline-block" *ngIf="SearchProperty ==='PatientCode'" class="autocomplete-item">
+      <input danphe-auto-complete class=" form-control" id="pat-serach-by-hospital-no" [(ngModel)]="SelectedPatient"
+        [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+        [list-formatter]="PatientListFormatterByPatientCode" display-property-name="PatientCode"
+        value-property-name=null onClick="this.select();" (focusout)="OnPatientSelect()" min-chars="1"
+        [grid-sort]="'PatientCode'" match-formatted="true" style="width:250px;"
+        (keyup.enter)="setFocusById('id_provisionalSearch')">
+    </div>
+    <div style="display: inline-block" *ngIf="SearchProperty ==='ShortName'" class="autocomplete-item">
+      <input danphe-auto-complete class=" form-control" id="pat-serach-by-hospital-patient-name"
+        [(ngModel)]="SelectedPatient" [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+        [list-formatter]="PatientListFormatterByPatientName" display-property-name="ShortName" value-property-name=null
+        onClick="this.select();" (focusout)="OnPatientSelect()" min-chars="1" [grid-sort]="'ShortName'"
+        match-formatted="true" style="width:250px;" (keyup.enter)="setFocusById('id_provisionalSearch')">
+    </div>
+    <div style="display: inline-block" *ngIf="SearchProperty ==='PhoneNumber'" class="autocomplete-item">
+      <input danphe-auto-complete class=" form-control" id="pat-serach-by-contact-no" [(ngModel)]="SelectedPatient"
+        [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+        [list-formatter]="PatientListFormatterByPhoneNumber" display-property-name="PhoneNumber"
+        value-property-name=null onClick="this.select();" (focusout)="OnPatientSelect()" min-chars="1"
+        [grid-sort]="'PhoneNumber'" match-formatted="true" style="width:250px;"
+        (keyup.enter)="setFocusById('id_provisionalSearch')">
+    </div>
+    <div style="display: inline-block; margin-left:10px;">
+      <button type="button" class="btn btn-success" id="id_provisionalSearch" (click)="LoadProvisionalInformation()">
+        Search <i class="fa fa-search"></i>
+      </button>
+    </div>
+  </div>
+  <div class="col-lg-12 col-sm-12">
+    <danphe-grid [grid-colDefaults]="creditBillGridColumns" [grid-data]="PatientVisitWiseProvisionalBillsInfo"
+      [rangeType]="dateRange" [date-range-options]="'1W,1M,3M'" [NepaliDateInGridParams]="NepaliDateInGridSettings"
+      (onDateChange)="onGridDateChange($event)" (grid-actions)="CreditBillGridActions($event)" [show-CustomDate]="false"
+      [hide-grid-search-box]="true"></danphe-grid>
+  </div>
+</div>
+
+<div class="row" *ngIf="ShowProvisionalDetails">
+  <provisional-bills-action (back-to-provisional-bills)="CloseProvisionalBillActionPage()"></provisional-bills-action>
+</div>
+<div class="popup-static portlet box portlet-fullscreen inv_modal" *ngIf="ShowEstimationBillInvoice">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="modelbox-div clearfix">
+          <a class="btn btn-danger history-del-btn" (click)="OnPopUpClose()" title="Cancel"><i
+              class="fa fa-close"></i></a>
+          <div class="form-body">
+            <div class="col-md-12">
+              <div class="row printStyle print-border">
+                <div style="text-align:center;">
+                  <pharmacy-provisional-estimation-bill-print
+                    [provisional-estimation-invoice]="ProvisionalEstimationBillInvoice">
+                  </pharmacy-provisional-estimation-bill-print>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

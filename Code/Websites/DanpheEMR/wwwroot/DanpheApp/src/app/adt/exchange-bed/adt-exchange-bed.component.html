@@ -1,0 +1,151 @@
+<div class="wrapper">
+    <div class="exchange-bed-container">
+        <div class="row">
+            <div class="margin-top-10">
+                <div class="caption lb-caption">
+                    <span class="caption-subject">
+                        <i class="glyphicon glyphicon-asterisk"></i>
+                        Exchange Bed
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input danphe-auto-complete id="id_search_admitted_patient"
+                       class="form-control searchtbx search-patient" [(ngModel)]="SelectedPatient"
+                       [list-formatter]="AdmittedPatientListFormatter"
+                       [source]="AdmittedPatientSearch.bind(this)" [path-to-data]="'Results'"
+                       placeholder="Search By HospitalNo/IpNumber/Patient Name"
+                       display-property-name="ShortName" value-property-name=null
+                       onClick="this.select();" max-num-list="10" [min-chars]="3"
+                       match-formatted="true" (ngModelChange)="OnPatientChanged()"
+                       [grid-sort]="'ShortName'" [ngModelOptions]="{standalone: true}" autofocus="true" />
+            </div>
+        </div>
+
+        <div class="row" *ngIf="SelectedPatient && SelectedPatient.WardId">
+            <div class="col-12 bed-information-container">
+                <div class="col-md-6 bed-info-section vertical-line">
+                    <div class="bed-info-header">
+                        <span><strong>Current Bed Information</strong></span>
+                    </div>
+                    <div class="bed-info">
+                        <table class="full-width-table">
+                            <tr>
+                                <td>
+                                    <div class="col-md-5">
+                                        <label>Ward:</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label>{{this.CurrentBedInformation.WardName}}</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="col-md-5">
+                                        <label>Bed Feature :</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label>{{this.CurrentBedInformation.BedFeatureName}}</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="col-md-5">
+                                        <label>Bed :</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label>{{this.CurrentBedInformation.BedCode}}</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="col-md-6 bed-info-section">
+                    <div class="bed-info-header">
+                        <span><strong>Desired Bed Information</strong></span>
+                    </div>
+                    <div class="bed-info">
+                        <table class="full-width-table">
+                            <tr>
+                                <td>
+                                    <div class="col-md-5">
+                                        <label>Ward :</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label>{{this.CurrentBedInformation.WardName}}</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="col-md-5">
+                                        <label>Bed Feature :</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <label>{{this.CurrentBedInformation.BedFeatureName}}</label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="col-md-5">
+                                        <label>Bed :</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <select name="select-bed" id="id_select_desired_bed" (change)="OnDesiredBedSelected($event)">
+                                            <option value="" disabled selected>--select desired bed--</option>
+                                            <!-- <option value="{{bed.BedId}}" *ngFor="let bed of AllBedsByBedFeature;">{{bed.BedCode}}</option> -->
+                                            <ng-container *ngFor="let bed of AllBedsByBedFeature">
+                                                <option [ngClass]="bed.IsReserved ? 'reserved' : bed.IsOccupied ? 'occupied' : 'available'"
+                                                        value="{{bed.BedId}}">
+                                                    {{bed.BedCode}}
+                                                    <ng-container *ngIf="bed.IsReserved"> (Reserved)</ng-container>
+                                                    <ng-container *ngIf="!bed.IsReserved && bed.IsOccupied"> (Occupied)</ng-container>
+                                                </option>
+                                            </ng-container>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr
+                                *ngIf="this.DesiredBedInformation.BedId && !DesiredBedInformation.IsAvailable">
+                                <td>
+                                    <div class="col-md-12 bed-selection-info">
+                                        <span class="alert-font">
+                                            The Selected bed is <span *ngIf="SelectedDesiredBed.IsOccupied">Occupied</span> <span
+                                                  *ngIf="SelectedDesiredBed.IsReserved">Reserved</span>
+                                            <span *ngIf="BedOccupyingPatient && BedOccupyingPatient.PatientName">by</span>
+                                            <strong *ngIf="BedOccupyingPatient && BedOccupyingPatient.PatientName">
+                                                {{BedOccupyingPatient.PatientName}}
+                                            </strong>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="this.DesiredBedInformation.BedId && DesiredBedInformation.IsAvailable">
+                                <td>
+                                    <div class="col-md-12 bed-selection-info">
+                                        <strong>The Selected Bed is Available, You can proceed to Save the Bed Exchange.</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <input type="submit" value="Discard" class="btn btn-danger" (click)="DiscardBedExchangeTransaction()" />
+                <input type="submit" value="Save" class="btn green btn-success" (click)="SaveBedExchangeTransaction()">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="margin-20-tp" style="width: 90%; padding: 20px;">
+  <div class="popup-static portlet box portlet-fullscreen custom_modal">
+    <div class="portlet-body form">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="modelbox-div ref_modal_div clearfix">
+            <div class="caption custom-caption no-margin">
+              <h3>
+                <span>
+                  <span *ngIf="!Update">Add Questionnaire for {{ SelectedFieldName?.FieldName }}</span>
+                  <span *ngIf="Update">Edit Questionnaire for {{ SelectedFieldName?.FieldName }}</span>
+                </span>
+              </h3>
+              <a class="btn btn-danger" (click)="Close()">X</a>
+            </div>
+            <div class="wrapper" style="padding-bottom: 20px;">
+              <div class="row flex flex-column" style="margin-right: 20px; margin-left: 20px;">
+                <div>
+                  <div class="row">
+                    <div [class]="GridClass">
+                      <form [formGroup]="ClinicalFieldQuestionary.CLNFieldQuestionaryValidator" class="form-horizontal hm-form">
+                        <div class="form-body col-md-12 hm-form">
+                          <div class="form-group">
+                            <label for="FieldName" class="control-label col-md-4">Medical Component</label>
+                            <div class="col-md-8">
+
+                              <input class="form-control" type="text" id="FieldName" [value]="SelectedFieldName?.FieldName" disabled>
+
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="AnswerType" class="control-label col-md-4">Answer Type<sup>*</sup></label>
+                            <div class="col-md-8">
+                              <select id="AnswerType" class="form-control" formControlName="AnswerType"
+                                      (change)="OnAnswerTypeSelected($event.target.value)" [attr.disabled]="SelectedAnswerType==true ? true : null">
+                                <option *ngFor="let answerType of AnswerType" [value]="answerType">{{ answerType }}</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div [ngClass]="{'col-md-4': ShowFlex, 'col-md-6': !ShowFlex}">
+                      <form [formGroup]="ClinicalFieldQuestionary.CLNFieldQuestionaryValidator" class="form-horizontal hm-form">
+                        <div class="form-body col-md-12 hm-form">
+                          <div class="form-group">
+                            <label for="Question" class="control-label col-md-4">Question<sup>*</sup></label>
+                            <div class="col-md-8">
+                              <input class="form-control" type="text" id="Question" placeholder="Question" formControlName="Question">
+                              <span class="color-red font-sm"
+                                    *ngIf="ClinicalFieldQuestionary.CLNFieldQuestionaryValidator.get('Question').invalid && ClinicalFieldQuestionary.CLNFieldQuestionaryValidator.get('Question').touched">Question
+                                is required</span>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                      <div class="modelbox-footer">
+                        <div class="all-buttons text-right">
+                          <input type="button" id="add_ClinicalHeadingField" class="btn green btn-success" (click)="AddClinicalFieldQuestionary()"
+                                 value="Save" />
+                          <input type="button" id="clearQuestionary" class="btn red btn-danger margin-7-hr" (click)="ClearClinicalQuestionary()"
+                                 value="Clear" />
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div *ngIf="!ShowFlex" [class]="PrimaryGridClass">
+                    <danphe-grid [grid-colDefaults]="ClinicalQuestionaryGridColumns" [grid-data]="CLNFieldQuestion"
+                                 (grid-actions)="ClinicalFieldQuestionaryGridActions($event)" [show-print-button]="false">
+                    </danphe-grid>
+                  </div>
+                  <div *ngIf="ShowFlex" [class]="PrimaryGridClass" style="width: 57%;">
+                    <danphe-grid [grid-colDefaults]="ClinicalQuestionaryGridColumns" [grid-data]="CLNFieldQuestion"
+                                 (grid-actions)="ClinicalFieldQuestionaryGridActions($event)" [show-print-button]="false">
+                    </danphe-grid>
+                  </div>
+                </div>
+                <div>
+                  <div class="col-md-5" *ngIf="ShowFlex">
+                    <div class="d-flex justify-content-center align-items-center">
+                      <manage-clinical-field-options (clinicalField-OptionsData)="OnClinicalFieldOptionsAdded($event)" [Show-Flex]="ShowFlex"
+                                                     [Clinical-Field]="ClinicalField" [Update]="Update"></manage-clinical-field-options>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

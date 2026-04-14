@@ -1,0 +1,27 @@
+/* .custom-table {
+  width: 50%;
+  float: left;
+  border-collapse: collapse;
+}
+
+.custom-table th {
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  border: 1px solid black;
+  padding: 8px;
+}
+
+.custom-table td {
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.medium-width {
+  width: 150px;
+  font-weight: bold;
+}
+
+.custom-table td:nth-child(2) {
+  width: 100px;
+} */

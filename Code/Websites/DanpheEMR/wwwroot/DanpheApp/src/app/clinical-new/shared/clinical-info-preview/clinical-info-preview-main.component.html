@@ -1,0 +1,965 @@
+<style>
+  /* .preview-container {
+        border: 2px solid black;
+    } */
+
+  .document {
+    border: 2px solid #0773bc;
+    border-radius: 4px !important;
+    margin: 12px;
+  }
+
+  .section {
+    border: 2px solid rgb(141, 140, 140);
+    margin: 12px;
+  }
+
+  .field {
+    border: 1px solid rgb(211, 210, 210);
+    margin: 12px;
+
+  }
+
+  .field-data-container {
+    /* border-bottom: 1px solid rgb(141, 140, 140); */
+    margin: 4px;
+  }
+
+  .preview-cockpit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+  }
+
+  .preview-cockpit>div {
+    /* flex: 1; */
+    min-width: 200px;
+    display: flex;
+    /* flex-direction: column; */
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .preview-cockpit label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .preview-cockpit select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    width: fit-content;
+  }
+
+  .preview-cockpit button {
+    align-self: flex-start;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  .preview-cockpit button .glyphicon {
+    margin-left: 5px;
+  }
+
+
+  .visit-container label {
+    margin: 8px;
+  }
+
+  .print-check-box {
+    /* display: inline-block; */
+    margin: 4px;
+
+  }
+
+  /* .field-label {
+        display: inline-block;
+    } */
+
+  .document-title {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .btn-toggle {
+    font-size: 1rem;
+    background-color: #0773bc;
+    color: white;
+    /* float: right; */
+    font-weight: bold;
+    border: none;
+  }
+
+  .edit-data {
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    float: right;
+  }
+
+
+  .data-option {
+    display: inline-block;
+  }
+
+  .btn-print {
+    height: fit-content;
+  }
+
+  .pdata {
+    display: inline-block;
+  }
+
+
+  .filter-container {
+    flex-wrap: wrap;
+  }
+
+  .field-label {
+    background: #0773bc9e;
+    font-size: 14px;
+    width: 100%;
+    color: white;
+    padding: 6px;
+  }
+
+  .table thead tr th {
+    font-size: 14px;
+    background-color: #d9ebff;
+    color: #696666;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table-bordered th,
+  .table-bordered td {
+    border: 1px solid #ddd;
+  }
+
+
+
+
+
+
+
+  /* print css */
+
+  .p-document {
+    padding-left: 12px;
+  }
+
+  .p-section {
+    margin-left: 12px;
+
+  }
+
+  .p-field {
+    margin-left: 12px;
+
+  }
+
+  .p-field-data-container {
+    margin: 4px;
+  }
+
+  .p-doc-title {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .p-sec-title {
+    font-size: 1.8rem;
+  }
+
+  .p-field-title {
+    /* font-weight: bold; */
+    font-size: 1.6rem;
+    margin: 0px;
+    padding: 0px;
+    background: #0773bc9e;
+    /* font-size: 14px; */
+    width: 100%;
+    color: white;
+    padding: 6px;
+    margin-top: 4px !important;
+
+  }
+
+  .p-print-data {
+    font-size: 1.2rem;
+  }
+
+  .p-questionary {
+    margin-left: 8px;
+  }
+
+  .full-screen-spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.458);
+    /* semi-transparent background */
+    z-index: 1000;
+    /* ensure it is above other elements */
+  }
+
+  .spinner-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .mr-loader {
+    width: 100px;
+    /* Adjust the size of the spinner as needed */
+    height: 100px;
+    /* Adjust the size of the spinner as needed */
+  }
+
+  .customize-label {
+    font-size: 14px;
+    margin: 4px;
+    font-weight: bold;
+  }
+
+  .col-sn {
+    width: 5%;
+  }
+
+  .col-date {
+    width: 15%;
+  }
+
+  .col-details {
+    width: 80%;
+  }
+</style>
+
+<div>
+  <div class="preview-container">
+    <div class="preview-cockpit">
+      <div>
+        <label>Select Patient Visit: </label>
+        <select [(ngModel)]="SelectedVisit">
+          <option *ngFor="let visit of AllVisits" [value]="visit.PatientVisitId">
+            {{visit.VisitDate | DanpheDateTime:'format':'YYYY-MM-DD'}} ({{visit.VisitCode}})
+          </option>
+        </select>
+        <button class="btn green" (click)="OnDataLoad()">
+          <span>Load</span>
+        </button>
+      </div>
+      <div class="filter-container">
+        <div>
+          <label>Document</label>
+          <select class="filter-select" [(ngModel)]="SelectedDocument" (change)="OnDocumentChange()">
+            <option [value]="0">Select All</option>
+            <option *ngFor="let document of DocumentList" [value]="document.Id">{{document.Name}}</option>
+          </select>
+        </div>
+        <div>
+          <label>Section</label>
+          <select class="filter-select" [(ngModel)]="SelectedSection" (change)="OnSectionChange()">
+            <option [value]="0">Select All</option>
+            <option *ngFor="let section of SectionList" [value]="section.Id">{{section.Name}}</option>
+          </select>
+        </div>
+        <div>
+          <label>Medical Component</label>
+          <select class="filter-select" [(ngModel)]="SelectedMedicalComponent">
+            <option [value]="0">Select All</option>
+            <option *ngFor="let component of MedicalComponentList" [value]="component.Id">{{component.Name}}</option>
+          </select>
+        </div>
+        <button class="btn green" (click)="OnFilter()">
+          <span>Filter</span>
+        </button>
+      </div>
+
+      <button class="btn btn-success btn-print" (click)="OnPrint()">
+        <span style="margin-right:4px;">Print</span> <i class="glyphicon glyphicon-print"></i>
+      </button>
+    </div>
+    <div style="display:flex;">
+      <label for="customizable" class="customize-label">Customize</label>
+      <input id="customizable" style="margin-top:auto" type="checkbox" [(ngModel)]="IsCustomizable">
+    </div>
+
+    <div class="document" *ngFor="let document of FilteredClinicalFieldConfig">
+      <div>
+        <div class="document-title">
+          <div>
+            <input type="checkbox" *ngIf="IsCustomizable" [(ngModel)]="document.IsPrintable" class="print-check-box"
+                   (change)="OnDocumentPrintChange(document)">
+            <span>
+              {{document.DisplayName}}
+            </span>
+          </div>
+          <button class="btn-toggle" (click)="ToggleDocument(document)" *ngIf="!document.ActiveTab">+</button>
+          <button class="btn-toggle" (click)="ToggleDocument(document)" *ngIf="document.ActiveTab">-</button>
+        </div>
+      </div>
+      <div *ngIf="document.ActiveTab">
+        <div class="section" *ngFor="let section of document.ChildHeading">
+          <input type="checkbox" *ngIf="IsCustomizable" [(ngModel)]="section.IsPrintable" class="print-check-box"
+                 (change)="OnSectionPrintChange(section)">
+          <p class="p-sec-title">{{section.DisplayName}}</p>
+
+
+          <div class="field" *ngFor="let field of section.Field">
+            <div class="field" *ngIf="field.InputType !== ENUMClinicalFieldInputType.SmartPrintableForm">
+              <input (change)="OnFieldPrintChange(field)"
+                     *ngIf="!(field.InputType === ENUMClinicalFieldInputType.Questionnaire) && IsCustomizable"
+                     type="checkbox"
+                     [(ngModel)]="field.PreviewConfig.IsPrintable"
+                     class="print-check-box">
+              <input *ngIf="field.InputType === ENUMClinicalFieldInputType.Questionnaire && IsCustomizable"
+                     (change)="OnQuestionaryPrintChange(field)"
+                     type="checkbox"
+                     [(ngModel)]="field.PreviewConfig.IsPrintable"
+                     class="print-check-box">
+              <div *ngIf="field.InputType === ENUMClinicalFieldInputType.Textbox">
+                <p class="field-label">{{field.FieldDisplayName}}</p>
+                <div *ngIf="field.PreviewConfig.FieldData && field.PreviewConfig.FieldData.length > 0" class="table-container"
+                     style="margin-top: 5px;">
+                  <table class="table table-bordered tbl_hover table-condensed">
+                    <thead>
+                      <tr>
+                        <th style="margin:0;padding:0;"></th>
+                        <th class="col-sn">SN</th>
+                        <th class="col-date">Date</th>
+                        <th class="col-details">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of field.PreviewConfig.FieldData; let i = index">
+                        <td style="margin:0;padding:0;"><input type="checkbox" *ngIf="IsCustomizable"
+                                 [(ngModel)]="data.IsPrintable"
+                                 class="print-check-box"></td>
+
+                        <td class="col-sn">{{i+1}}</td>
+                        <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                        <td class="col-details" style="color:black">
+                          {{data.FieldValue}}
+                        </td>
+
+                      </tr>
+                    </tbody>
+
+                  </table>
+                </div>
+              </div>
+              <div *ngIf="field.InputType === ENUMClinicalFieldInputType.FreeType">
+                <p class="field-label">{{field.FieldDisplayName}}</p>
+                <div *ngIf="field.PreviewConfig.FieldData && field.PreviewConfig.FieldData.length > 0" class="table-container"
+                     style="margin-top: 5px;">
+                  <table class="table table-bordered tbl_hover table-condensed">
+                    <thead>
+                      <tr>
+                        <th style="margin:0;padding:0;"></th>
+                        <th class="col-sn">SN</th>
+                        <th class="col-date">Date</th>
+                        <th class="col-details">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of field.PreviewConfig.FieldData; let i = index">
+                        <td style="margin:0;padding:0;"><input type="checkbox" *ngIf="IsCustomizable"
+                                 [(ngModel)]="data.IsPrintable"
+                                 class="print-check-box"></td>
+
+                        <td class="col-sn">{{i+1}}</td>
+                        <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                        <td class="col-details" style="color:black">
+                          <!-- {{data.FieldValue}} -->
+                          <freetype-html-renderer [htmlContent]="data.FieldValue"></freetype-html-renderer>
+
+                        </td>
+
+                      </tr>
+                    </tbody>
+
+                  </table>
+                </div>
+              </div>
+              <div *ngIf="field.InputType === ENUMClinicalFieldInputType.Number">
+                <p class="field-label">{{field.FieldDisplayName}}</p>
+                <div *ngIf="field.PreviewConfig.FieldData && field.PreviewConfig.FieldData.length > 0" class="table-container"
+                     style="margin-top: 5px;">
+                  <table class="table table-bordered tbl_hover table-condensed">
+                    <thead>
+                      <tr>
+                        <th style="margin:0;padding:0;"></th>
+                        <th class="col-sn">SN</th>
+                        <th class="col-date">Date</th>
+                        <th style="width:40%">Details</th>
+                        <th style="width:40%">Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of field.PreviewConfig.FieldData; let i = index">
+                        <td style="margin:0;padding:0;"> <input type="checkbox" *ngIf="IsCustomizable"
+                                 [(ngModel)]="data.IsPrintable"
+                                 class="print-check-box"></td>
+                        <td class="col-sn">{{i+1}}</td>
+                        <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                        <td style="width:40%" style="color:black">{{ data.FieldValue }} </td>
+                        <td style="width:40%" style="color:black">{{data.Remarks}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div *ngIf="field.InputType === ENUMClinicalFieldInputType.SingleSelection">
+                <p class="field-label">{{field.FieldDisplayName}}</p>
+                <div *ngIf="field.PreviewConfig.FieldData && field.PreviewConfig.FieldData.length > 0" class="table-container"
+                     style="margin-top: 5px;">
+                  <table class="table table-bordered tbl_hover table-condensed">
+                    <thead>
+                      <tr>
+                        <th style="margin:0;padding:0;"></th>
+                        <th class="col-sn">SN</th>
+                        <th class="col-date">Date</th>
+                        <th style="width:40%">Details</th>
+                        <th style="width:40%">Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let data of field.PreviewConfig.FieldData; let i = index">
+                        <tr *ngIf="data.ClinicalOptionsData && data.ClinicalOptionsData.length>0">
+                          <td style="margin:0;padding:0;"> <input type="checkbox" *ngIf="IsCustomizable"
+                                   [(ngModel)]="data.IsPrintable"
+                                   class="print-check-box"></td>
+                          <td class="col-sn">{{i+1}}</td>
+                          <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+
+                          <td style="width:40%" style="color:black">{{data.ClinicalOptionsData[0].Options}}
+                          </td>
+                          <td style="width:40%" style="color:black">{{data.Remarks}}</td>
+
+                        </tr>
+                      </ng-container>
+
+                    </tbody>
+
+                  </table>
+                </div>
+              </div>
+              <div *ngIf="field.InputType === ENUMClinicalFieldInputType.MultipleSelect">
+                <p class="field-label">{{field.FieldDisplayName}}</p>
+                <div *ngIf="field.PreviewConfig.FieldData && field.PreviewConfig.FieldData.length > 0" class="table-container"
+                     style="margin-top: 5px;">
+                  <table class="table table-bordered tbl_hover table-condensed">
+                    <thead>
+                      <tr>
+                        <th style="margin:0;padding:0;"></th>
+                        <th class="col-sn">SN</th>
+                        <th class="col-date">Date</th>
+                        <th style="width:40%">Details</th>
+                        <th style="width:40%">Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let data of field.PreviewConfig.FieldData; let i = index">
+                        <tr *ngIf="data.ClinicalOptionsData && data.ClinicalOptionsData.length>0">
+                          <td style="margin:0;padding:0;"> <input type="checkbox" *ngIf="IsCustomizable"
+                                   [(ngModel)]="data.IsPrintable" class="print-check-box">
+                          </td>
+                          <td class="col-sn">{{i+1}}</td>
+                          <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                          <td style="width:40%" style="color:black">
+                            <ng-container *ngFor="let option of data.ClinicalOptionsData; let j = index">
+                              <span>{{ option.Options }}</span>
+                              <span *ngIf="j < data.ClinicalOptionsData.length - 1">,&nbsp;</span>
+                            </ng-container>
+                          </td>
+                          <td style="width:40%" style="color:black">{{data.Remarks}}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div *ngIf="PreTemplateReloader">
+                <div
+                     *ngIf="field.InputType === ENUMClinicalFieldInputType.SmartTemplate">
+                  <p class="field-label">{{field.FieldDisplayName}}</p>
+                  <clinical-reusable-elements *ngIf="field.FieldConfig" [field]="field">
+                  </clinical-reusable-elements>
+                </div>
+              </div>
+              <!--Questinary View-->
+              <div *ngIf="field.InputType === ENUMClinicalFieldInputType.Questionnaire">
+                <p class="field-label">{{field.FieldDisplayName}}</p>
+
+                <div class="field" *ngFor="let question of field.QuestionaryConfig">
+                  <input (change)="OnQuestionaryFieldPrintChange(question)" type="checkbox" *ngIf="IsCustomizable"
+                         [(ngModel)]="question.PreviewConfig.IsPrintable" class="print-check-box">
+                  <p class="field-label">{{question.Question}}</p>
+
+                  <!-- For Textbox and Free type-->
+                  <div
+                       *ngIf="question.AnswerType === ENUMClinicalFieldInputType.Textbox && question.ClinicalQuestionAnswers && question.ClinicalQuestionAnswers.length > 0">
+                    <div class="table-container" style="margin-top: 5px;">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th style="margin:0;padding:0;"></th>
+                            <th class="col-sn">SN</th>
+                            <th class="col-date">Date</th>
+                            <th class="col-details">Details</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let data of question.ClinicalQuestionAnswers; let i = index">
+                            <td style="margin:0;padding:0;"> <input type="checkbox" *ngIf="IsCustomizable"
+                                     [(ngModel)]="data.IsPrintable" class="print-check-box">
+                            </td>
+                            <td class="col-sn">{{i+1}}</td>
+                            <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                            <td class="col-details" style="color:black">{{data.AnswerValue}}</td>
+                          </tr>
+                        </tbody>
+
+                      </table>
+                    </div>
+                  </div>
+                  <div
+                       *ngIf="question.AnswerType === ENUMClinicalFieldInputType.FreeType && question.ClinicalQuestionAnswers && question.ClinicalQuestionAnswers.length > 0">
+                    <div class="table-container" style="margin-top: 5px;">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th style="margin:0;padding:0;"></th>
+                            <th class="col-sn">SN</th>
+                            <th class="col-date">Date</th>
+                            <th class="col-details">Details</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let data of question.ClinicalQuestionAnswers; let i = index">
+                            <td style="margin:0;padding:0;"> <input type="checkbox" *ngIf="IsCustomizable"
+                                     [(ngModel)]="data.IsPrintable" class="print-check-box">
+                            </td>
+                            <td class="col-sn">{{i+1}}</td>
+                            <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                            <td class="col-details" style="color:black">
+                              <!-- {{data.AnswerValue}} -->
+                              <freetype-html-renderer [htmlContent]="data.AnswerValue"></freetype-html-renderer>
+                            </td>
+                          </tr>
+                        </tbody>
+
+                      </table>
+                    </div>
+                  </div>
+
+                  <div
+                       *ngIf="question.AnswerType === ENUMClinicalFieldInputType.Number && question.ClinicalQuestionAnswers && question.ClinicalQuestionAnswers.length > 0">
+                    <div class="table-container" style="margin-top: 5px;">
+                      <table class="table table-bordered tbl_hover table-condensed">
+                        <thead>
+                          <tr>
+                            <th style="margin:0;padding:0;"></th>
+                            <th class="col-sn">SN</th>
+                            <th class="col-date">Date</th>
+                            <th style="width:40%">Details</th>
+                            <th style="width:40%">Remarks</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let data of question.ClinicalQuestionAnswers; let i = index">
+                            <td style="margin:0;padding:0;">
+                              <input type="checkbox" *ngIf="IsCustomizable"
+                                     [(ngModel)]="data.IsPrintable" class="print-check-box">
+                            </td>
+                            <td class="col-sn">{{i+1}}</td>
+                            <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                            <td style="width:40%" style="color:black">{{data.AnswerValue}} </td>
+                            <td style="width:40%" style="color:black">{{data.Remarks}}</td>
+                          </tr>
+                        </tbody>
+
+                      </table>
+                    </div>
+                  </div>
+                  <div
+                       *ngIf="question.AnswerType === ENUMClinicalFieldInputType.SingleSelection && question.ClinicalQuestionOptions && question.ClinicalQuestionOptions.length > 0">
+                    <div class="table-container" style="margin-top: 5px;">
+                      <table class="table table-bordered tbl_hover table-condensed">
+                        <thead>
+                          <tr>
+                            <th style="margin:0;padding:0;"></th>
+                            <th class="col-sn">SN</th>
+                            <th class="col-date">Date</th>
+                            <th style="width:40%">Details</th>
+                            <th style="width:40%">Remarks</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container *ngFor="let data of question.ClinicalQuestionOptions; let i = index">
+                            <tr *ngIf="data.QuestionOptions && data.QuestionOptions.length > 0">
+                              <td style="margin:0;padding:0;">
+                                <input type="checkbox" *ngIf="IsCustomizable" [(ngModel)]="data.IsPrintable"
+                                       class="print-check-box">
+                              </td>
+                              <td class="col-sn">{{i+1}}</td>
+                              <td class="col-date">
+                                {{data.QuestionOptions[0].CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}
+                              </td>
+                              <td style="width:40%" style="color:black">
+                                <span *ngFor="let option of data.QuestionOptions">{{option.QuestionOption}}</span>
+                              </td>
+                              <td style="width:40%" style="color:black"><span *ngIf="data.QuestionOptions[0]">
+                                  {{data.QuestionOptions[0].Remarks}}</span></td>
+                            </tr>
+                          </ng-container>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div
+                       *ngIf="question.AnswerType === ENUMClinicalFieldInputType.MultipleSelect && question.ClinicalQuestionOptions && question.ClinicalQuestionOptions.length > 0">
+                    <div class="table-container" style="margin-top: 5px;">
+                      <table class="table table-bordered tbl_hover table-condensed">
+                        <thead>
+                          <tr>
+                            <th style="margin:0;padding:0;"></th>
+                            <th class="col-sn">SN</th>
+                            <th class="col-date">Date</th>
+                            <th style="width:40%">Details</th>
+                            <th style="width:40%">Remarks</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container *ngFor="let data of question.ClinicalQuestionOptions; let i = index">
+                            <tr *ngIf="data.QuestionOptions && data.QuestionOptions.length > 0">
+                              <td style="margin:0;padding:0;">
+                                <input type="checkbox" *ngIf="IsCustomizable" [(ngModel)]="data.IsPrintable"
+                                       class="print-check-box">
+                              </td>
+                              <td class="col-sn">{{i+1}}</td>
+                              <td class="col-date">
+                                {{data.QuestionOptions[0].CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}
+                              </td>
+                              <td style="width:40%" style="color:black">
+                                <ng-container *ngFor="let option of data.QuestionOptions; let j = index">
+                                  <span>{{ option.QuestionOption }}</span>
+                                  <span *ngIf="j < data.QuestionOptions.length - 1">,&nbsp;</span>
+                                </ng-container>
+                              </td>
+                              <td style="width:40%" style="color:black">
+                                <span *ngIf="data.QuestionOptions[0]">{{data.QuestionOptions[0].Remarks}}</span>
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="PreTemplateReloader">
+              <div *ngIf="field.InputType === ENUMClinicalFieldInputType.SmartPrintableForm">
+                <p class="field-label">{{field.FieldDisplayName}}</p>
+                <clinical-reusable-elements *ngIf="field.FieldConfig" [field]="field">
+                </clinical-reusable-elements>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowPrintPagePopUp">
+  <div class="portlet-body form">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div">
+        <div id="printableContent">
+          <table style="width:100%">
+            <thead>
+              <tr>
+                <td>
+                  <smart-printable-hospital-header class="print-header"></smart-printable-hospital-header>
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <patient-details-card></patient-details-card>
+                  <div class="p-document print-body" *ngFor="let document of PrintableDocuments">
+                    <p class="p-doc-title">{{document.DocumentName}}</p>
+                    <div class="p-section" *ngFor="let section of document.Sections">
+                      <p class="p-sec-titile">{{section.SectionName}}</p>
+                      <div class="p-field" *ngFor="let field of section.Fields">
+                        <p class="p-field-title" *ngIf="field.IsDisplayTitle">{{field.FieldName}}</p>
+                        <div>
+                          <div
+                               *ngIf="field.Type === ENUMClinicalFieldInputType.Textbox">
+                            <div class="table-container" style="margin-top: 5px;">
+                              <table class="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th class="col-sn">SN</th>
+                                    <th class="col-date">Date</th>
+                                    <th class="col-details">Details</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let answer of field.Answers; let i = index">
+                                    <td class="col-sn">{{i+1}}</td>
+                                    <td class="col-date">
+                                      {{answer.Date | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}
+                                    </td>
+                                    <td class="col-details" style="color:black">{{answer.Answer}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          <div *ngIf="field.Type === ENUMClinicalFieldInputType.FreeType">
+                            <div class="table-container" style="margin-top: 5px;">
+                              <table class="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th class="col-sn">SN</th>
+                                    <th class="col-date">Date</th>
+                                    <th class="col-details">Details</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let answer of field.Answers; let i = index">
+                                    <td class="col-sn">{{i+1}}</td>
+                                    <td class="col-date">
+                                      {{answer.Date | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}
+                                    </td>
+                                    <td class="col-details" style="color:black">
+                                      <!-- {{answer.Answer}} -->
+                                      <freetype-html-renderer
+                                                              [htmlContent]="answer.Answer"></freetype-html-renderer>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          <div *ngIf="field.Type === ENUMClinicalFieldInputType.Number">
+                            <div class="table-container" style="margin-top: 5px;">
+                              <table class="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th class="col-sn">SN</th>
+                                    <th class="col-date">Date</th>
+                                    <th style="width:40%">Details</th>
+                                    <th style="width:40%">Remarks</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let answer of field.Answers; let i = index">
+                                    <td class="col-sn">{{i+1}}</td>
+                                    <td class="col-date">
+                                      {{answer.Date | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}
+                                    </td>
+                                    <td style="width:40%" style="color:black" style="color:black">
+                                      {{answer.Answer}}</td>
+                                    <td style="width:40%" style="color:black">{{answer.Remark}}</td>
+
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                          <div
+                               *ngIf="field.Type === ENUMClinicalFieldInputType.SingleSelection ||  field.Type === ENUMClinicalFieldInputType.MultipleSelect">
+                            <div class="table-container" style="margin-top: 5px;">
+                              <table class="table table-bordered tbl_hover table-condensed">
+                                <thead>
+                                  <tr>
+                                    <th class="col-sn">SN</th>
+                                    <th class="col-date">Date</th>
+                                    <th style="width:40%">Details</th>
+                                    <th style="width:40%">Remarks</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let optionList of field.Options; let i = index">
+                                    <td class="col-sn">{{i+1}}</td>
+                                    <td class="col-date">
+                                      {{optionList.Date | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}
+                                    </td>
+
+                                    <td style="width:40%" style="color:black">
+                                      {{ optionList.Options | CommaSeparated }}
+                                      <!-- <span *ngFor="let option of optionList.Options">
+                                                                        {{option}},
+                                                                    </span> -->
+                                    </td>
+                                    <td style="width:40%" style="color:black">
+                                      <span *ngIf="optionList.Remark">
+                                        {{optionList.Remark}}
+                                      </span>
+                                    </td>
+
+                                  </tr>
+                                </tbody>
+
+                              </table>
+                            </div>
+                          </div>
+                          <div
+                               *ngIf="field.Type === ENUMClinicalFieldInputType.SmartTemplate || field.Type === ENUMClinicalFieldInputType.SmartPrintableForm ">
+                            <clinical-reusable-elements *ngIf="field" [field]="field">
+
+                            </clinical-reusable-elements>
+                          </div>
+                          <div class="p-questionary" *ngIf="field.Type === ENUMClinicalFieldInputType.Questionnaire">
+                            <div *ngFor="let question of field.Questionary">
+                              <p class="p-field-title">{{question.FieldName}}</p>
+                              <div>
+                                <div
+                                     *ngIf="question.Type === ENUMClinicalFieldInputType.Textbox  ||  question.Type === ENUMClinicalFieldInputType.Number">
+                                  <div class="table-container" style="margin-top: 5px;">
+                                    <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th class="col-sn">SN</th>
+                                          <th class="col-date">Date</th>
+                                          <th class="col-details">Details</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let answer of question.Answers; let i = index">
+                                          <td class="col-sn">{{i+1}}</td>
+                                          <td class="col-date">
+                                            {{answer.Date | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}
+                                          </td>
+                                          <td class="col-details" style="color:black">{{answer.Answer}}</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <div *ngIf="question.Type === ENUMClinicalFieldInputType.FreeType">
+                                  <div class="table-container" style="margin-top: 5px;">
+                                    <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th class="col-sn">SN</th>
+                                          <th class="col-date">Date</th>
+                                          <th class="col-details">Details</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let answer of question.Answers; let i = index">
+                                          <td class="col-sn">{{i+1}}</td>
+                                          <td class="col-date">
+                                            {{answer.Date | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}
+                                          </td>
+                                          <td class="col-details" style="color:black">
+                                            <!-- {{answer.Answer}} -->
+                                            <freetype-html-renderer [htmlContent]="answer.Answer">
+                                            </freetype-html-renderer>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <div
+                                     *ngIf="question.Type === ENUMClinicalFieldInputType.SingleSelection ||  question.Type === ENUMClinicalFieldInputType.MultipleSelect">
+                                  <div class="table-container" style="margin-top: 5px;">
+                                    <table class="table table-bordered tbl_hover table-condensed">
+                                      <thead>
+                                        <tr>
+                                          <th class="col-sn">SN</th>
+                                          <th class="col-date">Date</th>
+                                          <th style="width:40%">Details</th>
+                                          <th style="width:40%">Remarks</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let optionList of question.Options; let i = index">
+                                          <td class="col-sn">{{i+1}}</td>
+                                          <td class="col-date">
+                                            {{
+                                            optionList.Date | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'
+                                            }}
+                                          </td>
+
+                                          <td style="width:40%" style="color:black">
+                                            {{ optionList.Options | CommaSeparated }}
+                                            <!-- <span *ngFor="let option of optionList.Options">
+                                                                                    {{option}},
+                                                                                </span> -->
+                                          </td>
+                                          <td style="width:40%" style="color:black">
+                                            <span *ngIf="optionList.Remark">
+                                              {{optionList.Remark}}
+                                            </span>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+
+
+
+        </div>
+        <div class="close-modelbox">
+          <button class="btn btn-danger" (click)="ClosePopup()">
+            X
+          </button>
+        </div>
+        <div class="modelbox-footer">
+          <div class="all-buttons text-right">
+            <button class="btn green btn-success btn-sm hidden-print" (click)="PrintClinicalData()" value="Print"
+                    title="Print Page">
+              Print <i class="fa fa-print" style="margin-left:10px;"></i>
+            </button>
+            <button type="button" class="btn btn orange btn-success" (click)="ClosePopup()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

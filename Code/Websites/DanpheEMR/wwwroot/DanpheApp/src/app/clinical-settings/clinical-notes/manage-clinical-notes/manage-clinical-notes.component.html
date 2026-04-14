@@ -1,0 +1,33 @@
+<div class="margin-20-tp">
+  <a class="btn blue bordered" feature="button" (click)="ShowAddClinicalNotesPage()"><i class="fa fa-plus"></i>Add Clinical Note</a>
+
+  <div class="row">
+
+
+    <div class="col-md-12 col-xs-12 col-sm-12">
+      <danphe-grid [grid-colDefaults]="ClinicalMasterNotesGridColumns"
+                   [grid-data]="CLNMasterNotesList"
+                   (grid-actions)="ClinicalNotesGridActions($event)"
+                   [paginationPageSize]="100"
+                   [show-print-button]="false">
+      </danphe-grid>
+    </div>
+
+  </div>
+  <div style="margin-top:50px;">
+    <add-update-clinical-notes [show-Add-New-Page]="ShowNewClinicalNotesPage"
+                               [Clinical-Master-Notes]="ClinicalMasterNotes"
+                               [update]="UpdateClinicalNotes"
+                               (callback-add)="GetDataFromAdd($event)"
+                               [clinical-notes-info]="ClinicalNotesInfo">
+    </add-update-clinical-notes>
+  </div>
+
+  <div style="margin-top:50px;">
+    <clinical-component-mapping [Show-MedicalComponent-Page]="ShowMedicalComponentPage"
+                                [Clinical-Notes]="ClinicalNotes"
+
+                                (callback-add)="HandleCloseEvent($event)">
+    </clinical-component-mapping>
+  </div>
+</div>

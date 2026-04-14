@@ -1,0 +1,32 @@
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="showCard">
+  <div class="portlet-body form" style="background-color:white">
+    <div class="form-body">
+      <div class="col-md-12 col-md-offset-2">
+        <div class=" col-md-10 col-sm-12 col-xs-12 modelbox-div">
+          <div class="pat-card">
+            <div class="caption" style="color:blue;">
+              <h5 style="text-align: center;text-decoration: underline;font-weight: bold;">Patient Health Card</h5>
+              <a style="float:right;  margin-top:-32px;" class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+            </div>
+          </div>
+          <div id="id_healthCard" #id_healthCard>
+            <div *ngIf="HealthCardFrontHTMLContent" [innerHTML]="HealthCardFrontHTMLContent"></div>
+            <div *ngIf="HealthCardBackHTMLContent" [innerHTML]="HealthCardBackHTMLContent"></div>
+          </div>
+          <div style="width:100%;float:left;text-align:center;  margin: 60px 0px 0px 0px;">
+            <a class="btn btn-primary" style="padding-left: 30px; padding-right: 30px;" (click)="printWholeFrontSide()">Print</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--We're placing captured health-card image (using canvas) into below div.
+    IMPORTANT: DON'T TOUCH BELOW DIV  (id="idPrint")-->
+    <!-- <div id="idPrint">
+
+    </div> -->
+
+  </div>
+
+
+</div>

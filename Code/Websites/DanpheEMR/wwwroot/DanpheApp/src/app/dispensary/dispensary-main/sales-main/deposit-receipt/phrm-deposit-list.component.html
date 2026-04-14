@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="col-md-6">
+      <from-to-date-select (on-change)="OnDateRangeChange($event)" [date-settings-name]="'billing-reports'">
+      </from-to-date-select>
+    </div>
+    <div class="col-md-3 col-xs-12">
+      <div class="form-group">
+        <button class="btn green btn-success" type="button" (click)="LoadDepositList()" [disabled]="Loading">
+          <span *ngIf="!Loading">Load Data</span>
+          <span *ngIf="Loading">Loading...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrapper">
+  <div class="row">
+    <div class="col-lg-12 col-sm-12">
+      <danphe-grid [grid-colDefaults]="DepositListGridColumns" [grid-data]="DepositList" (grid-actions)="DepositListGridActions($event)" [show-print-button]="false" [NepaliDateInGridParams]="NepaliDateInGridSettings">
+      </danphe-grid>
+    </div>
+  </div>
+</div>
+
+<!--popup for print deposit-->
+<div class="popup-static portlet box portlet-fullscreen inv_modal" *ngIf="ShowDepositReceipts">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="modelbox-div clearfix">
+          <div class="caption lb-caption no-border" style="text-align:center; color:black; text-decoration:underline;">
+            <a class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+          </div>
+          <phrm-deposit-receipt [deposit]="DepositInfo" (callback-close)="CallBackCloseDepositReceiptPopup()"></phrm-deposit-receipt>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

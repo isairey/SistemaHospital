@@ -1,0 +1,128 @@
+<div>
+  <div class="form-body">
+    <div id="inputoutputSection" class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12 col-xs-12">
+            <div class="portlet cstm-portlet portlet-with-collapse">
+              <div class="portlet-title cstm-pt-title" style="display: flex; justify-content: space-between; align-items: center; padding: 0 15px;">
+                <div class="cstm-portlet-caption" style="flex: 1;">
+                  <span>Blood Sugar Monitoring</span>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                  <button class="btn btn-primary btn-sm" (click)="AddNewBloodSugar()" title="Add New Blood Sugar">
+                    <i class="fa fa-plus-circle"></i> Add New
+                  </button>
+                  <button class="btn green btn-success btn-sm hidden-print" (click)="ShowPrintPopUp()" value="Print" title="Print page">
+                    Print<i class="fa fa-print" style="margin-left:10px;"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="cstm-portlet-body">
+                <div class="table-responsive">
+                  <danphe-grid [grid-colDefaults]="bloodSugarMonitoringGridColumns" [grid-data]="BloodSugarMonitoringList"
+                               *ngIf="showBloodSugarMonitoringList" [show-print-button]="false"
+                               (grid-actions)="BloodSugarComponentGridActions($event)" [NepaliDateInGridParams]="NepaliDateInGridSettings">
+                  </danphe-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-md-4">
+                        <cln-add-blood-sugar *ngIf="showBloodSugarAddBox" [showBloodSugarAddBox]="showBloodSugarAddBox"
+                                             (callback-blood-sugar-update)="CallBackBloodSugarUpdate($event)"></cln-add-blood-sugar>
+                    </div> -->
+          <div *ngIf="showBloodSugarAddBox" class="popup-static portlet box portlet-fullscreen custom_modal">
+            <div class="portlet-body form">
+              <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                  <div class="modelbox-div clearfix">
+                    <div class="wrapper">
+                      <div class="caption custom-caption" style="margin: 0px 0px 15px 0px;">
+                        <h3>
+                          <span style="color: blue;" *ngIf="!UpdateBloodSugar">Add New Blood Sugar Details</span>
+                          <span style="color: blue;" *ngIf="UpdateBloodSugar">Update Blood Sugar Details</span>
+                        </h3>
+                        <a class="btn btn-danger" (click)="CloseAddBloodSugarPopUp()" title="Cancel">X</a>
+                      </div>
+                      <div class="col-md-12" style="margin: 5px; padding: 5px;">
+                        <cln-add-blood-sugar *ngIf="showBloodSugarAddBox" [showBloodSugarAddBox]="showBloodSugarAddBox"
+                                             (callback-blood-sugar-update)="CallBackBloodSugarUpdate($event)"
+                                             [selectedBloodSugar]="SelectedBloodSugar" [updateBloodSugar]="UpdateBloodSugar"></cln-add-blood-sugar>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- print_PopUp -->
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowSugarMonitoringPopUp">
+  <div class="portlet-body form">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div">
+        <div id="printableContent" class="modelbox-body">
+          <div class="row">
+            <smart-printable-hospital-header></smart-printable-hospital-header>
+            <div style="text-align: center; width: 100%;" class="blood-sugar-monitoring-title">
+              <span style="font-size: medium; font-weight: bold;">
+                BLOOD SUGAR MONITORING REPORT
+              </span>
+            </div>
+            <div style="margin:auto">
+              <patient-details-card></patient-details-card>
+            </div>
+
+            <div class="table-container" style="margin-top: 10px;">
+              <table class="table print-table patient-table">
+                <thead>
+                  <tr>
+                    <th>Recorded On</th>
+                    <th>Recorded Time</th>
+                    <th>RBS</th>
+                    <th>Insulin</th>
+                    <th>Enter By</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of BloodSugarMonitoringList">
+                    <td>{{ item.RecordedDate }}</td>
+                    <td>{{ item.RecordedTime }}</td>
+                    <td>{{ item.RbsValue }}</td>
+                    <td>{{ item.Insulin }}</td>
+                    <td>{{ item.EnteredBy }}</td>
+                    <td>{{ item.Remarks }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="close-modelbox">
+          <button class="btn btn-danger" (click)="ClosePopup()">
+            X
+          </button>
+        </div>
+        <div class="modelbox-footer">
+          <div class="all-buttons text-right">
+            <button class="btn green btn-success btn-sm hidden-print" (click)="PrintBloodSugarMonitoringReport()" value="Print"
+                    title="Print Page">
+              Print <i class="fa fa-print" style="margin-left:10px;"></i>
+            </button>
+            <button type="button" class="btn btn-cancel" (click)="ClosePopup()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

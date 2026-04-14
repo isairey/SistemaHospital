@@ -1,0 +1,41 @@
+<div class="col-lg-12 col-sm-12">
+    <danphe-grid [grid-colDefaults]="reservedBedListGridColumns" [grid-data]="reservedList"
+                 (grid-actions)="ReservedListGridActions($event)" [NepaliDateInGridParams]="NepaliDateInGridSettings">
+    </danphe-grid>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="cancleDialogBox">
+    <div class="portlet-body form">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="modelbox-div">
+                <div class="modelbox-header d-flex justify-content-between">
+                    <h4 class="margin-0-vr text-warning">
+                        <strong class="text-center">Write Cancel remarks</strong>
+                    </h4>
+                    <a class="btn btn-danger hidden-print rt_close_btn" (click)="ClosePopUp()" title="Cancel">X</a>
+                </div>
+                <form [formGroup]="BedReservationCancellationValidator" style="margin-left: 20px;">
+                    <div class="row">
+                        <label> Cancel Remarks <sup style="color:red">*</sup><b>:</b></label>
+                    </div>
+                    <div class="row">
+                        <textarea type="text" style="width: 650px; height: 70px; resize: none;" formControlName="CancellationRemarks"></textarea>
+                        <span *ngIf="BedReservationCancellationValidator.dirty && BedReservationCancellationValidator.invalid">
+                            <span class="color-red font-sm"
+                                  *ngIf="BedReservationCancellationValidator.controls['CancellationRemarks'].hasError('required')">Remarks is
+                                Required</span>
+                        </span>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12 text-right">
+                            <button class="btn btn-danger" [disabled]="loading" id="id_cancel" (click)="loading=true;Cancel();">
+                                Proceed To Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

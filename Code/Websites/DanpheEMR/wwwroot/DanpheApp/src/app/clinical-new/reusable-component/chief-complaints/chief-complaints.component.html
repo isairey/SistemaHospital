@@ -1,0 +1,90 @@
+<div>
+  <div class="portlet" style="margin:0;padding:0">
+    <div class="portlet-title" style="margin:8px 12px;padding:0;min-height:0; border:0">
+      <div class="tools" style="margin:0;padding:0">
+        <a href="javascript:;" class="fullscreen" data-original-title="" title="" (click)="ToggleFullscreen()"> </a>
+      </div>
+    </div>
+    <div class="portlet-body">
+      <div class="row" style="margin:auto">
+        <form [formGroup]="PatientComplaintForm" class="form-horizontal">
+          <div class="form-body">
+            <div class="col-md-12">
+              <div class="caption custom-caption no-margin">
+                <h1 class="caption-subject">Add Patient Complaint</h1>
+              </div>
+              <div class="row clearfix" style="padding-top: 15px;">
+                <div class="col-md-4 col-xs-12">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">Complaint<b style="float:right;"></b></label>
+                    <div class="col-md-7 doctor-select-opt">
+                      <input id="id" danphe-auto-complete [ngModelOptions]="{standalone: true}" class="form-control"
+                        [list-formatter]="ComplaintListFormatter" [source]="CLNChiefComplainsList"
+                        placeholder="Complaints" [(ngModel)]="SelectedChiefComplaint"
+                        display-property-name="ChiefComplain" value-property-name="ChiefComplainId"
+                        (ngModelChange)="OnComplaintSelected($event)" />
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-xs-12" *ngIf="IsComplaintSelected">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">Duration<b style="float:right;">:</b></label>
+                    <div class="col-md-7 doctor-select-opt">
+                      <input type="number" (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                        formControlName="Duration" placeholder="Duration"
+                        style="height: 30px; width: 90% !important;" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-xs-12" *ngIf="IsComplaintSelected">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">Units<b style="float:right;">:</b></label>
+                    <div class="col-md-7 doctor-select-opt">
+                      <select id="id" class="form-control" formControlName="DurationType">
+                        <option value="" disabled selected>Select Unit</option>
+                        <option *ngFor="let unit of Units" [value]="unit">{{ unit }}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row clearfix" style="padding-top: 30px;">
+                <div class="col-md-4 col-xs-12">
+                  <div class="form-group">
+                    <label class="control-label col-md-5">Notes<b style="float:right;">:</b></label>
+                    <div class="col-md-7 doctor-select-opt">
+                      <textarea appFocusTextbox formControlName="Notes" id="notes" class="form-control"
+                        [ngStyle]="{'height': IsFullscreen ? '75px' :'60px', 'width': IsFullscreen ? '360px' : '180px'}"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <input type="button" id="add" class="btn green btn-success margin-7-hr" (click)="AddPatientComplaints()"
+                  style="margin:19px 0 0 140px" value="Add" *ngIf="!Update" />
+                <input type="button" id="clear" class="btn  btn-danger margin-7-hr" (click)="RefreshPatientComplaints()"
+                  style="margin:19px 0 0 35px;" value="Clear" *ngIf="!Update" />
+                <input type="button" id="update" class="btn green btn-success margin-7-hr" *ngIf="Update"
+                  (click)="UpdatePatientComplaint()" style="margin:19px 0 0 140px" value="Update">
+                <input *ngIf="Update" type="button" id="cancelComplaint" class="btn btn-warning margin-7-hr"
+                  style="margin:19px 0 0 35px;" (click)="CancelPatientComplaint()" value="Cancel" />
+              </div>
+
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="row" style="width: 100%;">
+        <div class="col-md-12 col-xs-12 col-sm-12" style="width: 100%;">
+          <danphe-grid [grid-colDefaults]="ChiefComplaintComponentGridColumns" [grid-data]="PatientComplaintList"
+            (grid-actions)="ChiefComplaintsComponentGridActions($event)" [show-print-button]="false">
+          </danphe-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

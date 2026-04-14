@@ -1,0 +1,43 @@
+.full-width-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.full-width-table th, .full-width-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.full-width-table thead {
+  background-color: #d7cccc;
+}
+
+.full-width-table tbody tr:nth-child(even) {
+  background-color: #ebf0ff;
+}
+
+.full-width-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.checkbox-label {
+  display: block;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  cursor: pointer;
+}
+
+@keyframes blink {
+  0%, 75% { color: red; }
+  100% { color: transparent; }
+}
+
+.blink-text {
+  animation: blink 4s infinite;
+  font-size: smaller;
+}
+
+

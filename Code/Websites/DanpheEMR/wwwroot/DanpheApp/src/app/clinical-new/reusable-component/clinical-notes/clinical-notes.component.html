@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="tab-container">
+    <div>
+      <ul [ngClass]="{'sidebar':true,'closed':!IsOpen}">
+        <li (click)="OpenHeadingTab(note)" *ngFor="let note of NotesConfig" [class.active]="note.IsActive">
+          {{note.ClinicalNotesName}}
+        </li>
+      </ul>
+    </div>
+    <div class="tab-containerfields" [ngClass]="{'tab-containerfields': true, 'fullWidth': !IsOpen}">
+      <div class="clinical-notes-cokpit">
+        <div class="clinical-notes-cokpit-item">
+          <label>Select Patient Visit: </label>
+          <select [(ngModel)]="SelectedVisit">
+            <option *ngFor="let visit of AllVisits" [value]="visit.PatientVisitId">
+              {{visit.VisitDate | DanpheDateTime:'format':'YYYY-MM-DD'}} ({{visit.VisitCode}})
+            </option>
+          </select>
+          <button class="btn green" (click)="OnDataLoad()">
+            <span>Load</span>
+          </button>
+        </div>
+        <div class="toggleContainer clinical-notes-cokpit-item m-l-auto">
+          <span (click)="ToggleSideNav()" class="toggleLogo fa fa-bars"></span>
+        </div>
+      </div>
+      <ng-container #container></ng-container>
+    </div>
+  </div>
+</div>

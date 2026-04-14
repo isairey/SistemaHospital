@@ -1,0 +1,29 @@
+<div *ngIf="IsVisible" class="box" (click)="Close()">
+  <div class="global-search" (click)="StopPropagation($event)">
+
+    <div class="feature-search-container">
+      <select class="select-feature" (change)="OnOptionChange()" [(ngModel)]="FocusedElementService.SelectedFeature">
+        <option *ngFor="let option of FocusedElementService.GlobalSearchFeatureOptions" [value]="option">{{option}}</option>
+      </select>
+      <div class="gsearch-option">
+        <input class="gsearch-option-input"
+               #searchBox
+               (keydown)="OnKeyDown($event)"
+               [(ngModel)]="SearchTerm" placeholder="Search In Danphe" />
+        <span class="menu-search-icon" class="gsearch-icon">
+          <i class="fa fa-search"></i>
+        </span>
+      </div>
+
+    </div>
+    <div #scrollContainer class="search-list">
+      <ul class="filtered-list">
+        <li
+            [class.selected]="i === SelectedIndex"
+            (click)="SelectItem(i)" *ngFor="let option of FilteredItems; let i = index">
+          {{option.KeywordDisplayName}}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

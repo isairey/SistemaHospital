@@ -1,0 +1,54 @@
+import { DynamicFieldPropertiesVM } from "./dynamic-field-properties-VM.model";
+
+export class DischargeSummaryFieldSettingsVM {
+  DischargeType: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  DischargeCondition: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Consultant: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  DoctorIncharge: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Anesthetists: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  ResidentDr: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  BabyWeight: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  SelectDiagnosis: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  ProvisionalDiagnosis: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  OtherDiagnosis: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  ChiefComplaint: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  HistoryOfPresentingIllness: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  PastHistory: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  CaseSummary: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  ProcedureNts: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  OperativeFindings: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  HospitalReport: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  HospitalCourse: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  TreatmentDuringHospitalStay: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Condition: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  PendingReports: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  SpecialNotes: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Allergies: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Activities: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Diet: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  RestDays: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  FollowUp: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Others: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  CheckedBy: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Investigations: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  LabTests: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Imagings: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Medications: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  ClinicalFindings: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  DischargeOrder: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  ObstetricHistory: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  RelevantMaternalHistory: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  IndicationForAdmission: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  RespiratorySystem: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  CardiovascularSystem: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  GastrointestinalAndNutrition: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Renal: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  NervousSystem: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Metabolic: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Sepsis: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  CongenitalAnomalies: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Reflexes: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  MedicationsReceivedInNICUNursery: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+  Discussion: DynamicFieldPropertiesVM = new DynamicFieldPropertiesVM();
+
+}

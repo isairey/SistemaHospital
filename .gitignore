@@ -1,0 +1,11 @@
+node_modules/
+*.lock
+*.log
+bin
+obj
+v16
+packages
+.vs
+package-lock.json
+$tf/
+.tfignore

@@ -1,0 +1,38 @@
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <button rbac-permission='{"name":"btn-settings-bill-item-addnew","actionOnInvalid":"remove"}'
+          class="btn blue bordered" (click)="AddBillingItem()">
+    <i class="fa fa-plus"></i>
+    &nbsp; New Service Item
+  </button>
+  <button (click)="OpenFilterExportModal()" class="btn btn-primary">
+    Filter & Export
+  </button>
+</div>
+
+<app-bill-service-item *ngIf="showAddPage"
+                       (callback-add)="CallBackAdd($event)"
+                       [update]="update"
+                       [selectedItem]="selectedItem" [integration-name-list]="integrationNameList"
+                       [service-items]="serviceItemList"
+                       [service-categories]="ServiceCategoryList"></app-bill-service-item>
+
+
+<filter-export-service-items *ngIf="ShowFilterAndExport"
+                             [IntegrationName-List]="integrationNameList"
+                             [Service-Items]="serviceItemList"
+                             (callback-add)="GetDataFromAdd($event)"
+                             [Service-Categories]="ServiceCategoryList"
+                             [ShowFilterAnd-Export]="ShowFilterAndExport">
+</filter-export-service-items>
+
+<div *ngIf="showGrid" class="row">
+  <div class="col-md-12 col-xs-12 col-sm-12">
+    <danphe-grid [grid-colDefaults]="billingItemGridColumns"
+                 [grid-data]="serviceItemList"
+                 (grid-actions)="ServiceItemGridActions($event)"
+                 [grid-showExport]="true"
+                 [grid-exportOptions]="GetGridExportOptions()"
+                 [show-print-button]="false">
+    </danphe-grid>
+  </div>
+</div>

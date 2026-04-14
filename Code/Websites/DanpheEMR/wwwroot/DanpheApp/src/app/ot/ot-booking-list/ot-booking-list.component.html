@@ -1,0 +1,196 @@
+<div *ngIf="ShowBookingList">
+  <div style="display: flex">
+    <div style="margin: 8px 50px 0px 15px;">
+      <label for="id_checkbox_dateFilter" class="is-ref mt-checkbox mt-checkbox-outline">
+        <input type="checkbox" id="id_checkbox_dateFilter" style="cursor: pointer;" [(ngModel)]="IsDateFilter"
+               (change)="OnDateFilterChange($event)" />
+        <span></span>Date Filter
+      </label>
+    </div>
+    <div *ngIf="IsDateFilter" class="row" style="display: flex; margin: 0px 15px; justify-content: flex-start;">
+      <div>
+        <label style="vertical-align: top;margin-top: 10px; margin-right: 10px;">Booking Date: </label>
+        <div style="display: inline-block;">
+          <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'ot-booking-list'">
+          </from-to-date-select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; margin: 5px 15px 0px 15px;">
+    <div>
+      <button class="btn btn-link" (click)="AddNewOTBooking()"> <span class="glyphicon glyphicon-plus"></span> New OT Booking</button>
+    </div>
+    <div>
+      <label style="vertical-align: middle;margin-bottom: 8px; margin-right: 10px;">Booking Status: </label>
+      <div style="display: inline-block;">
+        <div class="horizontal-radio-group">
+          <div *ngFor="let status of OTBookingStatusList" style="margin-top: 9px;">
+            <label class="horizontal-radio-label" for="id_booking_status_{{status}}">
+              <input id="id_booking_status_{{status}}" [value]="status" type="radio" [(ngModel)]="Status" style="margin-top: 0;">
+              <span style="margin-left: 5px;">{{status}}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <input
+             danphe-auto-complete class="form-control" [source]="OTPrescriberList"
+             [list-formatter]="PrescriberFormatter" placeholder="Search By Surgeon"
+             display-property-name="PrescriberName" value-property-name="PrescriberId"
+             [min-chars]="0" max-num-list="10"
+             id="id_txt_prescriber" [(ngModel)]="CurrentPrescriber"
+             (focusout)="OnPrescriberSelect()" />
+    </div>
+    <div>
+      <button [disabled]="loading" class="btn green btn-success pull-right"
+              (click)="this.GetOTBookingList()">Load
+        <i class="fa fa-refresh"></i></button>
+    </div>
+
+  </div>
+  <div class="wrapper">
+    <danphe-grid [grid-colDefaults]="OTBookingListColumns" [grid-data]="OTBookingList"
+                 (grid-actions)="OTBookingListGidActions($event)"
+                 [grid-exportOptions]="gridExportOptions" [grid-showExport]="true"
+                 [report-for]="'ot'" [NepaliDateInGridParams]="NepaliDateInGridSettings"
+                 [grid-date-range]="DateRange" [report-header]="ReportHeader">
+    </danphe-grid>
+  </div>
+
+  <!-- <div *ngIf="ShowAddNewBookingPage" class="popup-static portlet box portlet-fullscreen custom_modal">
+    <div class="portlet-body form"> -->
+  <ot-booking-add
+                  *ngIf="ShowAddNewBookingPage" [ShowAddNewBookingPage]="ShowAddNewBookingPage" [ShowSearchFilter]="true"
+                  [IsUpdate]="IsUpdate" [OTBookingId]="SelectedOTBooking.OTBookingId"
+                  (CallBackAddClose)="GetBackFromOtBookingAdd($event)">
+  </ot-booking-add>
+  <!-- </div>
+  </div> -->
+
+  <div *ngIf="ShowTeamInfoPage" class="popup-static portlet box portlet-fullscreen custom_modal">
+    <div class="portlet-body form">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="modelbox-div clearfix">
+            <div class="caption custom-caption">
+              <h3> <span> Team Info </span>
+              </h3>
+              <a class="btn btn-danger" (click)="CloseTeamInfoPage()" title="Cancel">X</a>
+            </div>
+            <div style="margin: 15px;">
+              <table>
+                <thead>
+                  <th>S.N.</th>
+                  <th>Personnel Type</th>
+                  <th>Name</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let booking of OTTeamInfo let i=index;">
+                    <td>{{ i+1 }}</td>
+                    <td>{{ booking.PersonnelType }}</td>
+                    <td>{{ booking.FullName }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="text-right">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="ShowCancellationPage" class="popup-static portlet box portlet-fullscreen custom_modal">
+    <div class="portlet-body form">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="modelbox-div clearfix">
+            <div class="caption custom-caption" style="margin: 0px 0px 15px 0px;">
+              <h3> <span> OT Booking Cancellation </span>
+              </h3>
+              <a class="btn btn-danger" (click)="CloseCancellationPage()" title="Cancel">X</a>
+            </div>
+            <div style="margin: 5px, 0px; margin-bottom: 20px;">
+              <div class="col-md-4">
+                <label>Cancellation Remarks<sup>*</sup> : </label>
+              </div>
+              <div class="col-md-8">
+                <textarea class="col-md-12" style="margin-left: 5px;" [(ngModel)]="CancellationRemarks"
+                          id="id_txt_cancellation_remarks"></textarea>
+              </div>
+            </div>
+            <div class="text-right" style="margin: 15px;">
+              <input type="button" class="btn green btn-success margin-7-hr" (click)="CancelOTBooking()"
+                     [value]="'Cancel Booking'" id="id_btn_cancel_booking" style="margin-top: 10px;" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="ShowReschedulePage" class="popup-static portlet box portlet-fullscreen custom_modal">
+    <div class="portlet-body form">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="modelbox-div clearfix">
+            <div class="caption custom-caption" style="margin: 0px 0px 15px 0px;">
+              <h3> <span> Reschedule OT Booking </span>
+              </h3>
+              <a class="btn btn-danger" (click)="CloseReschedulePage()" title="Cancel">X</a>
+            </div>
+            <div class="col-md-7" style="margin: 0px; padding: 0px;">
+              <div class="col-md-4">
+                <label>Old Booked For Date : </label>
+              </div>
+              <div class="col-md-6">
+                <input class="col-md-12" style="margin-left: 5px;" [(ngModel)]="OldBookedForDate"
+                       id="id_txt_ot_booking_old_date" [disabled]="true" />
+              </div>
+            </div>
+            <div class="col-md-5" style="margin: 0px; margin-bottom: 20px; padding: 0px;">
+              <danphe-date-picker
+                                  [input-focus]="GoToDatePick"
+                                  (output-focus)="FocusOutFromDatePicker($event)"
+                                  [(ngModel)]="RescheduledDate"
+                                  [allow-future-date]="IsFutureDateEnabled"
+                                  [showTime]="true" [CalendarTypes]="'en,np'"
+                                  (ngModelChange)="HandleDateSelection()">
+              </danphe-date-picker>
+              <div *ngIf="BackDateError" class="error-message">
+                Back date selection is not allowed.
+              </div>
+            </div>
+            <div class="text-right" style="margin: 15px;">
+              <input type="button" class="btn green btn-success margin-7-hr" (click)="RescheduleOTBookingDate()"
+                     [value]="'Reschedule Booking'" id="id_btn_reschedule_booking" [disabled]="BackDateError" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <ot-booking-checklist
+                        *ngIf="ShowCheckListPage" [ShowCheckListPage]="ShowCheckListPage"
+                        (CheckListCallBack)="OnCheckListCallBack()" [SelectedOTBooking]="SelectedOTBooking">
+  </ot-booking-checklist> -->
+</div>
+
+<div style="padding: 0px; margin: 0px;" *ngIf="ShowBookingDetail">
+  <input type="button" class="btn btn-primary" (click)="BackToOTBookingList()" value="Back" />
+  <ot-booking-details
+                      [ot-booking-id]="SelectedOTBooking.OTBookingId" [isUpdate]="IsUpdate" [is-view-only]="IsViewOnly" [IsCancelled]="IsCancelled">
+  </ot-booking-details>
+</div>
+
+<ot-conclude-booking
+                     *ngIf="ShowConcludePage" [ot-booking-id]="SelectedOTBooking.OTBookingId"
+                     (CallBackCloseConcludePage)="OnConcludePageClose()"
+                     (CallBackEditBookingFromConcludePage)="EditBookingDetailsFromConcludePage($event)">
+</ot-conclude-booking>

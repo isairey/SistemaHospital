@@ -1,0 +1,86 @@
+<div class="caption custom-caption">
+    <h3> <span>Clinical Notes variable</span> </h3>
+    <form [formGroup]="clinicalNotes.ClinicalNoteValidator" class="form-horizontal hm-form">
+        <div class="form-body col-md-7">
+            <div class="form-group ">
+                <label class="control-label col-md-5">Display Name<sup>*</sup><b>:</b></label>
+                <div class="col-md-7">
+                    <input class="form-control" type="text"
+                           [(ngModel)]="clinicalNotes.DisplayName"
+                           formControlName="DisplayName"
+                           required
+                           id="DisplayName"
+                           value=""
+                           onclick="this.select()"
+                           placeholder="Display Name"
+                           (keyup.enter)="SetFocusById('FieldName')" />
+                    <span class="color-red font-sm"
+                          [hidden]="clinicalNotes.IsValidCheck('DisplayName','required') || !(clinicalNotes.IsDirty('DisplayName'))">Display Name is
+                        required</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-5">Field Name<sup>*</sup><b>:</b></label>
+                <div class="col-md-7">
+                    <input class="form-control" maxlength="30"
+                           [(ngModel)]="clinicalNotes.FieldName"
+                           formControlName="FieldName"
+                           onclick="this.select()"
+                           [attr.disabled]="Update ? true : null"
+                           (keyup.enter)="SetFocusById('DisplayOrder')"
+                           type="text" id="FieldName" value="" placeholder="Field Name" />
+                    <span class="color-red font-sm"
+                          [hidden]="clinicalNotes.IsValidCheck('FieldName','required') || !(clinicalNotes.IsDirty('FieldName'))">Field Name is
+                        required</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-5">Display Order<sup>*</sup><b>:</b></label>
+                <div class="col-md-7">
+                    <input class="form-control" maxlength="30"
+                           [(ngModel)]="clinicalNotes.DisplayOrder"
+                           formControlName="DisplayOrder"
+                           onclick="this.select()"
+                           type="text" id="DisplayOrder" value="" placeholder="Display Order" />
+                    <span class="color-red font-sm"
+                          [hidden]="clinicalNotes.IsValidCheck('DisplayOrder','required') || !(clinicalNotes.IsDirty('DisplayOrder'))">Display Order
+                        is required</span>
+                </div>
+            </div>
+
+            <div class="form-group" style="text-align: right;">
+                <input type="button" id="addClinincalNote" class="btn btn-warning margin-7-hr" (click)="ClearClinicalNote()"
+                       value="Clear" />
+                <input *ngIf="Update" type="button" id="addClinincalNote" class="btn btn-danger margin-7-hr" (click)="CancelUpdateClinicalNote()"
+                       value="Cancel" />
+                <input *ngIf="!Update" type="button" id="addClinincalNote" class="btn green btn-success margin-7-hr" (click)="AddClinicalNote()"
+                       value="Save" />
+                <input *ngIf="Update" type="button" id="addClinincalNote" class="btn green btn-success margin-7-hr" (click)="UpdateClinicalNote()"
+                       value="Update" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<div *ngIf="showAllClinicalNoteList" class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+        <danphe-grid [grid-colDefaults]="clinicalNoteGridColumns" [grid-data]="clinicalNoteList" (grid-actions)="ClinicalNoteGridActions($event)"
+                     [show-print-button]="false">
+        </danphe-grid>
+    </div>
+</div>
+
+
+
+<!--<input type="button" class="btn btn-primary" (click)="AddCountry()" value="Add Country" />
+
+        <country-add [showAddPage]="showAddPage"
+                     [selectedCountry]="selectedCountry"
+                     (callback-Add)="CallBackAdd($event)"></country-add>
+
+        <div *ngIf="showCountryList" class="row">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+                <danphe-grid [grid-colDefaults]="countryGridColumns" [grid-data]="countryList" (grid-actions)="CountryGridActions($event)">
+                </danphe-grid>
+            </div>
+        </div>-->

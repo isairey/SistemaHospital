@@ -1,0 +1,220 @@
+<style>
+  @media print {
+    button {
+      visibility: hidden;
+      display: none;
+    }
+
+    #print-good-reciept {
+      background-color: white !important;
+      height: 100% !important;
+      width: 100% !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      margin: 0 !important;
+      padding: 15px !important;
+      font-size: 14px !important;
+      line-height: 18px !important;
+    }
+
+    @page {
+      size: auto !important;
+      margin: 0 !important;
+    }
+  }
+
+  .printStyle {
+    border: dotted 1px;
+    margin: 10px 50px;
+  }
+
+  .print-border-top {
+    border-top: dotted 1px;
+  }
+
+  .print-border-bottom {
+    border-bottom: dotted 1px;
+  }
+
+  .print-border {
+    border: dotted 1px;
+  }
+
+  .center-style {
+    text-align: center;
+  }
+
+  .border-up-down {
+    border-top: dotted 1px;
+    border-bottom: dotted 1px;
+  }
+
+  .mb-0 {
+    margin-bottom: 0 !important;
+  }
+</style>
+<div class="row">
+  <div class="col-md-12" style="display: flex; justify-content: space-between;">
+    <div>
+      <button type="button" class="btn btn-primary" (click)="OpenGoodReceiptItemAddEditPage()">Add New Good Receipt</button>
+    </div>
+    <div>
+      <div class="icheck-inline">
+        List by Status: &nbsp;
+        <label class="mt-radio mt-radio-outline">
+          <input type="radio" (change)="FilterGoodReceipts()" [(ngModel)]="goodReceiptStatus" name="GRStatus" value="complete"
+                 style="width:15px;height:15px" />
+          <span></span>Complete
+        </label>
+        <label class="mt-radio mt-radio-outline">
+          <input type="radio" (change)="FilterGoodReceipts()" [(ngModel)]="goodReceiptStatus" name="GRStatus" value="cancelled"
+                 style="width:15px;height:15px" />
+          <span></span>Cancelled
+        </label>
+        <label class="mt-radio mt-radio-outline">
+          <input type="radio" (change)="FilterGoodReceipts()" [(ngModel)]="goodReceiptStatus" checked name="GRStatus" value="all"
+                 style="width:15px;height:15px" />
+          <span></span>All
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12 col-sm-12">
+    <div class="row">
+      <div class="col-md-5 col-xl-12">
+        <div class="row" style="padding-left: 15px;">
+          <from-to-date-select (on-change)="onDateChange($event)" [date-settings-name]="'billing-reports'">
+          </from-to-date-select>
+        </div>
+      </div>
+      <div class="col-md-3 col-xl-12">
+        <div class="row">
+          <div class="form-group">
+            <label class="control-label col-md-4" style="padding-right:0px;margin-top: 6px;">Supplier Name:</label>
+            <div class="col-md-8">
+              <input danphe-auto-complete class="form-control " [(ngModel)]="currentSupplier" [source]="supplierList"
+                     [list-formatter]="myListFormatter"
+                     placeholder="select supplier" display-property-name="SupplierName" value-property-name="SupplierName" min-chars="0"
+                     max-num-list="20" onClick="this.select();" match-formatted="true" [grid-sort]="'SupplierName'"
+                     (valueChanged)="SupplierChange($event)" style="width:200px " />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-xl-12">
+        <div class="row">
+          <div class="form-group">
+            <label class="control-label col-md-4" style="margin-top: 6px;">Aging Days:</label>
+            <div class=" col-md-8" style="padding-left:0px;">
+              <div class="row">
+                <input type="text" [(ngModel)]="fromDay" name="" placeholder="From" style="width:90px" class="form-control col-lg-3" />&nbsp;
+                <!-- @*<span class="error-msg" *ngIf="fromDay>toDay">From days should not greater than To days</span>*@ -->
+                <input type="text" [(ngModel)]="toDay" name="" placeholder="To" style="width:90px" class="form-control col-lg-3">
+                <!-- @*<span class="error-msg" *ngIf="fromDay<toDay">To days should not greater than From days</span>*@ -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-1 col-xl-12">
+        <div class="row">
+          <div class="form-group">
+            <button class="btn blue" style="margin-left:-20px;" type="button" (click)="LoadGoodReceipts()"> <i class="fa fa-search"></i>Show Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <danphe-grid [grid-colDefaults]="goodsreceiptsGridColumns" [grid-data]="newGoodsReceiptList" [rangeType]="dateRange"
+                 [NepaliDateInGridParams]="NepaliDateInGridSettings"
+                 (grid-actions)="GoodsReceiptGridAction($event)" [grid-exportOptions]="_gridExportOptions" [grid-showExport]="true"
+                 [show-header]="true" [report-for]="'pharmacy'" [filter-parameters]="FilterParameters" [grid-footer-content]="footerContent"
+                 [report-title]="'GRN Book'" [grid-footer-content]="footerContent" [report-for]="'pharmacy'"
+                 [report-title]="'Pharmacy Good Receipt List'" [show-header]="true">
+    </danphe-grid>
+    <!-- START: Summary -->
+    <div class="col-lg-12 col-sm-12 col-md-6" style="margin-bottom: 10px !important; display: flex;justify-content: center;">
+      <div class="table-responsive table-wrapper" id="phrm-gr-print_summary">
+        <table class="table table-bordered table-hover table-condensed custom_table padLess_table" border="1">
+          <thead>
+            <tr>
+              <th colspan="2" style="text-align: center;">
+                <span style="font-size:large;"> Summary </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container>
+              <tr>
+                <td style="font-weight:bold; color:blue">
+                  <span> <b> Sub Total </b> </span>
+                </td>
+                <td>
+                  <span> {{subTotal | ParseAmount }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-weight:bold; color:blue">
+                  <span> <b> Discount Total </b> </span>
+                </td>
+                <td>
+                  <span> {{discountTotal | ParseAmount }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-weight:bold; color:blue">
+                  <span> <b> VAT Total </b> </span>
+                </td>
+                <td>
+                  <span> {{vatTotal | ParseAmount }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-weight:bold; color:blue">
+                  <span> <b> Total Amount </b> </span>
+                </td>
+                <td>
+                  <span> {{totalAmount | ParseAmount }}</span>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="showNepaliReceipt; else englishReceipt">
+  <!-- Nepali GR VIEW-->
+  <app-phrm-gr-view-np *ngIf="showPopUp" [showPopUp]="showPopUp" [goodsReceiptId]="currentGRdetails.GoodReceiptId"
+                       [isGRCancelled]="currentGRdetails.IsCancel" [canUserModify]="true" (gr-cancel-event)="grCancelEventHandler($event)"
+                       (popup-close-event)="popUpCloseEventHandler()" [EnableAdjustmentEdit]="EnableAdjustmentEdit"></app-phrm-gr-view-np>
+</div>
+<ng-template #englishReceipt>
+  <div>
+    <!-- English GR View -->
+    <goods-receipt-view *ngIf="showPopUp" [showPopUp]="showPopUp" [goodsReceiptId]="currentGRdetails.GoodReceiptId"
+                        [isGRCancelled]="currentGRdetails.IsCancel" [canUserModify]="true" (gr-cancel-event)="grCancelEventHandler($event)"
+                        (popup-close-event)="popUpCloseEventHandler()" [EnableAdjustmentEdit]="EnableAdjustmentEdit"></goods-receipt-view>
+  </div>
+</ng-template>
+
+<div class="popup-static portlet box portlet-fullscreen inv_modal" *ngIf="showGoodReceiptAddEditPage">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="modelbox-div clearfix">
+          <div class="caption lb-caption mb-0">
+            <h3>
+              <i class="fa fa-shopping-cart"></i>
+              <span class="caption-subject">Add Good Receipt</span>
+            </h3>
+            <a class="btn btn-danger" (click)="CloseGoodReceiptItemAddEditPage()" title="Cancel"><i class="fa fa-times"></i></a>
+          </div>
+          <phrm-goods-receipt (call-back-popup-close)="CloseGoodReceiptItemAddEditPage()"></phrm-goods-receipt>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

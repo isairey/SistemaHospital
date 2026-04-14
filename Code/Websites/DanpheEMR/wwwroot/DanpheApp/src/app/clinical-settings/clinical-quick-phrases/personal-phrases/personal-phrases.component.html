@@ -1,0 +1,123 @@
+<a feature="button" class="btn blue bordered" (click)="AddPhrases()"><i class="fa fa-plus"></i>Add Phrases</a>
+<div *ngIf="ShowGrid" class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+        <danphe-grid [grid-colDefaults]="PersonalPhrasesGridColumns" [grid-data]="PhrasesList "
+                     (grid-actions)="ClinicalPersonalPhrasesGridActions($event)"
+                     [show-print-button]="false">
+        </danphe-grid>
+    </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen custom_modal modal-lg" *ngIf="ShowAddEditPage">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="modelbox-div clearfix">
+                    <div class="caption custom-caption">
+                        <h3> <span *ngIf="!IsUpdate">Add Phrases</span> <span *ngIf="IsUpdate">Update Phrases</span> </h3>
+                        <a class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+                    </div>
+                    <div class="form-body form-horizontal hm-form">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-12">
+                                <form [formGroup]="Phrases.ClinicalMyPhrasesValidator">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">Phrase Title<sup>*</sup><b>:</b></label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="text" id="TemplateName" formControlName="TemplateName"
+                                                   placeholder="Enter Phrases Title " />
+
+                                            <span
+                                                  class="color-red font-sm"
+                                                  *ngIf="
+                                                Phrases.ClinicalMyPhrasesValidator.get(
+                                         'TemplateName'
+                                       ).invalid &&
+                                       Phrases.ClinicalMyPhrasesValidator.get(
+                                         'TemplateName'
+                                       ).touched
+                                        ">Phrases Title is required</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="EditorOptions" class="control-label col-md-4">Accessibility<b>:</b></label>
+                                        <div class="col-md-8">
+                                            <select id="EditorOptions" class="form-control" formControlName="TemplateAccessibility">
+                                                <option *ngFor="let accessibility of PhrasesAccessibility" [value]="accessibility">{{ accessibility }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="EditorOption" class="control-label col-md-4">Editor Type<b>:</b></label>
+                                        <div class="col-md-8">
+                                            <select id="EditorOption" class="form-control" formControlName="TemplateType"
+                                                    (change)="OnEditorOptionChange($event.target.value)">
+                                                <option *ngFor="let options of EditorOptions" [value]="options">{{ options }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6 col-xs-12">
+                                <form [formGroup]="Phrases.ClinicalMyPhrasesValidator">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4"> Code<sup>*</sup><b>:</b></label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="text" id="TemplateCode" formControlName="TemplateCode"
+                                                   placeholder="Enter Code" />
+                                            <span class="color-red font-sm"
+                                                  *ngIf="Phrases.ClinicalMyPhrasesValidator.get('TemplateCode').invalid && Phrases.ClinicalMyPhrasesValidator.get('TemplateCode').touched && !Phrases.ClinicalMyPhrasesValidator.get('TemplateCode').hasError('maxlength')">Phrases
+                                                Code
+                                                is required</span>
+                                            <span class="color-red font-sm"
+                                                  *ngIf="Phrases.ClinicalMyPhrasesValidator.get('TemplateCode').hasError('maxlength') && Phrases.ClinicalMyPhrasesValidator.get('TemplateCode').touched">
+                                                Code cannot exceed 10 characters.
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="TemplateType" class="control-label col-md-4">Group Name<b>:</b></label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" type="text" id="TemplateGroup" formControlName="TemplateGroup"
+                                                   placeholder="Enter Group Name" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-12" style="margin-bottom:20px">
+                                <div class="form-group text-center">
+                                    <div class="col-md-12">
+                                        <label class="control-label no-padding" style="font-size: 15px;"> Phrase Content <sup>*</sup><b>:</b>
+                                        </label>
+                                        <span class="color-red font-sm" *ngIf="!IsValidTemplate"> Phrase Content required</span>
+                                        <br>
+                                        <danphe-summernote *ngIf="ShowSummerNoteGrid"
+                                                           (get-html-content)="OnChangeEditorData($event)"
+                                                           [set-html-content]="Phrases.TemplateContent"
+                                                           id="TemplateHTML"
+                                                           [panel-height]="'350px'"
+
+                                                           [readonly]="false">
+                                        </danphe-summernote>
+
+                                        <textarea *ngIf="!ShowSummerNoteGrid" name="TemplateHTML" [(ngModel)]="Phrases.TemplateContent"
+                                                  class="form-control vertical-expand" rows="20" style="margin-top: 10px;"> </textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <input type="button" id="id_button_addNewPhrases" class="btn green btn-success margin-7-hr" *ngIf="!IsUpdate"
+                               (click)="AddPersonalPhrases()" value="Add" id="Add" />
+                        <input type="button" id="id_button_updatePhrases" class="btn green btn-success margin-7-hr" *ngIf="IsUpdate"
+                               (click)="UpdatePersonalPhrases()"
+                               value="Update" id="Add" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

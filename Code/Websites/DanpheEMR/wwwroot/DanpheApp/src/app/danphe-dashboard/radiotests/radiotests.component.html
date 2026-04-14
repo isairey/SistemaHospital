@@ -1,0 +1,55 @@
+<div class="row g-0 header" style="width: 100%; height: 30px">
+  <div class="col-lg-7 col-md-7 col-sm-7 radiotests-header">
+    <p class="radiotestsheading">Top 10 Radio Tests</p>
+    <!-- <span><i class="fa-solid fa-circle-info"></i></span> -->
+    <span>
+      <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+        <i class="fa fa-info-circle info" data-toggle="tooltip"></i>
+        <span class="tooltip-text" id="top">
+          <div>
+            Click on the 'View Details' button at the top right corner to see
+            more information on this!
+          </div>
+        </span>
+      </div>
+    </span>
+  </div>
+  <div class="col-lg-5 col-md-5 col-sm-5 radiotestsreport container">
+    <button class="viewdetails" (click)="OnButtonClick()">
+      <label for="viewradiotestsdetails" class="viewradiotestsdetails point-cursor">View Details</label>
+      <i class="fa fa-angle-right arrowicon"></i>
+    </button>
+  </div>
+</div>
+
+<div class="row g-0">
+  <div class="col-lg-6 col-md-6 col-sm-6 container">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Test Name</th>
+            <th>No.of Test Done</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+              *ngFor="let test of RadioTests; let i = index"
+              [class.hidden]="i >= 10">
+            <td>{{ test.rank }}</td>
+            <td>{{ test.testname }}</td>
+            <td>{{ test.nooftest }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!---LabTestsChart--->
+  <div class="col-lg-6 col-md-6 col-sm-6">
+    <div class="chart-box">
+      <canvas #radiotestsChart width="400" height="400"></canvas>
+    </div>
+  </div>
+</div>

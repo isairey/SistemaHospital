@@ -1,0 +1,38 @@
+<!--START: Dynamic QR Popup -->
+<div class="popup-static portlet box portlet-fullscreen custom_modal">
+  <div class="portlet-body form align-items-center">
+    <div class="row">
+      <div class="col-md-3 col-md-offset-5">
+        <div class="modelbox-div clearfix" style="height: 600px;">
+          <a class="btn btn-danger del-btn" (click)="CloseDynamicQrPopup()">X</a>
+          <div>
+            <div *ngIf="IsFonePayPaymentSuccessful" class="payment-success-inside-qr">
+              <i class="fa fa-check" style="font-size: 60px;"></i>
+            </div>
+            <div class="qr-code" *ngIf="DynamicQrMessage">
+              <div class="qr-code-img">
+                <qr-code [padding]="0" [value]="DynamicQrMessage" [size]="300"></qr-code>
+              </div>
+            </div>
+            <div class="amount-to-pay" *ngIf="TotalInvoiceAmount > 0">
+              <p>
+                <strong>
+                  <span>Scan To Pay</span>
+                </strong>
+              </p>
+              <p>
+                <strong>
+                  <span>Total Amount: NRs. {{TotalInvoiceAmount}}</span>
+                </strong>
+              </p>
+            </div>
+            <div class="payment-success-message" *ngIf="IsFonePayPaymentSuccessful">
+              <p>Payment Successfully done</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--END: Dynamic QR Popup-->

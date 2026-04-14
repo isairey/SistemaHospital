@@ -1,0 +1,274 @@
+.rad-single-signature {
+  flex: 0 0 33%;
+  padding: 15px;
+  font-weight: bold;
+}
+
+.main-rad-sgn {
+  text-align: left;
+}
+
+.rad-signature {
+  font-size: 12px;
+  white-space: pre-line;
+  padding-top: 10px;
+  margin-top: 50px;
+  border-top: 2px dashed;
+}
+
+.flow-hr-reverse {
+  flex-direction: row-reverse;
+}
+
+.rad-hdr-flex-col {
+  padding: 3px 0px;
+}
+
+.rad-hdr-flex-col:nth-child(odd) {
+  flex-basis: 50%;
+}
+
+.rad-hdr-flex-col:nth-child(even) {
+  flex-basis: 40%;
+}
+
+.border-wrap,
+.patient-header-on-1-page {
+  border: 1px solid;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 12px !important;
+  line-height: 1
+}
+
+.rad-report-holder {
+  /* margin-top: 15px; */
+  margin-bottom: 25px !important;
+}
+
+.ref-label {
+  margin-bottom: 0;
+  line-height: 36px;
+}
+
+.rad-flex-vertical {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 33.33%;
+  float: right;
+  height: auto;
+}
+
+.rad-image {
+  max-width: 100%;
+  height: 100px;
+}
+
+.single-rad-image {
+  padding: 10px;
+}
+
+.signatureBody {
+  width: 100%;
+}
+
+.no-display {
+  height: 50px;
+}
+
+.doc-signature {
+  margin-top: 5px;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 50px;
+}
+
+.patient-header {
+  margin-top: 10px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.patient-header .tr .td {
+  border: none;
+  margin-bottom: 10px;
+}
+
+.hospitalcode {
+  margin-top: 10px;
+  display: block;
+  border: none;
+  margin-bottom: 10px;
+  height: 60px;
+}
+
+.report-header {
+  margin-top: 10px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.report-header img {
+  width: 100%;
+  height: 100px;
+}
+
+.printpage table tr td {
+  border: none;
+}
+
+.signatureBody tr {
+  width: 100%;
+}
+
+tfoot tr td {
+  border: none !important;
+}
+
+.footerNote tr td {
+  border: none !important;
+}
+
+#printpage table tr td {
+  border: none
+}
+
+.page-Header-No-Repeat {
+  border-bottom: none;
+}
+
+.page-footer {
+  height: fit-content;
+}
+
+.image {
+  height: 50px;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.btn {
+  margin-bottom: 5px;
+}
+
+.doc-sign {
+  display: flex;
+  justify-content: space-between;
+}
+
+.print-count {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 30px;
+}
+
+
+.img_11 {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  width: 150px;
+  cursor: pointer;
+}
+
+
+.img_11:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+  transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+}
+
+.slidefromtop {
+  position: relative;
+  -webkit-animation: fromtop 0.8s;
+  animation: fromtop 0.8s;
+}
+
+.key-shortcut-info {
+  color: #696182;
+  border: 1px solid #d1d1de;
+  width: 54%;
+}
+
+.lbl-email-img-preview {
+  cursor: pointer;
+}
+
+.lbl-email-img-preview:hover {
+  background-color: #c9c2c2;
+}
+
+td {
+  width: 33.33%;
+  padding: 10px;
+  border: 0px solid #ccc;
+}
+
+.under-insurance {
+  color: green
+}
+
+.report-header-tooltip {
+  padding: 0px 5px;
+  color: #006687;
+  z-index: inherit;
+}
+
+.show-header-image {
+  margin-left: 10px;
+}
+
+.printpage {
+  height: auto;
+  padding: 10px 20px;
+}
+
+.switch-local-lang {
+  display: inline-block;
+  background: #d8dff1;
+  padding: 1px 2px 0px;
+  cursor: pointer;
+}
+
+.rpt-footer-text {
+  font-size: 11px;
+  font-weight: normal !important;
+  font-family: Arial, sans-serif;
+}
+
+
+.report-signatories {
+  width: 100%;
+}
+
+.email-note {
+  font-size: small;
+}
+
+.email-preview-image-count {
+  padding: 10px 15px;
+  font-weight: bold;
+}
+
+.dv_img_email_preview {
+  min-height: 200px;
+  width: 100%;
+}
+
+.signatures-table {
+  width: 100%;
+}
+
+.align-right {
+  text-align: end;
+}

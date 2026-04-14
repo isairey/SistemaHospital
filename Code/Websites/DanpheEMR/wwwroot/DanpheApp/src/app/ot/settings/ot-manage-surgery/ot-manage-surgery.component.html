@@ -1,0 +1,71 @@
+<form [formGroup]="OTSurgery.OTSurgeryValidator" class="form-horizontal hm-form">
+
+    <div class="form-group" style="padding: 0px; margin: 0px;">
+        <div class="col-md-12" style="padding: 0px; margin: 0px;">
+            <label class="control-label col-md-2">Surgery Name<sup> *</sup> <b>:</b> </label>
+            <div class="col-md-3">
+                <div class="col-wrapper">
+                    <div class="col">
+                        <input id="id_txt_Surgery_name" class="form-control" maxlength="150" type="text"
+                               formControlName="SurgeryName" placeholder="Surgery Name"
+                               (keydown.enter)="GoToNextElement($event, 'id_txt_Surgery_code')" />
+                        <span class="color-red font-sm" *ngIf="OTSurgery.IsDirty('SurgeryName')"
+                              [hidden]="OTSurgery.IsValidCheck('SurgeryName','required')">Surgery Name is required.</span>
+                    </div>
+                </div>
+            </div>
+            <label class="control-label col-md-2">Surgery Code<sup> *</sup> <b>:</b> </label>
+            <div class="col-md-3">
+                <div class="col-wrapper">
+                    <div class="col">
+                        <input id="id_txt_Surgery_code" class="form-control" maxlength="150" type="text"
+                               formControlName="SurgeryCode" placeholder="Surgery Code"
+                               (keydown.enter)="GoToNextElement($event, 'id_txt_description')" />
+                        <span class="color-red font-sm" *ngIf="OTSurgery.IsDirty('SurgeryCode')"
+                              [hidden]="OTSurgery.IsValidCheck('SurgeryCode','required')">Surgery Code is required.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" style="padding: 0px; margin: 5px 0px 0px 0px;">
+            <label class="control-label col-md-2">Description <b>:</b> </label>
+            <div class="col-md-3">
+                <div class="col-wrapper">
+                    <div class="col">
+                        <textarea
+                                  id="id_txt_description" class="form-control" maxlength="150" type="text"
+                                  formControlName="Description" placeholder="Description"
+                                  (keydown.enter)="GoToNextElement($event, 'id_checkbox_isActive')">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5" style="padding: 0px 0px 0px 5px; margin: 3px 0px 0px 10px;">
+                <label for="id_checkbox_isActive" class="is-ref mt-checkbox mt-checkbox-outline">
+                    <input type="checkbox" id="id_checkbox_isActive" formControlName="IsActive" style="cursor: pointer;"
+                           (keydown.enter)="GoToNextElement($event, 'id_btn_save_ot_Surgery')" />
+                    <span></span>IsActive
+                </label>
+            </div>
+            <div style="padding: 0px; margin: 0px">
+                <button
+                        id="id_btn_save_ot_Surgery" style="float: left;" class="btn green btn-success" (click)="SaveOTSurgery()">
+                    {{ IsUpdate? 'Update' : 'Save' }}
+                </button>
+                <button
+                        id="id_btn_clear_ot_Surgery" style="float: left;" class="btn orange btn-success" (click)="ClearOTSurgeryFormControls()">
+                    Clear
+                </button>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<div class="row" style="padding: 10px; margin: 0px;">
+    <danphe-grid
+                 [grid-colDefaults]="OTSurgeryGridColumns"
+                 [grid-data]="OTSurgeryList"
+                 (grid-actions)="OTSurgeryGridActions($event)">
+    </danphe-grid>
+</div>

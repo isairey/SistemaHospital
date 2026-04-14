@@ -1,0 +1,56 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #9999FF;
+  border: 1px solid black;
+  padding: 0px 3px;
+}
+
+tr:nth-child(even) {
+  background-color: #EAF2D3;
+}
+
+tr:hover {
+  background-color: #CFCFCF;
+}
+
+td {
+  border: 1px solid black;
+  padding: 0px 3px;
+}
+
+.header-row:hover {
+  background-color: inherit;
+}
+
+/* Hide .print-only class by default */
+.print-only {
+  display: none;
+}
+
+/* Show .print-only class when printing */
+@media print {
+  .print-only {
+    display: block !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}

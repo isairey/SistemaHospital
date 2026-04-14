@@ -1,0 +1,123 @@
+<style>
+  .out-of-range {
+    background-color: #ffcccc;
+    color: red;
+    font-weight: bold;
+  }
+</style>
+<div>
+  <div class="portlet">
+    <div class="portlet-title" style="margin:8px 12px;padding:0;min-height:0;border:0">
+      <div class="tools" style="margin:0;padding:0">
+        <a href="javascript:;" class="fullscreen" data-original-title="" title=""> </a>
+      </div>
+    </div>
+    <div class="portlet-body">
+      <div>
+        <h4 class="text-center">
+          <strong>
+            Lab Investigation Results
+          </strong>
+        </h4>
+      </div>
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-group">
+              <label style="vertical-align: top;margin-top: 7px;margin-right:6px;">Lab Tests</label>
+              <div style="display: inline-block;width:160px">
+                <danphe-multiselect *ngIf="LabTests.length > 0" [ddl-data]="LabTests" [pre-selected]="PreselectLabTest"
+                                    [placeholder-text]="'--Select Lab Test --'" [value-property-name]="'LabTestId'"
+                                    (selected-items-list)="LabTestOnChange($event)"
+                                    [display-property-name]="'LabTestName'" [single-selection]="false">
+                </danphe-multiselect>
+
+              </div>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <div class="d-flex" style="justify-content: right;">
+              <div class="p-2 ">
+                <div style="display: flex;">
+                  <div *ngIf="!IsAcrossVisitAvailability" style="display: flex; align-items: center;">
+                    <label style="margin-right: 5px;">Last</label>
+                    <input class="form-control"
+                           type="number"
+                           [(ngModel)]="Days"
+                           id="inputBox"
+                           (input)="validateInput()"
+                           (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                           style="margin-right: 5px; width: 50px;">
+                    <div *ngIf="IsInvalidInput" class="error-message">Please enter days from 1 to 20</div>
+                    <label style="margin-left: 5px;">Days</label>
+                  </div>
+
+                  <div *ngIf="IsAcrossVisitAvailability" style="display: flex; align-items: center;">
+                    <label style="margin-right: 5px;">Test Count</label>
+                    <input class="form-control"
+                           type="number"
+                           [(ngModel)]="TestCount"
+                           id="testCountBox"
+                           (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                           style="margin-right: 5px; width: 50px;">
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="p-2">
+                <button type="button" class="btn green btn-success" (click)="LoadReport()" style="margin-right:8px"> <i
+                     class="fa fa-search"></i>
+                  Show Result
+                </button>
+              </div>
+              <div class="p-2">
+                <button class="btn btn-primary" (click)="PrintResults()">
+                  <span>Print</span>&nbsp;&nbsp;
+                  &nbsp;&nbsp; <i class="glyphicon glyphicon-print"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:20px;">
+        <div class="col-md-12" id="result_list">
+          <div class="table-container" style="position: relative;">
+            <table class="table table-bordered" style="margin-top: 0px;">
+              <thead style="background-color: rgb(51, 138, 245); color: white;">
+                <tr>
+                  <th>TestName</th>
+                  <th>ComponentName</th>
+                  <th>Unit</th>
+                  <th *ngFor="let header of FilteredDateHeaders">{{ header }}</th>
+                  <th>Reference Range</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of FilteredInvestigationResultViewList">
+                  <td>{{ row.TestName }}</td>
+                  <td>{{ row.ComponentName }}</td>
+                  <td>{{ row.Unit }}</td>
+                  <td *ngFor="let value of row.Values"
+                      [ngClass]="{'out-of-range': row.IsAbnormal}">
+                    {{ value }}
+                  </td>
+                  <th>{{row.ReferenceRange}}</th>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<lab-investigation-results-print *ngIf="ShowPrintPage"
+                                 [inner-html-data]="DivContentObj"
+                                 [show-investigation-results-print-page]="ShowPrintPage"
+                                 (HidePrintPage)="HidePrintPage()">
+</lab-investigation-results-print>

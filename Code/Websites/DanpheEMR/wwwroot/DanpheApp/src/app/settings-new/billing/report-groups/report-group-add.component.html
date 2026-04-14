@@ -1,0 +1,32 @@
+<div class="popup-static portlet box portlet-fullscreen custom_modal">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-5 col-md-offset-4">
+        <div class="modelbox-div clearfix">
+          <div class="caption custom-caption">
+            <h3> <span *ngIf="!Update">New Report Group</span> <span *ngIf="Update">Update Report Group</span> </h3>
+            <a class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+          </div>
+          <form [formGroup]="currentReportGroup.ReportGroupValidator" class="form-horizontal">
+            <div class="form-body">
+              <div class="form-group">
+                <label class="control-label col-md-5" style="width: 30%;">Report Group Name<sup>*</sup><b>:</b></label>
+                <div class="col-md-7">
+                  <input type="text" name="" value="" class="form-control"
+                         formControlName="GroupName"
+                         id="GroupName" placeholder="Enter Title" />
+                </div>
+              </div>
+            </div>
+            <div class="panel-footer all-buttons text-right">
+              <input id="savebtn" type="button" class="btn green btn-success margin-7-hr" *ngIf="!Update" (click)="AddReportGroup()" value="Add" />
+              <input id="savebtn" type="button" class="btn green btn-success margin-7-hr" *ngIf="Update" (click)="UpdateReportGroup()"
+                     value="Update" />
+              <input id="savebtn" type="button" class="btn red btn-Danger margin-7-hr" (click)="Close()" value="Close" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

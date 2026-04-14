@@ -1,0 +1,75 @@
+<style>
+  .category-header {
+    background-color: aliceblue;
+    color: black;
+    text-align: center;
+    height: 30px;
+    font-size: 12px;
+    text-transform: uppercase;
+
+  }
+
+  .out-of-range {
+    background-color: #ffcccc;
+    color: red;
+    font-weight: bold;
+  }
+</style>
+<div *ngIf="GroupedLabTest && GroupedLabTest.length > 0" class="table-container" style="margin-top: 5px;">
+  <div>
+    <label for="lab">Lab</label>
+    <table id="lab" class="table table-bordered tbl_hover table-condensed">
+      <thead>
+        <tr style="background-color: #599be0; color: white;">
+          <th>Reported Date</th>
+          <th>Component Name</th>
+          <th>Lab Test</th>
+          <th>Result</th>
+          <th>Unit</th>
+          <th>Reference Range</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let group of GroupedLabTest; let i = index">
+          <tr *ngIf="i === 0 || group.Category !== GroupedLabTest[i - 1].Category">
+            <td class="category-header" colspan="6">{{group.Category}}</td>
+          </tr>
+          <tr *ngFor="let testItem of group.Items">
+            <td>{{ testItem.CreatedOn | date:'yyyy-MM-dd' }}</td>
+            <td>{{testItem.ComponentName}}</td>
+            <td>{{testItem.LabTestName}}</td>
+            <td
+                [ngClass]="{'out-of-range': testItem.IsAbnormal}">
+              <freetype-html-renderer [htmlContent]="testItem.Value"></freetype-html-renderer>
+            </td>
+
+            <td>{{testItem.Unit}}</td>
+            <td>{{ testItem.ReferenceRange }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+<div *ngIf="RequestedImagingItems && RequestedImagingItems.length > 0" class="table-container" style="margin-top: 5px;">
+  <div>
+    <label for="Imaging">Imaging</label>
+    <table id="Imaging" class="table table-bordered tbl_hover table-condensed">
+      <thead>
+        <tr style="background-color: #599be0; color: white;">
+          <th>Investigation Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let reqimagingitem of RequestedImagingItems">
+          <tr>
+            <td>{{reqimagingitem.ImagingItemName}}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

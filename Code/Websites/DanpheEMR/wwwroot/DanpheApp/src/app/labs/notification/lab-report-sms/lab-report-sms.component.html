@@ -1,0 +1,227 @@
+<style>
+  .table thead tr th {
+    font-size: 14px;
+  }
+
+  .table thead tr {
+    background-color: #b6b3b3;
+  }
+
+  .highLightBackground {
+    background-color: #e1d0b3;
+  }
+
+  .left {
+    float: left;
+  }
+
+  .right {
+    float: right;
+  }
+
+  .textCenter {
+    text-align: center;
+  }
+
+  .table td {
+    font-size: 14px !important;
+  }
+
+  .table>tbody>tr>td {
+    padding: 2px !important;
+    line-height: 1.42857;
+    border: 1px dotted black !important;
+  }
+</style>
+<div *ngIf="showReport">
+  <danphe-lab-view-report *ngIf="showReport && labReportFormat == 'format1'" [templateReport]="singleReport"
+                          [hidePrintButton]="true"
+                          [showReport]="showReport"
+                          [showHeader]="showHeader" [printReportFromGrid]="false"
+                          [enableEdit]="false">
+  </danphe-lab-view-report>
+  <danphe-lab-view-report-format2 *ngIf="showReport && labReportFormat == 'format2'"
+                                  [templateReport]="singleReport"
+                                  [showReport]="showReport"
+                                  [showHeader]="showHeader" [printReportFromGrid]="false"
+                                  [enableEdit]="false">
+  </danphe-lab-view-report-format2>
+</div>
+<div style="margin:5px;">
+  <div style="margin-bottom: 10px;">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-2 col-xs-12" style="margin-top:9px;">
+          <span>Report Verification Date: </span>
+        </div>
+        <div class="col-md-5 col-xs-12" style="padding-left:0% !important;margin-left: -2%;">
+          <div style="display: inline-block;">
+            <!-- <danphe-date-picker [(ngModel)]="resultVerifiedOn" [CalendarTypes]="'en,np'">
+                        </danphe-date-picker> -->
+            <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'billing-reports'">
+            </from-to-date-select>
+          </div>
+        </div>
+        <div class="col-md-1 col-xs-12" style="padding-left:0%; margin-left:-4%;margin-top: 4px;">
+          <button [disabled]="loading" class="btn green btn-success pull-right"
+                  (click)="GetSMSApplicablePatientList();" style="display: inline-block;">Load
+            <i class="fa fa-refresh"></i></button>
+        </div>
+        <div class="col-md-4 col-xs-12" style="margin-top:3px;">
+          <div class="col-md-6" style="text-align:right;">
+            <input type="radio" checked id="radio_showSmsNotSentList" [(ngModel)]="smsSentStatus" name="IsSMSSent"
+                   value="SMS_Not_Sent" style="margin-right: 10px;" (change)="OnSMSSendStatusChange()">
+            <span>
+              <label for="radio_showSmsNotSentList">
+                SMS Not Sent
+              </label>
+            </span>
+          </div>
+          <div class="col-md-6" style="padding-left:20%;">
+            <input type="radio" id="radio_showSmsSentList" [(ngModel)]="smsSentStatus" name="IsSMSSent" value="SMS_Sent"
+                   style="margin-right: 10px;" (change)="OnSMSSendStatusChange()">
+            <span>
+              <label for="radio_showSmsSentList">
+                SMS Sent
+              </label>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6" style="margin-top:10px; margin-bottom: 10px;">
+          <input class="searchtbx" [(ngModel)]="searchString" onclick="this.select();"
+                 placeholder="Search Patient">
+        </div>
+        <div class="col-md-6" style="margin-top:10px; margin-bottom: 10px;">
+          <div class="row">
+            <div class="col-md-10" style="text-align:right; padding-right:5%;"><label *ngIf="labReportSendSMSDTO.PatientInfo.length >0"
+                     style="color:green;font-size: 12px;margin-top: 1%;">
+                (Selected Patient Count: {{labReportSendSMSDTO.PatientInfo.length}})
+              </label></div>
+            <div class="col-md-2"> <button id="btnOpenSmsPopup"
+                      *ngIf="securityService.HasPermission('btn-lab-notification-reportreadysms-sendsms') && labReportSendSMSDTO.PatientInfo.length >0"
+                      class="btn green btn-success" (click)="OpenSendSMSPopUp()"
+                      style="float:right;">
+                Send SMS
+                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+              </button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <table class="table table-bordered table-striped test-list table-hover" style="font-size: 12px;">
+        <thead class="table-header-bg">
+          <tr>
+            <th scope="col" style="width: 3%;text-align: center;">
+              <input type="checkbox" id="checkbox_SendLabReportSMS_PatientList" [(ngModel)]="selectAll"
+                     (change)="HandleSelectAllCheckBox($event)">
+            </th>
+            <th style="width:8%">Hospital No. </th>
+            <th style="width:25%"> PatientName </th>
+            <th style="width:8%"> Age/Sex </th>
+            <th style="width:10%"> PhoneNumber </th>
+            <th style="width:25%"> Verified Test Name(s) </th>
+            <th style="width:25%"> Pending Test Name(s) </th>
+            <th *ngIf="LabReportUploadConfigParam.EnableFileUpload" style="width:5%">IsUploaded</th>
+            <th *ngIf="LabReportUploadConfigParam.EnableFileUpload" style="width:5%"> Action </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container
+                        *ngFor="let patInfo of filteredPatientList | searchFilter: searchString | async| paginate: {id: 'listing_pagination', itemsPerPage: 20, currentPage: page } ; let i = index;">
+            <tr (click)="SelectPatient($event,patInfo)">
+              <td style="text-align:center;">
+                <input type="checkbox" [disabled]="patInfo.IsSmsSend || !patInfo.IsPhoneNumberValid"
+                       [(ngModel)]="patInfo.IsSelected">
+              </td>
+              <td> {{ patInfo.PatientCode }} </td>
+              <td> {{ patInfo.PatientName}} </td>
+              <td> {{ patInfo.Age}} / {{patInfo.Gender }}</td>
+              <td> {{ patInfo.PhoneNumber }} </td>
+              <td> {{ patInfo.VerifiedTestNamesCSV }} </td>
+              <td> {{ patInfo.PendingTestNamesCSV }} </td>
+              <td *ngIf="LabReportUploadConfigParam.EnableFileUpload"> {{ patInfo.IsFileUploaded ? 'YES' : 'NO' }}</td>
+              <td *ngIf="LabReportUploadConfigParam.EnableFileUpload">
+                <button [ngClass]="patInfo.IsFileUploaded ? 'btn btn-danger btn-sm':'btn green btn-success btn-sm'"
+                        (click)="OnUploadButtonClicked(patInfo)">
+                  <i class="fa fa-upload" aria-hidden="true"></i> Upload
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <div>
+        <pagination-controls id="listing_pagination" (pageChange)="page = $event" style="display: flex; float:right;">
+        </pagination-controls>
+      </div>
+    </div>
+  </div>
+  <div class="popup-static portlet box portlet-fullscreen" *ngIf="showSendSMSPopUp">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div">
+        <div class="modelbox-header">
+          <h4 class="margin-0-vr">SMS Alert !!!</h4>
+        </div>
+        <div class="modelbox-body">
+          <div class="col-md-2">
+            <label>SMS Text</label>
+            <span style="float:right">:</span>
+          </div>
+          <div class="col-md-10">
+            <textarea [(ngModel)]="labReportSendSMSDTO.SMSText" [disabled]="!labGeneralReportSMSConfig.AllowToEditText"
+                      [maxLength]="labGeneralReportSMSConfig.MaxCharacterLength" class="form-control" rows="3">
+                  {{ labReportSendSMSDTO.SMSText }}
+            </textarea>
+          </div>
+          <div style="margin-top: 80px;">
+            <p><b>Note:</b> This SMS will be sent to <i>{{ labReportSendSMSDTO.PatientInfo.length }} </i>selected
+              patients.</p>
+          </div>
+        </div>
+        <div class="modelbox-footer">
+          <div class="all-buttons text-right">
+            <button type="button" *ngIf="securityService.HasPermission('btn-lab-notification-reportreadysms-sendsms')"
+                    class="btn green btn-success btn-sm horizontal-space" [disabled]="loading"
+                    (click)="SendLabReportSMS()"> Send SMS
+              <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn btn-cancel btn-sm horizontal-space" (click)="CloseSendSMSPopUp()"> Discard
+            </button>
+          </div>
+        </div>
+        <div class="close-modelbox lb-close-btn">
+          <button class="btn btn-danger" (click)="CloseSendSMSPopUp()">X</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="popup-static portlet box portlet-fullscreen" *ngIf="showReUploadPopup">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="modelbox-div">
+        <div class="modelbox-header">
+          <h4 class="margin-0-vr" style="color: rgb(184, 73, 73);">Attention !!!</h4>
+        </div>
+        <div class="modelbox-body">
+          <p style="color:green;">This Report Is Alredy Uploaded. Are You Sure To Upload It Again ???</p>
+        </div>
+        <div class="modelbox-footer">
+          <div class="all-buttons text-right">
+            <button type="button" class="btn green btn-success btn-sm horizontal-space" (click)="LoadLabReports()"> Yes
+            </button>
+            <button type="button" class="btn btn-cancel btn-sm horizontal-space" (click)="closeConfirmationPopUp()"> No
+            </button>
+          </div>
+        </div>
+        <div class="close-modelbox lb-close-btn">
+          <button class="btn btn-danger" (click)="closeConfirmationPopUp()">X</button>
+        </div>
+      </div>
+    </div>
+  </div>

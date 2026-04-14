@@ -1,0 +1,82 @@
+<style>
+  .hos-sec {
+    padding-top: 5px;
+    padding-left: 30px;
+    width: auto;
+  }
+
+  .btn-padding {
+    padding-right: 2rem;
+  }
+
+  .filter-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+</style>
+<div class="wrapper">
+  <form [formGroup]="FilterDto.FilterFormGroup">
+    <div class="row" style="display: flex; margin: 0px 0px; justify-content: flex-start;">
+      <div>
+        <label style="vertical-align: top;margin-top: 7px; margin-right: 10px;"><b>Search By:</b></label>
+        <div style="display: inline-block;">
+          <select id="FilterStatus" formControlName="FilterStatus">
+            <option *ngFor="let option of FilterStatusOptions" [value]="option.value">{{ option.label }}</option>
+          </select>
+        </div>
+      </div>
+      <div style="display: inline-block;" style="margin-left: 20px;">
+        <from-to-date-select (on-change)="OnDateChange($event)"></from-to-date-select>
+      </div>
+    </div>
+    <br>
+    <div class="row filter-data">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label style="vertical-align: top;margin-top: 7px; margin-right: 10px;">Hospital Number<b>:</b></label>
+          <div style="display: inline-block;">
+            <input class="form-control" type="text" id="HospitalNumber" formControlName="HospitalNumber"
+                   placeholder="Hospital Number" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="#departmentlist" style="vertical-align: top;margin-top: 7px; margin-right: 10px;"> Ward :</label>
+          <div style="display: inline-block;">
+            <input danphe-auto-complete class="form-control" [list-formatter]="WardListFormatter" [source]="WardList"
+                   placeholder="Select Ward" formControlName="SelectedWard" display-property-name="WardName" />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="#departmentlist" style="vertical-align: top;margin-top: 7px; margin-right: 10px;"> Department Filter :</label>
+          <div style="display: inline-block;">
+            <select formControlName="DepartmentId"
+                    id="departmentlist">
+              <option value="0">ALL</option>
+              <option *ngFor="let dept of DepartmentList" [value]="dept.DepartmentId">{{dept.DepartmentName}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="pull-right btn-padding">
+        <button class="btn green btn-success margin-7-hr bth-mar" id="Filter_PatientFilter" type="submit" (click)="PatientFilter()">
+          <i class="fa fa-refresh"></i>Load
+        </button>
+      </div>
+    </div>
+  </form>
+  <div class="row">
+    <div>
+      <div class="col-md-12 col-xs-12 col-sm-12">
+        <h5><b>Discharged Patient List</b></h5>
+        <danphe-grid (grid-actions)="IpDischargedPatientGridActions($event)" [grid-colDefaults]="IPDischargedGridColumn"
+                     [grid-data]="IpDischargedPatientList" [NepaliDateInGridParams]="NepaliDateInGridSettings">
+        </danphe-grid>
+      </div>
+    </div>
+  </div>

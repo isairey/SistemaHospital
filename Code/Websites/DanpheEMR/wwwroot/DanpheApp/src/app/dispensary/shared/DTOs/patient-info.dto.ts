@@ -1,0 +1,30 @@
+class PatientInfo_DTO {
+    PatientId: number = 0;
+    PatientCode: string = "";
+    Gender: string = "";
+    PhoneNumber: string = "";
+    PANNumber: string = "";
+    FirstName: string = "";
+    MiddleName: string = "";
+    LastName: string = "";
+    Age: string = "";
+    Address: string = "";
+    ShortName: string = "";
+    CountrySubDivisionName: string = "";
+    DateOfBirth: string = '';
+    Ins_NshiNumber: string = null;
+    PatientVisitId: number = 0;
+    PerformerId: number = 0;
+    VisitDate: string = '';
+    VisitType: string = "";
+    SchemeId: number = null;
+    SchemeName: string = "";
+    PriceCategoryId: number = null;
+    ClaimCode: number = null;
+    PolicyNo: string = null;
+    LatestClaimCode: number = null;
+    GeneralCreditLimit: number = 0;
+    IpCreditLimit: number = 0;
+    OpCreditLimit: number = 0;
+    IsAdmitted: boolean = false;
+}

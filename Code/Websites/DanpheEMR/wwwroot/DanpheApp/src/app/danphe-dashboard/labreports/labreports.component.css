@@ -1,0 +1,118 @@
+.labreport-header {
+  display: flex;
+}
+
+.labreportheading {
+  margin-right: 5px;
+  font-size: 16px;
+  color: #666; /* Text color */
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.viewlabreportdetails {
+  margin-right: 3px;
+  color: #777;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.viewdetails {
+  border: 1px solid #888;
+  border-radius: 5px !important;
+  height: 27px;
+  justify-content: center;
+  /* width: 20%; */
+  float: right;
+  margin-left: 0px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding-left: 5px;
+  padding-right: 0px;
+  margin-top: 10px;
+}
+
+.labreport {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* For Tooltip */
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  width: 150px; /* Increased width for better display */
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left; /* Adjusted text alignment */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Added box-shadow for better visibility */
+}
+
+.hover-text:hover .tooltip-text {
+  visibility: visible;
+}
+
+.hover-text {
+  position: relative;
+  display: inline-block;
+  margin: 40px;
+  font-family: Arial;
+  text-align: center;
+}
+
+.info {
+  color: #666;
+  margin-top: 12px;
+}
+
+.arrowicon {
+  color: #666;
+  font-weight: 700;
+}
+
+.viewdetails:hover {
+  cursor: pointer;
+  background-color: #0773bc;
+}
+
+.viewdetails:active {
+  background-color: #0056a3;
+  transform: scale(0.98);
+}
+
+.viewdetails:hover .viewlabreportdetails {
+  color: white;
+}
+
+.viewdetails:hover .arrowicon {
+  color: white !important;
+}
+
+@media only screen and (max-width: 1468px) and (min-width: 768px) {
+  .labreportheading {
+    font-size: 13px;
+    margin-top: 3px;
+  }
+
+  .info {
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .viewdetails {
+    height: 22px;
+    justify-content: center;
+    width: 90px;
+  }
+
+  .viewlabreportdetails {
+    margin-right: 3px;
+    font-size: 11px;
+  }
+}

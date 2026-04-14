@@ -1,0 +1,54 @@
+<div class="table-container" style="margin: 20px; background-color: #f7f7f7; padding: 20px; border-radius: 10px;">
+  <table class="table table-bordered table-hover table-condensed" style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #599be0; color: white; text-align: left;">
+        <th style="width: 40%; padding: 10px;">Field</th>
+        <th style="width: 70%; padding: 10px;">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="DischargeType">
+        <td style="padding: 12px; font-size: 14px; font-weight: bold;">Discharge Type</td>
+        <td style="padding: 12px; font-size: 14px;">{{ DischargeType }}</td>
+      </tr>
+      <tr *ngIf="DischargeCondition">
+        <td style="padding: 10px; font-size: 14px; font-weight: bold;">Discharge Condition</td>
+        <td style="padding: 10px; font-size: 14px;">{{ DischargeCondition }}</td>
+      </tr>
+      <tr *ngIf="DoctorIncharge">
+        <td style="padding: 10px; font-size: 14px; font-weight: bold;">Doctor In Charge</td>
+        <td style="padding: 10px; font-size: 14px;">{{ DoctorIncharge }}</td>
+      </tr>
+      <tr *ngIf="ResidentDr">
+        <td style="padding: 10px; font-size: 14px; font-weight: bold;">Resident Doctor</td>
+        <td style="padding: 10px; font-size: 14px;">{{ ResidentDr }}</td>
+      </tr>
+      <tr *ngIf="Nurse">
+        <td style="padding: 10px; font-size: 14px; font-weight: bold;">Assigned Nurse</td>
+        <td style="padding: 10px; font-size: 14px;">{{ Nurse }}</td>
+      </tr>
+      <tr *ngIf="SelectedConsultants">
+        <td style="padding: 10px; font-size: 14px; font-weight: bold;">Consulting Doctors</td>
+        <td style="padding: 10px; font-size: 14px;">{{ SelectedConsultants }}</td>
+      </tr>
+      <tr *ngIf="CheckedBy">
+        <td style="padding: 10px;font-size: 14px; font-weight: bold;">Reviewed By</td>
+        <td style="padding: 10px; font-size: 14px;">{{ CheckedBy }}</td>
+      </tr>
+      <tr *ngIf="AnaesthetistName">
+        <td style="padding: 10px; font-size: 14px; font-weight: bold;">Anaesthetist</td>
+        <td style="padding: 10px;font-size: 14px; ">{{ AnaesthetistName }}</td>
+      </tr>
+      <tr *ngIf="DischargeInfoByPatientVisit?.IsOtPatient">
+        <td style="padding: 10px; font-size: 14px; font-weight: bold;">Operation Type</td>
+        <td style="padding: 10px; font-size: 14px;">{{ DischargeInfoByPatientVisit.OperationType }}</td>
+      </tr>
+      <tr *ngIf="DischargeInfoByPatientVisit?.IsOtPatient">
+        <td style="padding: 10px; font-size: 14px; font-weight: bold;">Operation Date</td>
+        <td style="padding: 10px;font-size: 14px;">
+          {{ DischargeInfoByPatientVisit.OperationDate | DanpheDateTime:'format':'YYYY-MM-DD' }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

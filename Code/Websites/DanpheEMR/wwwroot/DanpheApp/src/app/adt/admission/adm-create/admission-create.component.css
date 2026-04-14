@@ -1,0 +1,46 @@
+.hm-form .control-label,
+.emr-form .control-label {
+  font-weight: 600;
+  font-size: 12px;
+  color: #333333 !important;
+  padding: 0 15px;
+}
+.hm-form .form-control {
+  border-radius: 5px !important;
+}
+.hm-form .form-group,
+.emr-form .form-group {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.flx {
+  gap: 0 10px;
+}
+
+
+.consultant-select_list {
+  list-style: none;
+  padding: 0;
+  margin-top: 4px;
+}
+.consultant-select_list .consultant-select_item {
+  border: 1px solid #d2cbcb;
+  padding: 0 0px 0px 16px;
+  background: #fef9f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.consultant-remove-button{
+    background-color: #ac3e3e;
+    border: none;
+    color: white;
+    font-size: 16px;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    zoom: 0.7;
+}

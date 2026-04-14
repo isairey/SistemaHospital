@@ -1,0 +1,184 @@
+<div class="popup-static portlet box portlet-fullscreen" style="margin-bottom:25px">
+    <div class="portlet-body" style="background-color:white">
+        <div class="col-md-12">
+            <div class="col-md-12 col-sm-12 col-xs-12 modelbox-div" style="margin-right: 24px;">
+                <div style="padding:10px">
+                    <i style="margin-top:10px; margin-right:-10px;" class="btn btn-danger pull-right" (click)="Close()" title="Cancel">X</i>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Add Referrel
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12 col-xs-12 col-sm-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Enter Referral Date<b style="float:right;">:</b></label>
+                                        <input type="date" class="form-control" placeholder="Referral Date" [(ngModel)]="dischargeReferral.ReferralDate" (keyup.enter)="FocusElementById('referred-from')">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Enter Referred From Department Name<b style="float:right;">:</b></label>
+                                        <input danphe-auto-complete class="col-md-11 form-control" id="referred-from" (keyup.enter)="FocusElementById('referred-to')" [(ngModel)]="ReferredFromDepartment" [source]="departmentList" display-property-name="DepartmentName" (valueChanged)="OnRefferredFromDepartmentChange()" value-property-name=null [list-formatter]="departmentListFormatter" max-num-list="20" onclick="this.select()" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Enter Referred To Department Name<b style="float:right;">:</b></label>
+                                        <input danphe-auto-complete class="col-md-11 form-control" id="referred-to" (keyup.enter)="FocusElementById('remarks')" [(ngModel)]="ReferredToDepartment" [source]="departmentList" display-property-name="DepartmentName" (valueChanged)="OnReferredToDepartmentChange()" value-property-name=null [list-formatter]="departmentListFormatter" max-num-list="20" onclick="this.select()" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Remarks<b style="float:right;">:</b></label>
+                                        <textarea type="text" class="form-control" id="remarks" (keyup.enter)="FocusElementById('current-treatments')" placeholder="Remarks" [(ngModel)]="dischargeReferral.Remarks"></textarea>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Enter Name of Treatment<b style="float:right;">:</b></label>
+                                        <input type="text" class="form-control" id="current-treatments" (keyup.enter)="FocusElementById('current-diagnosis')" placeholder="Current Treatment In Out Hospital" [(ngModel)]="dischargeReferral.CurrentTreatments">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Enter Name of Current Diagnosis<b style="float:right;">:</b></label>
+                                        <input type="text" class="form-control" id="current-diagnosis" (keyup.enter)="FocusElementById('medical-officer')" placeholder="Current Diagnosis" [(ngModel)]="dischargeReferral.CurrentDiagnosis">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Enter Medical Officer Name<b style="float:right;">:</b></label>
+                                        <input type="text" class="form-control" id="medical-officer" (keyup.enter)="FocusElementById('referral-center')" placeholder="Medical Officer" [(ngModel)]="dischargeReferral.MedicalOfficer">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Enter Referral Center name<b style="float:right;">:</b></label>
+                                        <input type="text" class="form-control" id="referral-center" (keyup.enter)="FocusElementById('reason-for-referral')" placeholder="Referral Center" [(ngModel)]="dischargeReferral.ReferralCenter">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Reason For Referral<b style="float:right;">:</b></label>
+                                        <input type="text" class="form-control" id="reason-for-referral" (keyup.enter)="FocusElementById('clinical-history')" placeholder="Current Diagnosis" [(ngModel)]="dischargeReferral.ReasonForReferral">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="control-label" style="margin-left: 5px;">Enter Clinical History<b style="float:right;">:</b></label>
+                                        <textarea type="text" class="form-control" id="clinical-history" (keyup.enter)="FocusElementById('save-referral')" placeholder="Clinical History" [(ngModel)]="dischargeReferral.ClinicalHistory"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <input style="width: 100px;height: 35px;margin-right: 10px;float: right;" id="save-referral" class="btn blue" type="button" (click)="Save()" value="Save" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen inv_modal" style="margin-bottom:45px;" *ngIf="showReferralLetterPopup">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="modelbox-div clearfix">
+                    <!--Model Box Body Start-->
+                    <a class="btn btn-danger history-del-btn" (click)="Close()" title="Cancel"><i class="fa fa-times"></i></a>
+                    <div class="form-body" id="printpage">
+                        <div class="col-md-12">
+                            <div id="print-good-reciept" class="row printStyle print-border">
+                                <div style="width: 100%;">
+                                    <div style="width: 100%; display: flex;">
+                                        <div class="logo" style="width: 18%;padding: 0px 15px 0px 15px; text-align: left;"> <img class="img-responsive" style="max-height:70px;" src="../../../themes/theme-default/images/hospital-logo-phrm.PNG" />
+                                        </div>
+                                        <div style="width: 64%;padding-bottom:  0px; text-align: center;">
+                                            <div style="text-align: center;font-family:sans-serif; margin-top: 10px;">
+                                                <span style="font-size:15px;"><strong>{{headerDetail.hospitalName}}</strong></span><br />
+                                                <span style="font-size:15px;">Department of {{dischargeReferral.DepartmentToName}}</span><br />
+                                                <span style="font-size:14px; margin-right: 30px;" style="text-decoration: underline;"><strong>Referral
+                                                        Letter</strong></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div style="width: 100%; display: flex;">
+                                        <div style="width: 50%;">
+                                            <div style="text-align:left;">
+                                                <span><strong>Respected Sir/Madam,</strong></span>
+                                            </div>
+                                            <div style="text-align:left;">
+                                                <span><strong>Department of:</strong> {{dischargeReferral.DepartmentFromName}}</span>
+                                            </div>
+                                            <div style="text-align:left;">
+                                                <span><strong>Referral Center:</strong> {{dischargeReferral.ReferralCenter}}</span>
+                                            </div>
+                                            </div>
+                                        <div style="width:50%">
+                                            <div style="text-align:right;">
+                                                <span><strong>Date:</strong> {{dischargeReferral.ReferralDate | date}}</span>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    <br>
+                                    <div style="width:100%">
+                                        <span style="margin-left: 100px">We would like to refer a case of following details admitted in department of
+                                            {{dischargeReferral.DepartmentFromName}}</span>
+                                    </div>
+                                    <br>
+                                    <div style="width: 100%; display: flex;">
+                                        <div style="width: 50%;text-align:left;">
+                                            <strong>Name of Patient:</strong> {{dischargeReferral.PatientName}}
+                                        </div>
+                                        <div style="width: 50%; text-align:right;">
+                                            <strong>Age/Sex:</strong> {{dischargeReferral.Age}}/{{dischargeReferral.Sex}}
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div style="text-align:left; width: 100%">
+                                        <strong>Admitted On:</strong> {{dischargeReferral.AdmittedDate | date}}
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div style="text-align:left; width: 100%">
+                                        <strong>Brief Clinical History and examination:</strong> {{dischargeReferral.ClinicalHistory}}
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div style="text-align:left; width: 100%">
+                                        <strong>Current Diagnosis:</strong> {{dischargeReferral.CurrentDiagnosis}}
+                                    </div>
+                                    <br>
+                                    <div style="text-align:left; width: 100%">
+                                        <strong>Current Treatment in our hospital:</strong> {{dischargeReferral.CurrentTreatments}}
+                                    </div><br>
+
+                                    <div style="text-align:left; width: 100%">
+                                        <strong>Reason for Referral:</strong> {{dischargeReferral.ReasonForReferral}}
+                                    </div><br>
+
+                                    <div style="width: 100%; display: flex;">
+                                        <div style="width: 80%;text-align:left; margin-left: 100px;">
+                                            <span>Please Kindly evaluate this case for further management.
+                                            </span><br>
+                                            <span>Thank You.</span>
+                                        </div>
+                                        <div style="width: 30%;text-align:right;">
+                                            <strong><u>Medical Officer</u></strong>
+                                            <br>
+                                            {{dischargeReferral.MedicalOfficer}}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button (click)="print()" class="btn  btn-small btn-primary" style="float: right;margin-bottom: 15px; margin-right:5px;">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

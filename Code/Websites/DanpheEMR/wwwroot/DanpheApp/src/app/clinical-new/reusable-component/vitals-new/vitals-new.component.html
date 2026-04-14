@@ -1,0 +1,331 @@
+<style>
+    tbody>tr>td {
+        border: 1px solid #e7ecf1 !important;
+    }
+</style>
+<div class="col-md-12">
+    <!-- Tables -->
+    <div class="col-md-12" style="margin: 0px; padding: 0px;">
+        <div class="col-md-12" style="margin: 5px;" *ngIf="ShowLatestVitals">
+            <div class="table-responsive">
+                <table class="table table-bordered tbl_hover table-condensed">
+                    <thead>
+                        <tr class="header-row">
+                            <td [attr.colspan]="GetColSpanForLatestVitals()">
+                                <span style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: x-large; font-weight: bold;">Latest Vitals</span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr style="background-color: #599be0; color: white;">
+                            <th *ngFor="let vitalGroup of GroupedLatestPatientVitalsList">
+                                {{ vitalGroup.VitalsGroup }}
+                            </th>
+                            <th *ngIf="ShowBMIOnLatestVitals">
+                                {{BMI.BMIBiometricsName}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td *ngFor="let vital of GroupedLatestPatientVitalsList">
+                                {{ vital.VitalsValue }}
+                                <span *ngIf="vital.VitalsValue && vital.Unit"> {{ vital.Unit }}</span>
+                            </td>
+                            <td *ngIf="ShowBMIOnLatestVitals">
+                                {{BMI_ValueOnLatestVitals}} {{BMI.Unit}}
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <div class="col-md-12" style="margin: 5px;">
+            <div class="table-responsive">
+                <table class="table table-bordered tbl_hover table-condensed"
+                       *ngIf="(GroupedVitalsList && GroupedVitalsList.length)">
+                    <thead>
+                        <tr class="header-row">
+                            <td [attr.colspan]="GetColSpanForVitals()">
+                                <span style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: x-large; font-weight: bold;">Vitals</span>
+                                    <span>
+                                        <button class="btn-link" [disabled]="ShowAddBiometrics"
+                                                (click)="ShowAddVitalsPage()" style="width: auto;">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr style="background-color: #599be0; color: white;">
+                            <th>Created On</th>
+                            <th *ngFor="let vitalGroup of GroupedVitalsList">
+                                {{ vitalGroup.VitalsName }}<span *ngIf="vitalGroup.Unit"> ({{ vitalGroup.Unit }})</span>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let grouped of GroupedPatientVitals">
+                            <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].CreatedOn |
+                                DanpheDateTime:'format':'YYYY-MM-DD HH:mm A' }}</td>
+                            <td *ngFor="let group of grouped.VitalsGroupsByCreatedOn">
+                                {{ group.VitalsData[0].VitalsValue }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-12" style="margin: 5px;">
+            <div class="table-responsive">
+                <table class="table table-bordered tbl_hover table-condensed"
+                       *ngIf="(GroupedBiometricsList && GroupedBiometricsList.length)">
+                    <thead>
+                        <tr class="header-row">
+                            <td [attr.colspan]="GetColSpanForBiometrics()">
+                                <span style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: x-large; font-weight: bold;">Biometrics</span>
+                                    <span>
+                                        <button class="btn-link" [disabled]="ShowAddVitals"
+                                                (click)="ShowAddBiometricsPage()" style="width: auto;">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr style="background-color: #599be0; color: white;">
+                            <th>Created On</th>
+                            <th *ngFor="let vitalGroup of GroupedBiometricsList">
+                                {{ vitalGroup.VitalsName }}<span *ngIf="vitalGroup.Unit"> ({{ vitalGroup.Unit }})</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let grouped of GroupedPatientBiometrics">
+                            <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].CreatedOn |
+                                DanpheDateTime:'format':'YYYY-MM-DD HH:mm A' }}</td>
+                            <td *ngFor="let group of grouped.VitalsGroupsByCreatedOn">
+                                {{ group.VitalsData[0].VitalsValue }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="(GroupedVitals && ShowAddVitals)" class="popup-static portlet box portlet-fullscreen custom_modal">
+        <div class="portlet-body form">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="modelbox-div clearfix">
+                        <div class="caption custom-caption" style="margin: 0px 0px 15px 0px;">
+                            <h3>
+                                <span style="color: blue;">Add New Vitals</span>
+                            </h3>
+                            <a class="btn btn-danger" (click)="CloseAddVitalsPage()" title="Cancel">X</a>
+                        </div>
+                        <div class="col-md-12" *ngIf="GroupedVitals && ShowAddVitals"
+                             style="margin: 5px; padding: 5px;">
+                            <div *ngFor="let key of GetObjectKeys(GroupedVitals)">
+                                <div class="col-md-12" style="display: flex;" *ngIf="GroupedVitals[key].length === 1">
+                                    <label class="col-md-4"
+                                           style="display: flex; justify-content: space-between; padding: 0px">
+                                        <span>
+                                            {{GroupedVitals[key][0].VitalsName}}
+                                            <span
+                                                  *ngIf="GroupedVitals[key] && GroupedVitals[key][0].Unit">({{GroupedVitals[key][0].Unit}})
+                                            </span>
+                                        </span>
+                                        <span>:</span>
+                                    </label>
+                                    <input
+                                           *ngIf="GroupedVitals[key] && GroupedVitals[key][0] && GroupedVitals[key][0].InputType === InputTypes.Number"
+                                           style="width: 15rem !important; margin: 0px 0px 5px 5px;" type="number"
+                                           [(ngModel)]="GroupedVitals[key][0].VitalsValue"
+                                           (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                                           name="{{GroupedVitals[key][0].VitalsName}}"
+                                           placeholder="{{GroupedVitals[key][0].VitalsName}}"
+                                           (input)="OnVitalsInput(GroupedVitals[key][0])">
+                                    <input appFocusTextbox
+                                           *ngIf="GroupedVitals[key] && GroupedVitals[key][0] && GroupedVitals[key][0].InputType === InputTypes.Textbox"
+                                           style="width: 30rem !important; margin: 0px 0px 5px 5px;" type="text"
+                                           [(ngModel)]="GroupedVitals[key][0].VitalsValue"
+                                           name="{{GroupedVitals[key][0].VitalsName}}"
+                                           placeholder="{{GroupedVitals[key][0].VitalsName}}">
+                                    <textarea appFocusTextbox
+                                              *ngIf="GroupedVitals[key] && GroupedVitals[key][0] && GroupedVitals[key][0].InputType === InputTypes.FreeType"
+                                              style="width: 30rem !important; margin: 0px 0px 5px 5px;"
+                                              [(ngModel)]="GroupedVitals[key][0].VitalsValue"
+                                              name="{{GroupedVitals[key][0].VitalsName}}"
+                                              placeholder="{{GroupedVitals[key][0].VitalsName}}">
+                                    </textarea>
+                                </div>
+
+                                <div class="col-md-12" style="display: flex;" *ngIf="GroupedVitals[key].length > 1">
+                                    <label class="col-md-4"
+                                           style="display: flex; justify-content: space-between; padding: 0px">
+                                        <span>
+                                            {{GroupedVitals[key][0].VitalsGroup}} ({{ GroupedVitals[key][0].Unit }})
+                                            <!-- <span *ngFor="let unit of GroupedVitals[key]; let i = index">
+                                                ({{ unit.Unit }}){{ i !== GroupedVitals[key].length - 1 ? '/' : '' }}
+                                            </span> -->
+                                        </span>
+                                        <span>:</span>
+                                    </label>
+                                    <ng-container *ngFor="let vital of GroupedVitals[key]">
+                                        <input
+                                               *ngIf="GroupedVitals[key] && GroupedVitals[key][0] && GroupedVitals[key][0].InputType === InputTypes.Number"
+                                               style="width: 10rem !important; margin: 0px 0px 5px 5px;" type="number"
+                                               (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                                               name="{{vital.VitalsName}}" placeholder="{{vital.VitalsName}}"
+                                               [(ngModel)]="vital.VitalsValue" (input)="OnVitalsInput(vital)">
+                                        <input appFocusTextbox
+                                               *ngIf="GroupedVitals[key] && GroupedVitals[key][0] && GroupedVitals[key][0].InputType === InputTypes.Textbox"
+                                               style="width: 10rem !important; margin: 0px 0px 5px 5px;" type="text"
+                                               name="{{vital.VitalsName}}" placeholder="{{vital.VitalsName}}"
+                                               [(ngModel)]="vital.VitalsValue">
+                                        <textarea appFocusTextbox
+                                                  *ngIf="GroupedVitals[key] && GroupedVitals[key][0] && GroupedVitals[key][0].InputType === InputTypes.Textbox"
+                                                  style="width: 10rem !important; margin: 0px 0px 5px 5px;"
+                                                  name="{{vital.VitalsName}}" placeholder="{{vital.VitalsName}}"
+                                                  [(ngModel)]="vital.VitalsValue">
+                                        </textarea>
+                                    </ng-container>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12 text-right" style="display: flex; justify-content: flex-end;">
+                                <button class="btn green btn-success" (click)="SaveVitals()"
+                                        style="float: right; margin-left: 10px; width: auto;">
+                                    Save
+                                </button>
+                                <button class="btn orange btn-success" (click)="ClearValues()"
+                                        style="float: right; margin-left: 10px; width: auto;">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="(GroupedBiometrics && ShowAddBiometrics)"
+         class="popup-static portlet box portlet-fullscreen custom_modal">
+        <div class="portlet-body form">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="modelbox-div clearfix">
+                        <div class="caption custom-caption" style="margin: 0px 0px 15px 0px;">
+                            <h3>
+                                <span style="color: blue;">Add New Biometrics</span>
+                            </h3>
+                            <a class="btn btn-danger" (click)="CloseAddBiometricsPage()" title="Cancel">X</a>
+                        </div>
+                        <div class="col-md-12" *ngIf="GroupedBiometrics && ShowAddBiometrics"
+                             style="margin: 5px; padding: 5px;">
+                            <div *ngFor="let key of GetObjectKeys(GroupedBiometrics)">
+                                <div class="col-md-12" style="display: flex;"
+                                     *ngIf="GroupedBiometrics[key].length === 1">
+                                    <label class="col-md-4"
+                                           style="display: flex; justify-content: space-between; padding: 0px">
+                                        <span>
+                                            {{GroupedBiometrics[key][0].VitalsName}}
+                                            <span
+                                                  *ngIf="GroupedBiometrics[key] && GroupedBiometrics[key][0].Unit">({{GroupedBiometrics[key][0].Unit}})
+                                            </span>
+                                        </span>
+                                        <span>:</span>
+                                    </label>
+                                    <input
+                                           *ngIf="GroupedBiometrics[key] && GroupedBiometrics[key][0] && GroupedBiometrics[key][0].InputType === InputTypes.Number"
+                                           style="width: 15rem !important; margin: 0px 0px 5px 5px;" type="number"
+                                           [(ngModel)]="GroupedBiometrics[key][0].VitalsValue"
+                                           (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                                           name="{{GroupedBiometrics[key][0].VitalsName}}"
+                                           placeholder="{{GroupedBiometrics[key][0].VitalsName}}"
+                                           (input)="OnVitalsInput(GroupedBiometrics[key][0])">
+                                    <input appFocusTextbox
+                                           *ngIf="GroupedBiometrics[key] && GroupedBiometrics[key][0] && GroupedBiometrics[key][0].InputType === InputTypes.Textbox"
+                                           style="width: 30rem !important; margin: 0px 0px 5px 5px;" type="text"
+                                           [(ngModel)]="GroupedBiometrics[key][0].VitalsValue"
+                                           name="{{GroupedBiometrics[key][0].VitalsName}}"
+                                           placeholder="{{GroupedBiometrics[key][0].VitalsName}}">
+                                    <textarea appFocusTextbox
+                                              *ngIf="GroupedBiometrics[key] && GroupedBiometrics[key][0] && GroupedBiometrics[key][0].InputType === InputTypes.FreeType"
+                                              style="width: 30rem !important; margin: 0px 0px 5px 5px;"
+                                              [(ngModel)]="GroupedBiometrics[key][0].VitalsValue"
+                                              name="{{GroupedBiometrics[key][0].VitalsName}}"
+                                              placeholder="{{GroupedBiometrics[key][0].VitalsName}}">
+                                    </textarea>
+                                </div>
+                                <div class="col-md-12" style="display: flex;" *ngIf="GroupedBiometrics[key].length > 1">
+                                    <label class="col-md-4"
+                                           style="display: flex; justify-content: space-between; padding: 0px">
+                                        <span>
+                                            {{GroupedBiometrics[key][0].VitalsGroup}} ({{ GroupedBiometrics[key][0].Unit
+                                            }})
+                                            <!-- <span *ngFor="let unit of GroupedBiometrics[key]; let i = index">
+                                                ({{ unit.Unit }}){{ i !== GroupedBiometrics[key].length - 1 ? '/' : '' }}
+                                            </span> -->
+                                            <span
+                                                  *ngIf="GroupedBiometrics[key][0].InputType === InputTypes.Number"><sup>*</sup></span>
+                                        </span>
+                                        <span>:</span>
+                                    </label>
+                                    <ng-container *ngFor="let vital of GroupedBiometrics[key]">
+                                        <input
+                                               *ngIf="GroupedBiometrics[key] && GroupedBiometrics[key][0] && GroupedBiometrics[key][0].InputType === InputTypes.Number"
+                                               style="width: 15rem !important; margin: 0px 0px 5px 5px;" type="number"
+                                               (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                                               name="{{vital.VitalsName}}" placeholder="{{vital.VitalsName}}"
+                                               [(ngModel)]="vital.VitalsValue" (input)="OnVitalsInput(vital)">
+                                        <input appFocusTextbox
+                                               *ngIf="GroupedBiometrics[key] && GroupedBiometrics[key][0] && GroupedBiometrics[key][0].InputType === InputTypes.Textbox"
+                                               style="width: 10rem !important; margin: 0px 0px 5px 5px;" type="text"
+                                               name="{{vital.VitalsName}}" placeholder="{{vital.VitalsName}}"
+                                               [(ngModel)]="vital.VitalsValue">
+                                        <textarea appFocusTextbox
+                                                  *ngIf="GroupedBiometrics[key] && GroupedBiometrics[key][0] && GroupedBiometrics[key][0].InputType === InputTypes.Textbox"
+                                                  style="width: 10rem !important; margin: 0px 0px 5px 5px;"
+                                                  name="{{vital.VitalsName}}" placeholder="{{vital.VitalsName}}"
+                                                  [(ngModel)]="vital.VitalsValue">
+                                        </textarea>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-md-12" style="display: flex;" *ngIf="ShowBMIOnAddNewVitals">
+                                    <label class="col-md-4"
+                                           style="display: flex; justify-content: space-between; padding: 0px">
+                                        <span>{{BMI.BMIBiometricsName}} ({{BMI.Unit}})</span>
+                                        <span>:</span>
+                                    </label>
+                                    <input style="width: 15rem !important; margin: 0px 0px 5px 5px;"
+                                           (wheel)="coreService.PreventNumberChangeOnScroll($event)" type="number"
+                                           [disabled]="true" name="BMI" placeholder="BMI"
+                                           [(ngModel)]="BMI_ValueOnAddNewVitals">
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-right" style="display: flex; justify-content: flex-end;">
+                                <button class="btn green btn-success" (click)="SaveVitals()"
+                                        style="float: right; margin-left: 10px; width: auto;">
+                                    Save
+                                </button>
+                                <button class="btn orange btn-success" (click)="ClearValues()"
+                                        style="float: right; margin-left: 10px; width: auto;">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

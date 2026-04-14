@@ -1,0 +1,179 @@
+<div class="wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="caption custom-caption"> <i class="glyphicon glyphicon-asterisk"></i> <b><span
+                          class="caption-subject">Copayment Report</span></b> </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'billing-reports'">
+        </from-to-date-select> -->
+            <div>
+                <common-fiscal-year-calendar [ShowMonthCalendar]="true" (fiscalYearDate)="onDateSelect($event)">
+                </common-fiscal-year-calendar>
+            </div>
+        </div>
+        <div class="col-md-2 col-xs-12">
+            <div class="form-group">
+                <button class="btn green btn-success" type="button" (click)="LoadReport()" [disabled]="Loading">
+                    <i class="fa fa-search"></i> Show Report
+                </button>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12">
+            <div class="form-group">
+                <button class="btn green btn-success" type="button" (click)="PrintReport()" [disabled]="Loading">
+                    <i class="fa fa-print"></i> Print
+                </button>
+                <button class="btn green btn-success" type="button" (click)="ExportReport('CopaymentReport')"
+                        [disabled]="Loading">
+                    <i class="fa-file-export"></i> Export
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="row">
+      <div class="col-lg-12 col-sm-12">
+        <danphe-grid [grid-colDefaults]="CopaymentReportColumns" [grid-data]="CoPaymentReportData"
+          [grid-exportOptions]="gridExportOptions" [grid-showExport]="true" [grid-date-range]="DateRange"
+          [report-for]="'billing'">
+        </danphe-grid>
+      </div>
+   
+    </div> -->
+    <div id="CopaymentReport" class="container" *ngIf="showReport">
+        <table>
+            <tr colspan="5" style="text-align: center;">
+                <div class="header-text">
+                    <p>
+                        अनुसूची १ <br>
+                        <u>सह-भुक्तानी सम्वन्धी प्रतिवेदन</u><br>
+                        (दफा १० सँग सम्वन्धित)
+                    </p>
+                </div>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <label>अस्पतालको नाम : {{HospitalName}}</label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>प्रतिवेदन गरेको महिना : {{selectedMonth}}</label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>ठेगाना : {{HospitalAddress}} </label>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                    <div class="col-md-12 no-spaces">
+                        <label></label>
+
+                    </div>
+                    <div class="col-md-12">
+                        <label></label>
+
+                    </div>
+                    <div class="col-md-12">
+                        <label>आ व :{{selectedYear}} </label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <table class="report-data">
+                        <thead>
+                            <tr>
+                                <th>ऋ.सं</th>
+                                <th>सेवाको किसिम</th>
+                                <th>सेवाग्राही सँख्या</th>
+                                <th>सेवाग्राहीवाट प्राप्त भएको दश प्रतिशतले हुन आउने रकम</th>
+                                <th>स्वास्थ्य वीमा बोर्डमा नब्बे प्रतिशतले हुन आउने दावी गरेको रकम</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of CoPaymentReportData">
+                                <td>{{row.SN}}</td>
+                                <td>{{row.ServiceType}}</td>
+                                <td>{{row.PatientCount}}</td>
+                                <td>{{row.CoPaymentCashAmount}}</td>
+                                <td>{{row.CoPaymentCreditAmount}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>जम्मा</td>
+                                <td>{{SumPatientCount}}</td>
+                                <td>{{sumCoPaymentCash}}</td>
+                                <td>{{sumCoPaymentCredit}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <br>
+            <tr class="signature">
+                <td colspan="2">
+                    <div class="col-md-12">
+
+                        <div class="col-md-12">
+                            <label>प्रतिबेदन तयार गर्नेको : </label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>नाम, धर : </label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>पद : </label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>सही :</label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>मिति : </label>
+                        </div>
+                        <div class="col-md-12 no-space">
+                            <label> </label>
+                        </div>
+                        <div class="col-md-12 sign" style="text-align: right;">
+                            <label style="font-weight: bold; font-size: 16px;"></label>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+                <td colspan="2">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <label>प्रमाणित गर्नेको : </label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>नाम, धर : </label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>पद : </label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>सही :</label>
+                        </div>
+                        <div class="col-md-12">
+                            <label>मिति : </label>
+                        </div>
+                        <div class="col-md-12 no-space">
+                            <label> </label>
+                        </div>
+                        <div class="col-md-12 sign" style="text-align: right;">
+                            <label style="font-weight: bold; font-size: 16px;">निः कार्यकारी निर्देशक </label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr colspan="5">
+                <app-print-page *ngIf="showPrint" [print-data-header]="printDetails"
+                                (print-sucess)="callBackPrint()"></app-print-page>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,130 @@
+<div class="popup-static portlet box portlet-fullscreen custom_modal">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <div class="modelbox-div ref_modal_div clearfix">
+          <div class="caption custom-caption no-margin">
+            <h3>
+              <span>
+                <ng-container *ngIf="IsAddNewRef">Add External Referral</ng-container>
+                <ng-container *ngIf="!IsAddNewRef">Edit External Referral</ng-container>
+              </span>
+            </h3>
+            <a class="btn btn-danger" (click)="CloseAddReferralPage()">X</a>
+          </div>
+          <form [formGroup]="ExternalRef.ExternalRefValidator" class="form-horizontal hm-form externalForm">
+            <div class="form-body">
+              <div class="form-group">
+                <label for="referrerName" class="control-label col-md-5">Referrer Name<sup>*</sup><b>:</b></label>
+                <div class="col-md-7">
+                  <input id="referrerName" class="form-control" type="text" placeholder="Referrer Name"
+                         formControlName="ReferrerName" [(ngModel)]="ExternalRef.ReferrerName"
+                         (keyup.enter)="SetFocusById('ExtRefferaddress')">
+                  <span class="color-red font-sm margin-15-lft"
+                        [hidden]="!(ExternalRef.IsDirty('ReferrerName') && !ExternalRef.IsValidCheck('ReferrerName','required'))">Referrer Name is
+                    required</span>
+
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="address" class="control-label col-md-5">Address <b>:</b></label>
+                <div class="col-md-7">
+                  <input type="text" id="ExtRefferaddress" class="form-control" placeholder="Address"
+                         [ngModelOptions]="{standalone: true}" [(ngModel)]="ExternalRef.ContactAddress"
+                         (keyup.enter)="SetFocusById('contactNum')">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="contactNum" class="control-label col-md-5">Contact Number<b>:</b><sup>*</sup></label>
+                <div class="col-md-7">
+                  <input id="contactNum" class="form-control" type="number" placeholder="Contact Number"
+                         formControlName="ContactNumber" [(ngModel)]="ExternalRef.ContactNumber" maxlength="15"
+                         (keyup.enter)="SetFocusById('panNum')" (wheel)="coreService.PreventNumberChangeOnScroll($event)">
+                  <span class="color-red font-sm" *ngIf="ExternalRef.IsDirty('ContactNumber')"
+                        [hidden]="ExternalRef.IsValidCheck('ContactNumber','pattern')">Please enter valid contact number.</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="email" class="control-label col-md-5">Email<b>:</b></label>
+                <div class="col-md-7">
+                  <input id="email" class="form-control" type="email" placeholder="Email"
+                         formControlName="EmailAddress" [(ngModel)]="ExternalRef.EmailAddress" (keyup.enter)="SetFocusById('panNum')">
+                </div>
+                <span class="color-red font-sm margin-15-lft"
+                      [hidden]="!(ExternalRef.IsDirty('EmailAddress') && !ExternalRef.IsValidCheck('EmailAddress','pattern'))">Eg:
+                  abc@gmail.com</span>
+              </div>
+              <div class="form-group">
+                <label for="referrerName" class="control-label col-md-5">{{GeneralFieldLabel.PANNo}}<b>:</b></label>
+                <div class="col-md-7">
+                  <input class="form-control" type="text"
+                         onClick="this.select();" placeholder="{{GeneralFieldLabel.PANNo}}"
+                         [(ngModel)]="ExternalRef.PANNumber"
+                         [ngModelOptions]="{standalone: true}"
+                         id="panNum" (keyup.enter)="SetFocusById('NMCNum')">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="NMCNumber" class="control-label col-md-5">{{GeneralFieldLabel.NMCNo}}<b>:</b></label>
+                <div class="col-md-7">
+                  <input class="form-control" type="text"
+                         onClick="this.select();" placeholder="{{GeneralFieldLabel.NMCNo}}"
+                         [(ngModel)]="ExternalRef.NMCNumber"
+                         [ngModelOptions]="{standalone: true}"
+                         id="NMCNum" (keyup.enter)="SetFocusById('add')">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="referrerName" class="control-label col-md-5">TDS Percent<b>:</b></label>
+                <div class="col-md-7">
+                  <input class="form-control" type="number"
+                         onClick="this.select();"
+                         [(ngModel)]="ExternalRef.TDSPercent"
+                         [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="IsIncentiveApplicable" class="control-label col-md-5">Is Incentive Applicable</label>
+                <div class="col-md-7">
+                  <div class="input-group">
+                    <div class="icheck-inline">
+                      <label class="mt-checkbox mt-checkbox-outline">
+                        <input id="IsIncentiveApplicable" name="IsIncentiveApplicable"
+                               type="checkbox" value=""
+                               [(ngModel)]="ExternalRef.IsIncentiveApplicable"
+                               [ngModelOptions]="{standalone: true}">
+                        <span></span>
+                        True
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="isActive" class="control-label col-md-5">Is Active</label>
+                <div class="col-md-7">
+                  <div class="input-group">
+                    <div class="icheck-inline">
+                      <label class="mt-checkbox mt-checkbox-outline">
+                        <input id="isActive" type="checkbox"
+                               [ngModelOptions]="{standalone: true}" [(ngModel)]="ExternalRef.IsActive" name="chkIsActive" />
+                        <span></span>
+                        True
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="modelbox-footer">
+            <div class="all-buttons text-right">
+              <button id="add" *ngIf="IsAddNewRef" class="btn green btn-success margin-7-hr" (click)="AddReferral()">Add</button>
+              <button id="add" *ngIf="!IsAddNewRef" class="btn green btn-success margin-7-hr" (click)="UpdateReferral()">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,199 @@
+<style>
+    /* @page {
+        size: A4 landscape;
+        margin-top: 8px;
+        margin-bottom: 10px;
+        margin-left: 20px;
+        font-size: 70%;
+        scale: 70%;
+        color: #333333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    } */
+
+    body {
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        color: #333333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    table td,
+    table th {
+        padding: 0;
+        font-size: 12px;
+    }
+
+    .column {
+        float: left;
+        padding: 5px;
+    }
+
+    .box-body {
+        padding: 0px 10px 0 10px;
+        color: #333333
+    }
+
+    .c_name {
+        font-size: 14px !important;
+        font-weight: bold !important;
+        margin-bottom: 0;
+        margin-top: 0;
+        color: #333333
+    }
+
+    .c_paragraphs {
+        font-size: 12px !important;
+        margin: 0 0 0 0;
+        padding: 0;
+        font-weight: normal;
+        color: #333333
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        color: #333333;
+    }
+
+    table td,
+    table th {
+        text-align: left;
+        vertical-align: top !important;
+        color: #333333 !important;
+        font-weight: normal !important;
+    }
+
+    table th {
+        font-weight: bold !important;
+        /* background-color: #dee6ef; */
+    }
+</style>
+<!-- Modal -->
+<div class="popup-static portlet box portlet-fullscreen custom_modal modal-dialog modal-dialog-centered"
+     *ngIf="ShowBillingSalesSummaryPrintPage">
+    <div class="portlet-body form">
+        <!-- Model Box Body Start -->
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="modelbox-div clearfix">
+                    <div class="caption custom-caption no-margin" style="padding: 0;">
+                        <!-- <h3 class="text-center" style="font-size: 24px;"><span>Diet Sheet</span></h3> -->
+                        <a class="btn btn-danger" (click)="CloseBillingSalesSummaryPrintPagePopUp()" title="Cancel">X</a>
+                    </div>
+                    <div class="sheet" id="id_sales_summary_sheet" style="padding-left:20px;">
+                        <div class="box-body invoice header" style="margin-bottom:20px;">
+                            <table border="0" style="width: 100%; margin: 0 auto;" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="width:25%;" *ngIf="InvoiceDisplaySettings.ShowHospLogo">
+                                        <img class="img-responsive" style="height:60px; width: 80px; position: relative; top: 10px;"
+                                             src="../../../themes/theme-default/images/hospital-logo.PNG" />
+                                    </td>
+                                    <td style="width:50%;text-align: center;" *ngIf="HeaderDetail && InvoiceDisplaySettings.ShowHeader">
+                                        <h3 class="c_name" style="margin-bottom: 5px;font-size: 18px !important;">
+                                            <strong>{{HeaderDetail.CustomerName}}</strong>
+                                        </h3>
+                                        <p class="c_paragraphs" style="margin-bottom: 5px;font-size: 14px !important;">{{HeaderDetail.Address}}</p>
+                                        <p class="c_paragraphs" style="margin-bottom: 5px;font-size: 14px !important;">{{HeaderDetail.Tel}}</p>
+                                    </td>
+
+                                    <td style="width:25%;"></td>
+
+                                </tr>
+                            </table>
+                            <!-- <billing-header></billing-header> -->
+                            <table border="0" style="width: 100%; margin-top:18px;" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td colspan="10" style="text-align: center;">
+                                        <p style="margin: 0 0 5px 0;font-size: 20px !important;" class="c_name"><strong>Billing Sales Summary</strong>
+                                        </p>
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+
+                        </div>
+
+
+                        <div style="width: 100%; margin: 0 auto; margin-bottom: 40px;">
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                                <tr>
+                                    <td style="width: 33%; text-align: left; font-size:15px;">
+                                        <strong>Hospital No:</strong> {{SelectedPatient.PatientCode}}
+                                    </td>
+                                    <td style="width: 33%;"> </td>
+
+                                    <td style="width: 33%; padding-right: 20px; text-align: right;font-size:15px;">
+                                        <strong>Printed On:</strong> {{CurrentDate | date:'yyyy-MM-dd HH:mm'}}
+                                    </td>
+                                </tr>
+                                <tr style="height:10px;"></tr>
+                                <tr>
+                                    <td style="width: 33%; text-align: left; font-size:15px;">
+                                        <strong>Patient Name:</strong> {{SelectedPatient.ShortName}}
+                                    </td>
+                                    <td style="width: 33%; text-align: center;font-size:15px;">
+                                        <strong>Patient Age:</strong> {{SelectedPatient.Age}}
+                                    </td>
+                                    <td style="width: 33%; padding-right: 20px; text-align: right; font-size:15px;">
+                                        <strong>Patient Gender:</strong> {{SelectedPatient.Gender}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+
+                        <table border="0" style="width: 100%; margin: 10px auto;" cellspacing="0" cellpadding="0">
+                            <tr style="border-bottom: 1px solid #cccccc;">
+                                <th style="padding: 5px 0px; width: 5%;text-align: center;">Visit</th>
+                                <th style="padding: 5px 0px;width: 10%;text-align: center;">Scheme</th>
+                                <th style="padding: 5px 0px; width: 10%;text-align: center;">Price Category</th>
+                                <th style="padding: 5px 0px;width: 10%;text-align: center; ">Item Name</th>
+                                <th style="padding: 5px 0px;width: 5%; text-align: center;">Sales Qty</th>
+                                <th style="padding: 5px 0px; width: 5%; text-align: center;">Return Qty</th>
+                                <th style="padding: 5px 0px; width: 5%;text-align: center;"> Total Qty
+
+                                </th>
+                                <th style="padding: 5px 0px;width: 10%; text-align: center;">Rate</th>
+                                <th style="padding: 5px 0px;width: 10%; text-align: center; ">Sub Total</th>
+                                <th style="padding: 5px 0px;width: 10%; text-align: center;">Discount</th>
+                                <th style="padding: 5px 0px;width: 10%; text-align: center; ">Total</th>
+                                <th style="padding: 5px 0px;width: 10%;text-align: center; ">Remarks</th>
+                            </tr>
+                            <tr *ngFor="let bill of BillingSalesSummaryList">
+                                <td style="padding: 5px 0px; width: 5%;text-align: center;">{{bill.VisitCode}}</td>
+                                <td style="padding: 5px 0px;width: 10%;text-align: center; ">{{bill.SchemeName}}</td>
+                                <td style="padding: 5px 0px; width: 10%;text-align: center;">{{bill.PriceCategoryName}}</td>
+                                <td style="padding: 5px 0px; width: 10%;text-align: center;">{{bill.ItemName}}</td>
+                                <td style="padding: 5px 0px; width: 5%;text-align: center;">{{bill.Quantity}}</td>
+                                <td style="padding: 5px 0px;width: 5%;text-align: center; ">{{bill.ReturnQuantity}}</td>
+                                <td style="width: 120px; width: 5%;text-align: center;">{{bill.Total}}</td>
+
+                                <td style="padding: 5px 0px; text-align: center; width: 10%">{{bill.SaleRate}}</td>
+                                <td style="width: 10%;text-align: center;">{{bill.SubTotal}} </td>
+                                <td style="padding: 5px 0px; width: 10%;text-align: center;">{{bill.DiscountAmount}}</td>
+                                <td style="padding: 5px 0px; width: 10%; text-align: center;">{{bill.Total}}</td>
+                                <td style="padding: 5px 0px;width: 10%; text-align: center;">{{bill.Remarks}}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                    <div style="text-align:center;z-index: 4;position: relative; margin-bottom: 25px; margin-top: 15px;">
+                        <button class="btn green btn-success" (click)="Print()">
+                            <span>Print</span>&nbsp;&nbsp;
+                            &nbsp;&nbsp; <i class="glyphicon glyphicon-print"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Model Box Body End -->
+</div>
+
+<new-print-page *ngIf="OpenBrowserPrintWindow" [print-data]="BrowserPrintContentObj">
+</new-print-page>

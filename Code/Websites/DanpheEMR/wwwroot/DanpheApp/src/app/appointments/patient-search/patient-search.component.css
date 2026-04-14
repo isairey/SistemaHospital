@@ -1,0 +1,94 @@
+.ml-18 {
+  margin-left: 18px;
+}
+
+.ml-5 {
+  margin-left: 5px;
+}
+
+.mt-15 {
+  margin-top: 15px;
+}
+
+.fs-large {
+  font-size: larger;
+}
+
+.dropdown-menu {
+  min-width: 172px;
+}
+
+.dropdown-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu .dropdown-item i {
+  margin-right: 10px;
+}
+
+.dropdown-menu .dropdown-item:not(:last-child) {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.dropdown-menu .dropdown-divider {
+  margin: 0;
+}
+
+.nav-tabs .nav-item .nav-link.active {
+  border-bottom: 4px solid #007bff;
+}
+
+.shortcut-key {
+  margin-top: 0px !important;
+}
+
+.searchpatients {
+  margin-bottom: 3% !important;
+  margin-left: -21% !important;
+}
+
+.searchtbx {
+  margin-top: -1% !important;
+}
+
+.filterbyselect {
+  margin-bottom: 3% !important;
+  margin-left: -40% !important;
+  margin-top: -1% !important;
+  height: 27px;
+}
+
+.page-bar span {
+  font-size: 15px !important;
+  margin: 10px 10px !important;
+}
+
+.page-bar span i {
+  margin-right: 0px !important;
+}
+
+.page-bar span b {
+  margin-left: 0px !important;
+  margin-right: 5px !important;
+}
+
+.CheckInButton {
+  height: 20px;
+  width: 130px;
+  margin-top: -5px;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+
+.NewPatientButton {
+  height: 20px;
+  width: 130px;
+  margin-top: -5px;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+
+.col-md-offset-half {
+  margin-left: 4%
+}

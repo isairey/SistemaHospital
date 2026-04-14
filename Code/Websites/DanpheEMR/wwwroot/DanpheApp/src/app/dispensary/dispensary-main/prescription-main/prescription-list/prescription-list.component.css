@@ -1,0 +1,30 @@
+.bg-modal {
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    /* Changed from absolute to fixed */
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-contents {
+    width: 80%;
+    /* Changed from fixed width to percentage */
+    max-width: 800px;
+    /* Added max-width for larger screens */
+    background-color: white;
+    text-align: center;
+    padding: 30px;
+    /* Increased padding */
+    position: relative;
+    border-radius: 4px;
+    max-height: 90vh;
+    /* Limit maximum height */
+    overflow-y: auto;
+    /* Add scrollbar if content exceeds max-height */
+}

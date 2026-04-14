@@ -1,0 +1,52 @@
+
+.container {
+  max-width: 1000px;
+  margin: 10px auto;
+}
+
+.form-container {
+  padding: 4px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  width: 150px;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.form-control {
+  flex: 1;
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+}
+
+.form-check-input {
+  margin-right: 10px;
+}
+
+.larger-checkbox {
+  transform: scale(1.8);
+}
+
+.text-danger {
+  color: red;
+}
+
+.ot-details h5 {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.btn-success {
+  width: 100px;
+}

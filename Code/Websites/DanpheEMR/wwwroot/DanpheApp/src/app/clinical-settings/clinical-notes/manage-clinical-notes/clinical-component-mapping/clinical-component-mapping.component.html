@@ -1,0 +1,326 @@
+<style>
+  .caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .caption span {
+    text-align: center;
+  }
+
+  .custom-checkbox {
+    width: 20px;
+    height: 20px;
+    margin: auto;
+  }
+
+  .control-label {
+    text-align: left;
+  }
+
+  .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    flex: 0 0 30%;
+  }
+
+  .form-group .col-md-7,
+  .form-group .col-md-8 {
+    flex: 1;
+  }
+
+  .form-horizontal .form-group .col-md-7 {
+    padding-left: 0;
+  }
+
+  .form-horizontal .form-group .col-md-8 {
+    padding-right: 0;
+  }
+
+  .bordered-row {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .table th,
+  .table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+  }
+
+  .table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+
+  .custom-checkbox {
+    width: 20px;
+    height: 20px;
+    margin: auto;
+  }
+
+  .display-sequence-input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  .disabled-input {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+
+  .table-container {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+  }
+
+  .table-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .table-content {
+    margin-top: 8px;
+  }
+
+  .scrollable-body {
+    overflow-y: auto;
+    height: 300px;
+  }
+
+  .table-caption {
+    text-align: left;
+    margin-bottom: 15px;
+  }
+</style>
+
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowMedicalComponentPage">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div ref_modal_div clearfix">
+          <div class="caption custom-caption no-margin">
+            <h3>
+              <span>
+                <span>Clinical Notes Mapping</span>
+              </span>
+            </h3>
+            <a class="btn btn-danger" (click)="Close()">X</a>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <form [formGroup]="ClinicalNotesMapping.ClinicalNotesMappingValidator" class="form-horizontal hm-form">
+                <div class="form-body col-md-12 hm-form">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="Name" class="control-label">Clinical Note<sup>*</sup><b>:</b></label>
+                        <div class="col-md-8">
+                          <input class="form-control" maxlength="100" type="text" id="id_Note_Title" [value]="ClinicalNotes?.ClinicalNotesName"
+                                 disabled>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" style="margin-left: 5px; margin-right: 5px;">
+                  <div style="position: relative; top: 15px; right: 10px; font-size: 10px; color: grey; text-align: right;">
+                    * For Default Mapping, Proceed without Department/Employee Selection
+                  </div>
+
+                  <fieldset style="position: relative;">
+                    <legend style="font-size: 12px;">Select User Mapping Type</legend>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="IsDefault" class="control-label">Department<b>:</b></label>
+                        <div class="col-md-7">
+                          <select class="form-control" id="id_Department" formControlName="DepartmentId" (change)="FilterEmployeeList()">
+                            <option value="">Select Department</option>
+                            <option *ngFor="let department of FilteredDepartmentList" [value]="department.DepartmentId">
+                              {{ department.DepartmentName }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="ClinicalNotesCode" class="control-label">Employee<b>:</b></label>
+                        <div class="col-md-8">
+                          <select formControlName="EmployeeId" id="id_CLNChiefComplain_MedicalCode" (change)="AssignDepartment()"
+                                  class="form-control">
+                            <option value="">Select Employee</option>
+                            <option *ngFor="let employee of FilteredEmployeeList" [value]="employee.EmployeeId">
+                              {{ employee.EmployeeName }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="modelbox-footer">
+                      <div class="all-buttons text-right">
+                        <input type="button" id="add" class="btn green btn-success margin-7-hr" (click)="LoadClinicalNotesMapping()"
+                               value="Proceed" />
+                        <input type="button" id="close" class="btn red btn-danger margin-7-hr" (click)="Close()" value="Close" />
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+                <div class="table-container" *ngIf="ShowMapping">
+                  <div class="table-caption" style="font-size:14px">
+                    {{ GetClinicalNotesMappingLabel() }}
+                  </div>
+                  <div class="row">
+                    <div class="form-body col-md-12 hm-form">
+                      <div class="bordered-row hm-form">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="SelectOption1" class="control-label">Document</label>
+                            <select id="ParentId" class="form-control" formControlName="ParentHeadingId" (change)="FilterChildHeadingList()">
+                              <option value="">Select Document</option>
+                              <option *ngFor="let parentHeading of ParentHeadingsList" [value]="parentHeading.ClinicalHeadingId">{{
+                                parentHeading.ClinicalHeadingName
+                                }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="SelectOption2" class="control-label">Section</label>
+                            <select id="HeadingId" class="form-control" formControlName="ClinicalHeadingId"
+                                    (change)=" OnSectionSelected($event)">
+                              <option value="">Select Section</option>
+                              <option *ngFor="let childHeading of FilterChildHeadings" [value]="childHeading.ClinicalHeadingId">{{
+                                childHeading.ClinicalHeadingName }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group">
+                            <label for="SelectOption3" class="control-label">MedicalComponent</label>
+                            <select id="HeadingId" class="form-control" formControlName="FieldId">
+                              <option value="">Select Medical Component</option>
+                              <option *ngFor="let childHeading of FilteredMedicalComponents" [value]="childHeading.FieldId">{{
+                                childHeading.FieldName }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-2 d-flex justify-content-end">
+                          <input style="margin-top: 10px;"
+                                 type="button"
+                                 id="load"
+                                 class="btn green btn-success"
+                                 (click)="FilterMedicalComponents()"
+                                 value="Load" />
+                          <input style="margin-top: 10px; margin-left: 10px;"
+                                 type="button"
+                                 id="reset"
+                                 class="btn red btn-danger"
+                                 (click)="ResetFilters()"
+                                 value="Reset" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <input style="width: 25%;" type="text" class="form-control mb-3" placeholder="Search..." formControlName="SearchQuery"
+                         (input)="OnSearchQueryChange($event.target.value)" />
+                  <div class="table-content">
+                    <div class="table-responsive">
+                      <div class="scrollable-body">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th><input type="checkbox" class="form-check-input custom-checkbox" formControlName="SelectAllComponent"
+                                       (change)="ChangeAllCheckbox()"></th>
+                              <th>Medical Component</th>
+                              <th>Input Type</th>
+                              <th>Display Sequence</th>
+                            </tr>
+                          </thead>
+
+                          <tbody class="scrollable-tbody">
+                            <tr *ngFor="let field of FilterFieldList()">
+                              <td>
+                                <input type="checkbox" class="form-check-input custom-checkbox"
+                                       [(ngModel)]="field.IsActive"
+                                       [ngModelOptions]="{standalone: true}"
+                                       (change)="OnFieldMapping(field)">
+                              </td>
+                              <td class="center-text">{{ field.FieldName }}</td>
+                              <td class="center-text">{{ field.InputType }}</td>
+                              <td>
+                                <input type="number" class="display-sequence-input"
+                                       [(ngModel)]="field.DisplaySequence"
+                                       [ngModelOptions]="{standalone: true}"
+                                       (ngModelChange)="ValidateDisplaySequence(field.DisplaySequence)"
+                                       #sequence="ngModel"
+                                       required>
+                                <div
+                                     *ngIf="sequence.invalid && (sequence.dirty || sequence.touched) || !ValidateDisplaySequence(field.DisplaySequence)">
+                                  <span *ngIf="sequence.errors?.required" class="color-red font-sm">
+                                    Display Sequence is required.
+                                  </span>
+                                  <span *ngIf="!ValidateDisplaySequence(field.DisplaySequence) && !sequence.errors?.required"
+                                        class="color-red font-sm">
+                                    Display Sequence Can't be Zero Or Negative Number
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modelbox-footer" *ngIf="ShowMapping">
+                  <div class="all-buttons text-right">
+                    <input
+                           type="button"
+                           id="add"
+                           class="btn green btn-success margin-7-hr"
+                           (click)="AddUpdateMedicalComponentMappings()"
+                           value="Save" />
+                    <input
+                           type="button"
+                           id="close"
+                           class="btn red btn-danger margin-7-hr"
+                           (click)="Close()"
+                           value="Close" />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,259 @@
+<style>
+    .mt-checkbox {
+        margin-top: 2px;
+        width: 17px;
+        height: 17px;
+    }
+</style>
+
+
+<div class="popup-static portlet box portlet-fullscreen custom_modal">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class=" modelbox-div clearfix">
+                    <div class="caption custom-caption">
+                        <h3> <span *ngIf="!IsUpdate">Add Registration Sticker </span> <span *ngIf="IsUpdate">Update Registration Sticker</span> </h3>
+                        <a class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+                    </div>
+                    <form [formGroup]="CurrentRegistrationStickerData.RegistrationStickerValidator" class="form-horizontal hm-form">
+                        <div class="form-body">
+                            <div class="row clearfix">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="StickerGroupCode" class="control-label col-md-5">StickerGroupCode <sup
+                                                         class="color-red">*</sup></label>
+                                                <div class="col-md-7">
+                                                    <input type="text" id="StickerGroupCode" class="form-control" name="StickerGroupCode"
+                                                           formControlName="StickerGroupCode" />
+                                                    <span class="color-red font-sm"
+                                                          [hidden]="CurrentRegistrationStickerData.IsValidCheck('StickerGroupCode','required') || !(CurrentRegistrationStickerData.IsDirty('StickerGroupCode'))">
+                                                        StickerGroup Code is required </span>
+                                                    <span class="color-red font-sm"
+                                                          [hidden]="CurrentRegistrationStickerData.IsValidCheck('StickerGroupCode','maxlength') || !(CurrentRegistrationStickerData.IsDirty('StickerGroupCode'))">
+                                                        StickerGroupCode
+                                                        should be less than 20 characters. </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="StickerName">StickerName <sup
+                                                         class="color-red">*</sup></label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control" id="StickerName" name="StickerName"
+                                                           formControlName="StickerName" />
+                                                    <span class="color-red font-sm"
+                                                          [hidden]="CurrentRegistrationStickerData.IsValidCheck('StickerName','required') || !(CurrentRegistrationStickerData.IsDirty('StickerName'))">
+                                                        StickerName is required </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="VisitType">VisitType <sup class="color-red">*</sup></label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control" id="VisitType" name="VisitType"
+                                                           formControlName="VisitType" />
+                                                    <span class="color-red font-sm"
+                                                          [hidden]="CurrentRegistrationStickerData.IsValidCheck('VisitType','required') || !(CurrentRegistrationStickerData.IsDirty('VisitType'))">
+                                                        VisitType is required </span>
+                                                    <span class="color-red font-sm"
+                                                          [hidden]="CurrentRegistrationStickerData.IsValidCheck('VisitType','maxlength') || !(CurrentRegistrationStickerData.IsDirty('VisitType'))">
+                                                        VisitType
+                                                        should be less than 15 characters. </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="VisitDateLabel">VisitDateLabel <sup
+                                                         class="color-red">*</sup></label>
+                                                <div class="col-md-5">
+                                                    <input type="text" class="form-control" id="VisitDateLabel" formControlName="VisitDateLabel"
+                                                           name="VisitDateLabel" />
+                                                    <span class="color-red font-sm"
+                                                          [hidden]="CurrentRegistrationStickerData.IsValidCheck('VisitDateLabel','required') || !(CurrentRegistrationStickerData.IsDirty('VisitDateLabel'))">
+                                                        VisitDateLabel is required </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4"
+                                                       for="IsDefaultForCurrentVisitType">IsDefaultForCurrentVisitType?</label>
+                                                <div class="col-md-5">
+                                                    <input type="checkbox" class="mt-checkbox" id="IsDefaultForCurrentVisitType"
+                                                           formControlName="IsDefaultForCurrentVisitType" name="IsDefaultForCurrentVisitType" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="MemberNoLabel">MemberNoLabel <sup
+                                                         class="color-red">*</sup></label>
+                                                <div class="col-md-5">
+                                                    <input type="text" class="form-control" id="MemberNoLabel" formControlName="MemberNoLabel"
+                                                           name="MemberNoLabel" />
+                                                    <span class="color-red font-sm"
+                                                          [hidden]="CurrentRegistrationStickerData.IsValidCheck('MemberNoLabel','required') || !(CurrentRegistrationStickerData.IsDirty('MemberNoLabel'))">
+                                                        MemberNoLabel is required </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="ShowMemberNo">ShowMemberNo.?</label>
+                                                <div class="col-md-5">
+                                                    <input type="checkbox" class="mt-checkbox" id="ShowMemberNo" formControlName="ShowMemberNo"
+                                                           name="ShowMemberNo" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="PatientDesignationLabel">PatientDesignationLabel <sup
+                                                         class="color-red">*</sup></label>
+                                                <div class="col-md-5">
+                                                    <input type="text" class="form-control" id="PatientDesignationLabel"
+                                                           formControlName="PatientDesignationLabel" name="PatientDesignationLabel" />
+                                                    <span class="color-red font-sm"
+                                                          [hidden]="CurrentRegistrationStickerData.IsValidCheck('PatientDesignationLabel','required') || !(CurrentRegistrationStickerData.IsDirty('PatientDesignationLabel'))">
+                                                        PatientDesignationLabel is required </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4"
+                                                       for="ShowPatientDesignation">ShowPatientDesignationLabel?</label>
+                                                <div class="col-md-5">
+                                                    <input type="checkbox" class="mt-checkbox" id="ShowPatientDesignation"
+                                                           formControlName="ShowPatientDesignation" name="ShowPatientDesignation" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="QueueNoLabel">QueueNoLabel <sup
+                                                         class="color-red">*</sup></label>
+                                                <div class="col-md-5">
+                                                    <input type="text" class="form-control" id="QueueNoLabel" formControlName="QueueNoLabel"
+                                                           name="QueueNoLabel" />
+                                                    <span class="color-red font-sm"
+                                                          [hidden]="CurrentRegistrationStickerData.IsValidCheck('QueueNoLabel','required') || !(CurrentRegistrationStickerData.IsDirty('QueueNoLabel'))">
+                                                        QueueNoLabel is required </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="ShowQueueNo">ShowQueueNoLabel?</label>
+                                                <div class="col-md-5">
+                                                    <input type="checkbox" class="mt-checkbox" id="ShowQueueNo" formControlName="ShowQueueNo"
+                                                           name="ShowQueueNo" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-5" for="ShowSchemeCode">ShowSchemeCode?</label>
+                                                <div class="col-md-2">
+                                                    <input type="checkbox" class="mt-checkbox" id="ShowSchemeCode" formControlName="ShowSchemeCode"
+                                                           name="ShowSchemeCode" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="ShowClaimCode">ShowClaimCode?</label>
+                                                <div class="col-md-2">
+                                                    <input type="checkbox" class="mt-checkbox" id="ShowClaimCode" formControlName="ShowClaimCode"
+                                                           name="ShowClaimCode" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="ShowIpdNumber">ShowIpNumber?</label>
+                                                <div class="col-md-2">
+                                                    <input type="checkbox" class="mt-checkbox" id="ShowIpdNumber" formControlName="ShowIpdNumber"
+                                                           name="ShowIpdNumber" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-5" for="ShowWardBedNo">ShowWardBedNo?</label>
+                                                <div class="col-md-1">
+                                                    <input type="checkbox" class="mt-checkbox" id="ShowWardBedNo" formControlName="ShowWardBedNo"
+                                                           name="ShowWardBedNo" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-6" for="ShowRegistrationCharge">ShowRegistrationCharge?</label>
+                                                <div class="col-md-2">
+                                                    <input type="checkbox" class="mt-checkbox" id="ShowRegistrationCharge"
+                                                           formControlName="ShowRegistrationCharge" name="ShowRegistrationCharge" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-6" for="ShowPatContactNo">ShowPatContactNumber?</label>
+                                                <div class="col-md-2">
+                                                    <input type="checkbox" class="mt-checkbox" id="ShowPatContactNo"
+                                                           formControlName="ShowPatContactNo" name="ShowPatContactNo" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div>
+                        <div class="text-right" style="margin-right:15px ; margin-bottom:10px;">
+                            <input id="cancelbtn" type="button" class="btn orange btn-cancel margin-7-hr"
+                                   style="background-color: orange; color: white;" (click)="Close()"
+                                   value="Discard" />
+
+                            <input id="savebtn" type="button" (click)="Add()" class="btn green btn-success margin-7-hr" *ngIf="!IsUpdate"
+                                   value="Save" />
+
+                            <input id="savebtn" type="button" (click)="Update()" class="btn green btn-success margin-7-hr" *ngIf="IsUpdate"
+                                   value="Update" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

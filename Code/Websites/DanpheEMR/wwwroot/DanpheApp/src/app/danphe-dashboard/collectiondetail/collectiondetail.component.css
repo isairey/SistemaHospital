@@ -1,0 +1,148 @@
+.collectiondetail-header {
+  display: flex;
+  padding-left: 20px;
+}
+
+.collectiondetailheading {
+  margin-right: 5px;
+  font-size: 16px;
+  color: #666; /* Text color */
+  font-weight: bold;
+}
+
+.viewcollectiondetails {
+  margin-right: 3px;
+  color: #777;
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.viewdetails {
+  border: 1px solid #888;
+  height: 27px;
+  justify-content: center;
+  float: right;
+  margin-left: 0px;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 5px !important;
+  margin-top: 10px;
+}
+
+.arrowicon {
+  color: #666;
+  font-weight: 700;
+}
+
+.infoicon {
+  color: #666;
+  margin-top: 12px;
+}
+
+.collectiondetailreport {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+#departmentname {
+  border-radius: 5px !important;
+  /* margin-left: 5px; */
+  border-color: #ddd;
+  width: 80%;
+  float: right;
+  height: 35px;
+}
+
+.service-button {
+  border-radius: 5px 0 0 5px !important; /* Rounded corners on the left */
+  border-right: none;
+}
+
+.pharmacy-button {
+  border-radius: 0 5px 5px 0 !important; /* Rounded corners on the right */
+  border-left: none;
+  margin-left: -5px;
+}
+
+.service-button,
+.pharmacy-button {
+  background-color: white;
+  color: #0773bc;
+  border-color: #0773bc;
+  box-shadow: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.service-button:hover,
+.pharmacy-button:hover {
+  background-color: #0773bc;
+  color: white;
+}
+.active {
+  background-color: #0773bc !important;
+  color: white !important;
+}
+
+.chart-box {
+  width: 95%;
+  height: 550px;
+  background-color: none;
+
+  justify-content: center;
+  margin-bottom: 10px;
+  margin-left: 5px;
+}
+.chart-size {
+  width: 95%;
+  height: 90%;
+}
+
+/* For Tooltip */
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  width: 150px; /* Increased width for better display */
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left; /* Adjusted text alignment */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Added box-shadow for better visibility */
+}
+
+.hover-text:hover .tooltip-text {
+  visibility: visible;
+}
+
+.hover-text {
+  position: relative;
+  display: inline-block;
+  margin: 40px;
+  font-family: Arial;
+  text-align: center;
+}
+
+.viewdetails:hover {
+  cursor: pointer;
+  background-color: #0773bc;
+}
+
+.viewdetails:active {
+  background-color: #0056a3;
+  transform: scale(0.98);
+}
+
+.viewdetails:hover .viewcollectiondetails {
+  color: white;
+}
+
+.viewdetails:hover .arrowicon {
+  color: white !important;
+}

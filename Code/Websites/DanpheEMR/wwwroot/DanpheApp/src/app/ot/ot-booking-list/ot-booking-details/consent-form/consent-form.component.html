@@ -1,0 +1,30 @@
+<div class="col-md-12" style="padding: 0px; margin: 0px;" *ngIf="ShowConsentFormPage">
+    <div class="container">
+        <div class="no-print row" style="padding: 0px 15px;">
+            <div class="col-md-6" style="padding: 0px; margin: 0px;">
+                <label for="TemplateType">Consent Form <b>:</b></label>
+                <select
+                        id="TemplateType" style="margin: 0px 0px 0px 10px" (change)="OnTemplateSelect($event.target.value)">
+                    <option value="">Select Template Type</option>
+                    <option *ngFor="let temp of TemplateList" [value]="temp.TemplateId">{{ temp.TemplateName }}</option>
+                </select>
+            </div>
+            <div *ngIf="IsTemplateSelected" class="col-md-6 text-right" style="padding: 0px; margin: 0px;">
+                <button
+                        class="btn green btn-success" type="button"
+                        [disabled]="loading" (click)="PrintConsentForm()">
+                    <i class="fa fa-print"></i>
+                    Print
+                </button>
+            </div>
+        </div>
+        <div *ngIf="ShowConsent" class="content-section" style="width: 100%; margin: 20px 0px 0px 0px; padding: 10px">
+            <div id="consentForm" #consentForm style="width: 100%">
+                <div style="margin: 0px 0px 25px 0px;" *ngIf="SelectedTemplate.PrintHospitalHeader">
+                    <billing-header></billing-header>
+                </div>
+                <div [innerHTML]="TemplateHTMLContent"></div>
+            </div>
+        </div>
+    </div>
+</div>

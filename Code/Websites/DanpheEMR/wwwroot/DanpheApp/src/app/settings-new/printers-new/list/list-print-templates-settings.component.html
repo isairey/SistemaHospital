@@ -1,0 +1,19 @@
+<div class="margin-20-tp">
+    <a class="btn green btn-success" feature="button" (click)="AddNewPrintTemplate()">
+        <i class="fa fa-plus"></i>
+        Add New Print Template
+    </a>
+
+    <div class="row">
+        <div class="col-md-12 col-xs-12 col-sm-12">
+            <danphe-grid [grid-colDefaults]="PrintTemplatesGridCols" [grid-data]="PrintTemplates"
+                         (grid-actions)="PrintTemplatesGridAction($event)">
+            </danphe-grid>
+        </div>
+    </div>
+    <div *ngIf="ShowAddNewPrintTemplate">
+        <print-template-settings [print-template-to-edit]="SelectedPrintTemplate"
+                                 [is-add-new-print-template]="IsAddMode"
+                                 (callback-add)="CallbackAddUpdatePrintTemplate($event)">
+        </print-template-settings>
+    </div>

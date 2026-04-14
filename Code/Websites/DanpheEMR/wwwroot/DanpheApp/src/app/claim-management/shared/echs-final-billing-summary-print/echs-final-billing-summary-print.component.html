@@ -1,0 +1,284 @@
+<!-- Modal -->
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowFinalBillSummaryPage">
+    <div class="portlet-body form">
+        <!--Model Box Body Start-->
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="modelbox-div clearfix">
+                    <div class="caption custom-caption no-margin">
+                        <a class="btn btn-danger" (click)="CloseFinalBillSummaryReport()" title="Cancel">X</a>
+                    </div>
+
+                    <body>
+
+                        <!-- Set Page: A5, A4, A3 -->
+                        <!-- Set Landscape or Portrait -->
+                        <style>
+                            @page {
+                                size: A5 landscape;
+                                margin-top: 8px;
+                                margin-bottom: 10px;
+                                margin-left: 20px;
+                                font-size: 70%;
+                                scale: 70%;
+                                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                            }
+
+                            body {
+                                font-size: 12px;
+                                margin: 0;
+                                padding: 0;
+                                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                            }
+
+                            table td,
+                            table th {
+                                padding: 0;
+                                font-size: 10px;
+                            }
+
+                            .column {
+                                float: left;
+                                padding: 5px;
+                            }
+
+                            .box-body {
+                                padding: 0px 10px 0 10px;
+                            }
+
+                            .c_name {
+                                font-size: 10pt !important;
+                                margin-bottom: 0;
+                                margin-top: 0;
+                            }
+
+                            .c_paragraphs {
+                                font-size: 8pt !important;
+                                margin: 0 0 0 0;
+                                padding: 0;
+                            }
+
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin-bottom: 30px;
+                            }
+
+                            table td,
+                            table th {
+                                text-align: left;
+                                vertical-align: top !important;
+                            }
+                        </style>
+
+                        <div class="A5 landscape" *ngIf="!PrintTemplateTypeSettings.Enable">
+                            <div class="sheet" id="final_bill_summary_report">
+                                <div class="box-body invoice header" style="color: black; font-weight: 600;">
+                                    <table class="opd-invoice-header-image" border="0"
+                                           style="width: 100%; margin: 0 auto 5px auto; vertical-align: top !important"
+                                           cellspacing="0"
+                                           cellpadding="0"
+                                           *ngIf="InvoiceDisplaySettings.ShowHeader && InvoiceDisplaySettings.HeaderType === 'image'">
+                                        <tr>
+                                            <td>
+                                                <img src="\themes\theme-default\images\billing-invoice-header-image.png" alt="" style="width: 100%;">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table class="opd-invoice-header-custom" border="0"
+                                           style="width: 100%; margin: 0 auto 5px auto; vertical-align: top !important"
+                                           cellspacing="0"
+                                           cellpadding="0"
+                                           *ngIf="InvoiceDisplaySettings.ShowHeader && InvoiceDisplaySettings.HeaderType === 'custom'">
+                                        <tr>
+                                            <td colspan="2" width="25%">
+                                                <img src="\themes\theme-default\images\office-logo-new.png" alt="Hospital Logo" width="100px">
+                                            </td>
+                                            <td colspan="4" width="50%">
+                                                <h3 class="c_name" style="text-align: center; margin-bottom: 0px;">
+                                                    <strong>{{HeaderDetail.CustomerName}}</strong>
+                                                </h3>
+                                                <p class="c_paragraphs" style="text-align: center; margin-bottom: 0px;">{{HeaderDetail.Address}}</p>
+                                                <p class="c_paragraphs" style="text-align: center; margin-bottom: 0px;">Ph No: {{HeaderDetail.Tel}}
+                                                </p>
+                                            </td>
+                                            <td colspan="2" width="25%" style="text-align: right; vertical-align: top;">
+                                                <p class="c_paragraphs" style="text-align: right; margin-top: 10px; margin: 0;">
+                                                    <strong>{{HeaderDetail.CustomerRegLabel}}</strong>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table
+                                           border="0" style="width: 100%; margin: 0 auto; vertical-align: top !important" cellspacing="0"
+                                           cellpadding="0">
+                                        <tr>
+                                            <td colspan="11" style="text-align: center;">
+                                                <p>
+                                                    <strong>
+                                                        <span style="font-size: 16px;">
+                                                            Final Bill Summary Report
+                                                        </span>
+                                                    </strong>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr style="border: 1px solid #ccc;">
+                                            <td colspan="11" style="padding: 6px !important;">
+                                                <table style="width: 100%; margin-bottom: 0!important;">
+                                                    <tr>
+                                                        <td colspan="4" style="text-align: left;">
+                                                            <p class="c_paragraphs" style="margin-bottom: 0px;">Hospital No:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.PatientCode}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                        <td colspan="4" style="text-align: right;">
+                                                            <p
+                                                               *ngIf="PatientDetails.VisitType === InpatientVisitType" class="c_paragraphs"
+                                                               style="margin-bottom: 0px;">
+                                                                IP No:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.VisitCode}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4" style="text-align: left;">
+                                                            <p class="c_paragraphs" style="margin-bottom: 0px;">
+                                                                <strong>Patient's Name:&nbsp; {{PatientDetails.PatientName}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                        <td colspan="4" style="text-align: right;">
+                                                            <p class="c_paragraphs" style="margin-bottom: 0px;">
+                                                                Age/Gender:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.AgeGender}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4" style="text-align: left;">
+                                                            <p class="c_paragraphs" style="margin-bottom: 0px;">Address:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.Address}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                        <td colspan="4" style="text-align: right;">
+                                                            <p class="c_paragraphs" style="margin-bottom: 0px;">Contact:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.PhoneNumber}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4" style="text-align: left;">
+                                                            <p class="c_paragraphs" style="margin-bottom: 0px;">
+                                                                Policy/Member Number:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.PolicyNumber}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                        <td colspan="4" style="text-align: right;">
+                                                            <p class="c_paragraphs" style="margin-bottom: 0px;">Method of Payment:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.MethodOfPayment}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="PatientDetails.VisitType === InpatientVisitType">
+                                                        <td colspan="4" style="text-align: left;">
+                                                            <p class="c_paragraphs" style="margin-bottom: 0px;">DOA:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.AdmissionDate | DanpheDateTime:'format':'YYYY-MM-DD hh:mm A'}}
+                                                                    {{PatientDetails.AdmissionDate | nepaliDate:'format':'YYYY-MM-DD hh:mm A'}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                        <td colspan="4" style="text-align: right;">
+                                                            <p class="c_paragraphs" style="margin-bottom: 0px;">Room Category:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.WardName}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="PatientDetails.VisitType === InpatientVisitType">
+                                                        <td colspan="4" style="text-align: left;">
+                                                            <p
+                                                               class="c_paragraphs"
+                                                               style="margin-bottom: 0px;">
+                                                                DOD:&nbsp;
+                                                                <strong>
+                                                                    {{PatientDetails.DischargeDate | DanpheDateTime:'format':'YYYY-MM-DD hh:mm A'}}
+                                                                    {{PatientDetails.AdmissionDate | nepaliDate:'format':'YYYY-MM-DD hh:mm A'}}
+                                                                </strong>
+                                                            </p>
+                                                        </td>
+                                                        <td colspan="4" style="text-align: right;">
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th style="padding: 5px !important; width: 5%">SN.</th>
+                                            <th style="padding: 5px !important; width: 70%">Service Department</th>
+                                            <th style="padding: 5px !important; width: 10%">Sub Total</th>
+                                            <th style="padding: 5px !important; width: 5%">Discount</th>
+                                            <th style="padding: 5px !important; width: 10%">Total</th>
+                                        </tr>
+                                        <tr *ngFor="let serviceDept of MappedServiceDepartmentCharge; let i=index">
+                                            <td style="padding: 0px 5px;">{{i+1}}.</td>
+                                            <td style="padding: 0px 5px;">{{serviceDept.ServiceDepartment}}</td>
+                                            <td style="padding: 0px 5px;">{{serviceDept.Charge}}</td>
+                                            <td style="padding: 0px 5px;">0</td>
+                                            <td style="padding: 0px 5px;">{{serviceDept.Charge}}</td>
+                                        </tr>
+                                        <tr style="border-top: 1px solid #ccc;">
+                                            <td colspan="2" style="padding: 5px !important; vertical-align: top;">
+                                                <p class="c_paragraphs" style="margin: 0px">
+                                                    <strong>
+                                                        In Words : {{ChargeDetails.GrandTotal | NumberInWords}} ONLY
+                                                    </strong>
+                                                </p>
+                                            </td>
+                                            <td colspan="6" style="padding: 5px !important; text-align: right;">
+                                                <p
+                                                   class="c_paragraphs" style="margin: 0px">
+                                                    <strong>
+                                                        Credit Amount: {{ChargeDetails.GrandTotal}}
+                                                    </strong>
+                                                </p>
+                                                <p
+                                                   class="c_paragraphs" style="margin: 0px">
+                                                    <strong>
+                                                        Credit Grand Amount: {{ChargeDetails.GrandTotal}}
+                                                    </strong>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div style="text-align:center;z-index: 4;position: relative;margin-bottom: 25px; margin-top: 15px;">
+                                <button class="btn green btn-success" value="" [disabled]="loading" (click)="Print()" id="btnPrintReport">
+                                    <span>Print Report</span>&nbsp;&nbsp;&nbsp;&nbsp; <i class="glyphicon glyphicon-print"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </body>
+                </div>
+            </div>
+        </div>
+        <!--Model Box Body End-->
+    </div>
+</div>

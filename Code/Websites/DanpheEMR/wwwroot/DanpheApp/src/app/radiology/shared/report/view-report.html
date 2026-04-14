@@ -1,0 +1,545 @@
+<div class="wrapper">
+  <div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="showImagingReport">
+    <div class="portlet-body form imaging-rpt-view" id="id_imaging_report_view">
+      <div class="row custom-row">
+        <div class="col-md-10 col-md-offset-1 custom-col">
+          <div class="modelbox-div">
+            <div class="caption custom-caption radiology-rpt-container">
+              <h3> <span>Radiology Report</span></h3>
+              <a *ngIf="!reportViewFromClaimManagement" class="btn btn-danger radiology-rpt-cancel" (click)="Close()" title="Cancel">X</a>
+            </div>
+            <div class="modelbox-body custom-modelbox">
+              <div class="row custom-action-buttons-row " *ngIf="!reportViewFromClaimManagement">
+                <div class="col-md-6 col-xs-8 custom-col-left">
+                  <!--<hr *ngIf="showCustomerHeader" style="border:1px solid black;margin-top: 0px;margin-bottom: 5px;" />-->
+                  <div class="rad-btns margin-15-bt text-left">
+                    <button class="btn btn-primary margin-7-hr hidden-print print-rpt" (click)="PrintReportHTML()"> Print
+                      Report <i
+                         class="glyphicon glyphicon-print"></i> </button>
+                    <!--Sud: 26Jul'19 View image feature is not used anywhere, hence hiding it for now:-->
+                    <button *ngIf="enableDicomImages" class="rad-rpt-view-image btn btn-primary hidden-print btn-sm margin-7-rt"
+                            title="View Scanned Images"
+                            (click)="ViewScannedImages()"> View Images </button>
+
+                    <button *ngIf="Editable && !RadiologyReportFromClaimScrubbing"
+                            [rbac-permission]="{'name':'btn-radiology-edit-report','actionOnInvalid':'hidden'}"
+                            class="btn btn-primary btn-sm hidden-print margin-7-hr edit-rpt" title="Edit Report" (click)="EditReport()"> <i
+                         class="fa fa-pencil"></i> Edit </button>
+
+                    <a *ngIf="PACSServerConfiguration.EnablePACSServer" class="btn btn-primary btn-sm hidden-print margin-7-hr view-dicom-images"
+                       title="View Dicom Images" target="_blank"
+                       href="{{PACSServerConfiguration.BaseURL}}"> <i class="fa fa-eye"></i> View Dicom
+                      Images </a>
+
+                    <a *ngIf="Editable && emailSettings.EnableSendEmail && !RadiologyReportFromClaimScrubbing"
+                       class="btn btn-cancel hidden-print btn-sm pull-right send-email"
+                       title="Send Report as Email"
+                       (click)="showEmailDataBox=true;ProcessSendingData()"> <i class="fa fa-envelope"></i> Send Email </a>
+                  </div>
+                </div>
+                <div class="col-md-3 under-insurance"> <span *ngIf="report.HasInsurance"><b>[ Under Insurance ]</b></span> </div>
+                <div class="col-md-3 show-header-container">
+                  <div>
+                    <div id="toolbox" class="tooltip no-print report-header-tooltip">
+                      <input id="chkHdrImgShow" type="checkbox" [(ngModel)]="reportHeader.show" />
+                      <label for="chkHdrImgShow" class="show-header-image"> Show Header Image </label>
+                      <p class="tooltiptext ttptextdown no-print">Hide if you need to print the report in LetterHead Paper.
+                        <br /> Else Show Header.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row img-rpt-wrapper" id="div_imagingReportWrapper">
+                <div id="printpage" class="printpage">
+                  <div class="radrep-text-holder" id="rptContentNoImage">
+                    <div class="page-Header-No-Repeat">
+                      <!--below class is added inside print-window (check printfunction in view-report.component):sud-4thJan'19-->
+                      <!-- Below code is to display hospital code i.e if hospital already have header on print pages-->
+                      <div *ngIf="hospitalCode && reportHeader.show===false" class="hospitalcode" id="rptContentNoImage"
+                           [ngClass]="hospitalCode">
+                      </div>
+                      <!-- Below code is to display hospital header -->
+                      <div *ngIf="reportHeader && reportHeader.show && !showEmailDataBox" class="report-header">
+                        <img *ngIf="reportHeader.headerType=='image'" [src]="reportHeader.imagePath" />
+                        <customer-header *ngIf="reportHeader.headerType=='text-formatted'"></customer-header>
+                      </div>
+                      <div *ngIf="PatientHeaderOnAllPages" class="border-wrap">
+                        <div class="flex-container justify-sp-between flex-align-center flex-container-header">
+                          <div class="rad-hdr-flex-col patient-name">Name :<b>{{PatientNameToDisplay}}({{report.PatientCode}})</b>
+                            <div *ngIf="RptHdrSettng.LocalNameEnabled && !showEmailDataBox" id="toolbox"
+                                 class="tooltip no-print report-header-tooltip">
+                              <span (click)="switchLocalLang()" class="switch-local-lang">
+                                <i class="fa fa-refresh"></i> </span>
+                              <p class="tooltiptext ttptextdown no-print">Switch language of Patient Name</p>
+                            </div>
+                          </div>
+                          <div class="rad-hdr-flex-col rep-date">Rep. Date : <b> {{report.CreatedOn |
+                              DanpheDateTime:'format':'YYYY-MM-DD HH:mm'}}
+                              ({{report.CreatedOn | nepaliDate }})</b></div>
+                        </div>
+                        <div class="flex-container justify-sp-between flex-align-center flex-container-header">
+                          <div class="rad-hdr-flex-col age-sex">Age/Sex : <b>{{report.Age}}/{{report.Gender.charAt(0)}}</b>
+                          </div>
+                          <div class="rad-hdr-flex-col prescriber-name-container">Prescriber Name : <b> {{report.PrescriberName}}</b>
+                            <div *ngIf="!showEmailDataBox && !RadiologyReportFromClaimScrubbing" id="toolbox"
+                                 class="tooltip no-print report-header-tooltip"> <span *ngIf="Editable" class="switch-local-lang"
+                                    (click)="OpenChangeDocPopup()">
+                                <i
+                                   class="fa fa-edit edit-ic"></i> </span>
+                              <p class="tooltiptext ttptextdown no-print">Click to Change Prescriber Dr.</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="flex-container justify-sp-between flex-align-center flex-container-header">
+                          <div class="rad-hdr-flex-col address-contact"> Address/Contact No :
+                            <b>{{coreService.SortPatientAddress(report)}}/{{report.PhoneNumber}}</b>
+                          </div>
+                          <div class="rad-hdr-flex-col referrer-name">Referrer Name : <b> {{report.ReferredByName}}</b>
+                            <div *ngIf="!showEmailDataBox && !RadiologyReportFromClaimScrubbing" id="toolbox"
+                                 class="tooltip no-print report-header-tooltip"> <span *ngIf="Editable"
+                                    (click)="OpenChangeReferrerPopUp()" class="switch-local-lang">
+                                <i
+                                   class="fa fa-edit edit-ic edit-icon"></i> </span>
+                              <p class="tooltiptext ttptextdown no-print">Click to Change Referrer</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class=" flex-container-header">
+                          <div class="rad-hdr-flex-col radiology-no" *ngIf="report.RadiologyNo">MRI/CT/X-ray No.: <b>
+                              {{report.RadiologyNo}} </b> </div>
+                          <div class="rad-hdr-flex-col date-col" *ngIf="report.BillingDate">Date:
+                            <b> {{report.BillingDate | DanpheDateTime:'format':'YYYY-MM-DD HH:mm'}} ({{report.BillingDate
+                              | nepaliDate }})
+                            </b>
+                          </div>
+                          <div *ngIf="report.Indication" class="rad-hdr-flex-col rpt-indication"> Indication : <b>
+                              {{report.Indication}}</b></div>
+                        </div>
+                      </div>
+                      <!-- <div [ngClass]="hospitalCode" class="rad-hdr-gap" *ngIf="!reportHeader || !reportHeader.show"> </div> -->
+                      <!-- Below code is to display patient information on every page -->
+                    </div>
+                    <table>
+                      <thead>
+                        <tr>
+                          <td>
+                            <!--place holder for the fixed-position header-->
+                            <div *ngIf="!PatientHeaderOnAllPages" class="patient-Header-Not-Repeatable-space"></div>
+                            <div *ngIf="PatientHeaderOnAllPages" class="page-Header-Repeat-space"></div>
+
+                          </td>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td>
+                            <!--*** CONTENT GOES HERE ***-->
+                            <div class="rad-report-holder">
+                              <div *ngIf="!PatientHeaderOnAllPages" class="patient-header-on-1-page">
+                                <div class="flex-container justify-sp-between flex-align-center flex-container-header">
+                                  <div class="rad-hdr-flex-col patient-name-container">Name
+                                    :<b>{{PatientNameToDisplay}}({{report.PatientCode}})</b>
+                                    <div *ngIf="RptHdrSettng.LocalNameEnabled && !showEmailDataBox" id="toolbox"
+                                         class="tooltip no-print report-header-tooltip"> <span class="switch-local-lang"
+                                            (click)="switchLocalLang()">
+                                        <i class="fa fa-refresh"></i> </span>
+                                      <p class="tooltiptext ttptextdown no-print">Switch language of Patient
+                                        Name</p>
+                                    </div>
+                                  </div>
+                                  <div class="rad-hdr-flex-col align-right rep-date">Rep. Date : <b> {{report.CreatedOn |
+                                      DanpheDateTime:'format':'YYYY-MM-DD HH:mm'}}
+                                      ({{report.CreatedOn | nepaliDate }})</b></div>
+                                </div>
+                                <div class="flex-container justify-sp-between flex-align-center flex-container-header">
+                                  <div class="rad-hdr-flex-col age-sex">Age/Sex : <b>{{report.DateOfBirth |
+                                      DanpheDateTime:'age' }}/{{report.Gender}}</b>
+                                  </div>
+                                  <div class="rad-hdr-flex-col align-right prescriber-name-container">Prescriber Name : <b>
+                                      {{report.PrescriberName}}</b>
+                                    <div *ngIf="!showEmailDataBox && !RadiologyReportFromClaimScrubbing " id="toolbox"
+                                         class="tooltip no-print report-header-tooltip">
+                                      <span class="switch-local-lang"
+                                            *ngIf="Editable"
+                                            (click)="OpenChangeDocPopup()">
+                                        <i class="fa fa-edit edit-ic edit-icon"></i> </span>
+                                      <p class="tooltiptext ttptextdown no-print report-header-tooltip">Click to Change Prescriber Dr.
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="flex-container justify-sp-between flex-align-center flex-container-header">
+                                  <div class="rad-hdr-flex-col address-contact"> Address/Contact No :
+                                    <b>{{coreService.SortPatientAddress(report)}}/{{report.PhoneNumber}}</b>
+                                  </div>
+                                  <div class="rad-hdr-flex-col align-right">Referrer Name : <b> {{report.ReferredByName}}</b>
+                                    <div *ngIf="!showEmailDataBox && !RadiologyReportFromClaimScrubbing" id="toolbox"
+                                         class="tooltip no-print report-header-tooltip">
+                                      <span class="switch-local-lang"
+                                            *ngIf="Editable"
+                                            (click)="OpenChangeReferrerPopUp()">
+                                        <i
+                                           class="fa fa-edit edit-ic edit-icon"></i> </span>
+                                      <p class="tooltiptext ttptextdown no-print report-header-tooltip">Click to Change Referrer</p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="flex-container justify-sp-between flex-align-center flex-container-header">
+                                  <div class="rad-hdr-flex-col" *ngIf="report.RadiologyNo">MRI/CT/X-ray No.: <b>
+                                      {{report.RadiologyNo}} </b> </div>
+                                  <div class="rad-hdr-flex-col" *ngIf="report.BillingDate">Date:
+                                    <b> {{report.BillingDate | DanpheDateTime:'format':'YYYY-MM-DD HH:mm'}}
+                                      ({{report.BillingDate | nepaliDate }})
+                                    </b>
+                                  </div>
+                                  <div *ngIf="report.Indication" class="rad-hdr-flex-col"> Indication : <b>
+                                      {{report.Indication}}</b></div>
+                                </div>
+                              </div>
+                              <div class="report-content" [innerHTML]="report.ReportText"></div>
+
+                              <div [ngClass]="{'signature-on-last-page': IsSignatureAtBottomOfLastPage, 'signature-at-content-end': !IsSignatureAtBottomOfLastPage}"
+                                   *ngIf="!SignatoriesOnAllPages && (report.FooterTextsList || report.Signatories)">
+                                <table id="signatures" [ngClass]="hospitalCode" *ngIf="report.Signatories" class="signatures-table">
+                                  <tbody class="signatureBody">
+                                    <tr>
+                                      <td class="rad-single-signature rad-rpt-signature">
+                                        <div class="doc-sign"
+                                             [ngClass]="{'flow-hr-reverse': DisplaySignatureOnRight}">
+                                          <div class="main-rad-sgn"
+                                               *ngFor="let emp of report.Signatories; let i=index;">
+                                            <div>
+                                              <div class="no-display"
+                                                   *ngIf="emp.SignatoryImageName == null">
+                                              </div>
+                                              <div class="doc-signature" *ngIf="emp.SignatoryImageName">
+
+                                                <img *ngIf="emp.SignatoryImageName !== null"
+                                                     class="image"
+                                                     id="signImage{{i}}"
+                                                     src="../../../../../../fileuploads/EmployeeSignatures/{{emp.SignatoryImageName}}"
+                                                     (error)="handleImageError($event)" />
+                                              </div>
+                                              <div class="doc-signature" *ngIf="!emp.SignatoryImageName">
+                                              </div>
+                                            </div>
+                                            <div class="rad-signature" *ngIf="emp.Signature"
+                                                 [innerHTML]="emp.Signature">
+                                              <br />
+                                              <br />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                <div class="ftr-lst-sctn-lp col-md-12 col-xs-12 rpt-footer-text"
+                                     *ngIf="report.FooterTextsList && report.FooterTextsList.length">
+                                  <table>
+                                    <div *ngFor="let footerText of report.FooterTextsList; let i = index">
+                                      <label (click)="onFooterTextChecked(i)">
+                                        <input type="checkbox" [checked]="footerText.IsChecked" />
+                                        {{ footerText.Text }}
+                                      </label>
+
+                                    </div>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+
+                      <tfoot>
+                        <tr>
+                          <td>
+                            <!--place holder for the fixed-position footer-->
+                            <div *ngIf="SignatoriesOnAllPages" class="page-footer-space"> </div>
+                            <div *ngIf="!SignatoriesOnAllPages" class="page-footer-No-Repeat-space"> </div>
+                          </td>
+                        </tr>
+                      </tfoot>
+
+                    </table>
+                    <div class="page-footer" *ngIf="SignatoriesOnAllPages && (report.FooterTextsList || report.Signatories)">
+                      <table id="signatures" [ngClass]="hospitalCode" *ngIf="report.Signatories" class="report-signatories">
+                        <tbody class="signatureBody">
+                          <tr>
+                            <td class="rad-single-signature rad-rpt-signature">
+                              <div class="doc-sign" [ngClass]="{'flow-hr-reverse': DisplaySignatureOnRight}">
+                                <div class="main-rad-sgn" *ngFor="let emp of report.Signatories; let i=index;">
+                                  <div>
+                                    <div class="no-display"
+                                         *ngIf="emp.SignatoryImageName== null">
+                                    </div>
+                                    <div class="doc-signature" *ngIf="emp.SignatoryImageName">
+                                      <img *ngIf="emp.SignatoryImageName!== null"
+                                           class="image" id="signImage{{i}}"
+                                           src="../../../../../../fileuploads/EmployeeSignatures/{{emp.SignatoryImageName}}"
+                                           (error)="handleImageError($event)" />
+                                    </div>
+                                    <div class="doc-signature" *ngIf="!emp.SignatoryImageName">
+                                    </div>
+                                  </div>
+                                  <div class="rad-signature" *ngIf="emp.Signature" [innerHTML]="emp.Signature">
+                                    <br />
+                                    <br />
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class=" footer-list-section col-md-12 col-xs-12 footer-text-list"
+                           *ngIf="report.FooterTextsList && report.FooterTextsList.length">
+                        <table>
+                          <div *ngFor="let footerText of report.FooterTextsList; let i = index">
+                            <input type="checkbox" [checked]="footerText.IsChecked" (change)="onFooterTextChecked(i)" />
+                            <label>{{ footerText.Text }}</label>
+                          </div>
+                        </table>
+                      </div>
+                      <div class="print-count" *ngIf="ShowPrintCount">
+                        <p *ngIf="report.PrintCount > 0">
+                          Copy ({{report.PrintCount}}) of original
+                        </p>
+                      </div>
+                      <div class="page-footer gap-footer-div">
+                      </div>
+                    </div>
+                    <!-- <div class="page-footer-No-Repeat"
+                                           *ngIf="!SignatoriesOnAllPages &&(report.FooterTextsList || report.Signatories)">
+                                          <div class=" footer-list-section col-md-12 col-xs-12"
+                                               *ngIf="report.FooterTextsList && report.FooterTextsList.length">
+                                              <table>
+                                                  <tr *ngFor="let footerText of report.FooterTextsList">
+                                                      <td>
+                                                          <input type="checkbox" [(ngModel)]="footerText.isChecked" />
+                                                          {{ footerText.text }}
+                                                      </td>
+                                                  </tr>
+                                              </table>
+                                          </div>
+                                          <div class="print-count" *ngIf="ShowPrintCount">
+                                              <p *ngIf="report.PrintCount > 0">
+                                                  Copy ({{report.PrintCount}}) of original
+                                              </p>
+                                          </div>
+                                          <div class="page-footer gap-footer-div">
+                                          </div>
+                                      </div> -->
+                  </div>
+                  <div *ngIf="enableImageUpload && album && album.length" id="dvPatImagesOnly" [ngClass]="hospitalCode"
+                       class="row radrep-patimages-holder">
+                    <!--below class is added inside print-window (check printfunction in view-report.component):sud-4thJan'19-->
+                    <!--album is a 2d array now, we've to map it accordingly in code.-->
+                    <div *ngFor="let alb of album; let vIndex = index;" class="rad-flex-vertical">
+                      <div *ngFor="let image of alb; let hIndex=index" class="single-rad-image"> <img class="rad-image"
+                             (click)="OpenLightBox(vIndex,hIndex)" [src]="image.src" /> </div>
+                    </div>
+                  </div>
+                  <div id="print_page_end"> </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="modelbox-footer footer-div" *ngIf="!reportViewFromClaimManagement">
+              <div class="all-buttons text-right">
+                <button class="btn btn-primary margin-7-hr hidden-print print-rpt-button" (click)="PrintReportHTML()"> Print Report <i
+                     class="glyphicon glyphicon-print"></i> </button>
+                <button type="button" class="btn btn-cancel margin-7-hr print-rpt-close-btn" (click)="Close()"> Close </button>
+              </div>
+            </div>
+            <!--
+          <div class="close-modelbox">
+            <button class="btn btn-danger" (click)="Close()">X</button>
+          </div>
+-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showEditReportWindow">
+
+    <!--We need only one button ('print') of Post-Report when it's opened from this page.  [showStudyList]="showStudylist"-->
+
+    <danphe-post-report *ngIf="showEditReportWindow" [showreport]="showEditReportWindow" [report]="tempReportToEdit" [patient]="currentPatient"
+                        [buttonsList]="['submit']" (add-report)="UpdatePatientReport($event)"></danphe-post-report>
+  </div>
+
+  <!-- <div *ngIf="showStudy"> -->
+
+  <dicom-study-list *ngIf="showStudy"></dicom-study-list>
+</div>
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowChangePrescriberPopUp">
+  <div class="portlet-body form change-prescriber-body">
+    <div class="row change-prescriber-row">
+      <div class="col-md-6 col-md-offset-3 change-prescriber-col">
+        <div class="modelbox-div">
+          <div class="caption custom-caption change-prescriber-doctor">
+            <h3> <span>Change Prescriber Doctor</span></h3>
+            <a class="btn btn-danger change-prescriber-close-btn" (click)="closeReferrerPopup()" title="Cancel">X</a>
+          </div>
+
+          <div class="modelbox-body custom-modelbox">
+            <div class="row margin-15-vr select-prescriber-container">
+              <div class="col-md-3 prescriber-label-container">
+                <label class="ref-label select-prescriber-label" for="refDoctor"><strong>Select Prescriber:</strong></label>
+              </div>
+              <div class="col-md-9 on-prescriber-change">
+                <select-referrer [selected-ref-id]="selectedPrescriberId" [selected-ref-name]="selectedPrescriberId"
+                                 [allow-external]="ExtRefSettings.EnableExternal" [allow-free-text]="ExtRefSettings.AllowFreeText"
+                                 [default-external]="ExtRefSettings.DefaultExternal"
+                                 (on-referrer-change)="OnPrescriberChanged($event)">
+                </select-referrer>
+              </div>
+            </div>
+          </div>
+          <div class="modelbox-footer footer-div">
+            <div class="all-buttons text-right footer-buttons">
+              <button type="button" class="btn btn-primary btn-sm margin-7-hr change-button" (click)="UpdatePrescriberByDr()"> Change </button>
+              <button type="button" class="btn btn-cancel btn-sm margin-7-hr cancel-button" (click)="closeReferrerPopup()"> Cancel </button>
+            </div>
+          </div>
+          <!--
+        <div class="close-modelbox">
+          <button class="btn btn-danger" (click)="closeReferrerPopup()">X</button>
+        </div>
+-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="showEmailDataBox">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div">
+          <div class="caption custom-caption email-info">
+            <h3> <span>Enter the email information</span></h3>
+            <a class="btn btn-danger" (click)="CloseSendEmailPopUp()" title="Cancel">X</a>
+          </div>
+          <div class="modelbox-body email-modelbox">
+            <div class="row margin-15-vr email-model-row">
+              <div class="col-md-12 email-model-col">
+                <form [formGroup]="radEmail.EmailValidator" class="form-horizontal email-form">
+                  <div class="form-group email-form-group">
+                    <label for="inputEmail" class="col-sm-2 control-label to-label">To</label>
+                    <div class="col-sm-10 email-input-container">
+                      <input formControlName="EmailAddress" [(ngModel)]="radEmail.EmailAddress" type="email"
+                             class="form-control email-input" id="inputEmail"
+                             placeholder="Email">
+                      <div class="color-red font-sm email-req" *ngIf="radEmail.IsDirty('EmailAddress')"
+                           [hidden]="radEmail.IsValidCheck('EmailAddress','required')"> Email Address is required </div>
+                      <p class="email-note"><i>Note: separate multiple email by semicolon (;)</i></p>
+                    </div>
+                  </div>
+                  <div class="form-group email-form-group">
+                    <label for="subject" class="col-sm-2 control-label sub-label">Subject</label>
+                    <div class="col-sm-10 email-sub-container">
+                      <input formControlName="Subject" [(ngModel)]="radEmail.Subject" type="text" class="form-control email-subject-input"
+                             id="subject"
+                             placeholder="Subject">
+                      <div class="color-red font-sm sub-req" *ngIf="radEmail.IsDirty('Subject')"
+                           [hidden]="radEmail.IsValidCheck('Subject','required')">
+                        Subject is required </div>
+                    </div>
+                  </div>
+                  <div class="form-group email-form-group">
+                    <div class="col-sm-10 remark-container">
+                      <textarea formControlName="PlainContent" maxlength="500" id="remark" cols="50" rows="5"
+                                placeholder="Enter text" name="text"
+                                [(ngModel)]="radEmail.PlainContent" class="email-remark-textarea"></textarea>
+                      <div class="color-red font-sm email-remark-error" [hidden]="radEmail.IsValidCheck('PlainContent','required')"
+                           *ngIf="radEmail.IsDirty('PlainContent')">
+                        Remark is required
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group email-form-group" *ngIf="radEmail.ImageAttachments_Preview">
+                    <div class="email-preview-image-count"> <b>({{email_previewImage_Count}}) of
+                        ({{radEmail.ImageAttachments_Preview.length}}) Images selected </b> <i>(Maximum 5 Images) </i> </div>
+                    <div class="col-md-8 email-preview-list">
+                      <div *ngIf="radEmail.ImageAttachments_Preview.length>0">
+                        <div *ngFor="let img of radEmail.ImageAttachments_Preview; let i = index;">
+                          <input type="checkbox" [(ngModel)]="img.IsSelected" id="{{img.ImageName}}"
+                                 [ngModelOptions]="{standalone: true}"
+                                 (change)="ImgPreviewChkOnChange()" class="email-preview-checkbox" />
+                          <label class="lbl-email-img-preview" for="{{img.ImageName}}"
+                                 (mouseover)="email_imagePreview_onMouseOver(img)"
+                                 (mouseout)="email_imagePreview_onMouseOut()"> {{i+1}}.
+                            {{img.ImageName}}.png </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 email-preview-image-container ">
+                      <div id="dv_img_email_preview" class="dv_img_email_preview"> <img class="img-responsive email-preview-img"
+                             *ngIf="email_showImagePreview"
+                             [src]="email_previewImage_Src" /> </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!--<order-select (sendBackOrders)="GetOrders($event)" [showSelectOrder]="openOrderBox" [selectedOrders]="ordersSelected"></order-select>-->
+          </div>
+          <div class="modelbox-footer custom-modelbox-footer">
+            <div class="all-buttons text-right">
+              <button [disabled]="loading" type="button" class="btn btn-primary btn-sm margin-7-hr send-button" (click)="loading=true;SendEmail()">
+                Send </button>
+              <button type="button" class="btn btn-cancel btn-sm margin-7-hr cancel-button" (click)="CloseSendEmailPopUp()"> Cancel </button>
+            </div>
+          </div>
+          <!--
+        <div class="close-modelbox">
+          <button class="btn btn-danger" (click)="CloseSendEmailPopUp()">X</button>
+        </div>
+-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="popup-static portlet box portlet-fullscreen custom_modal custom-popup" *ngIf="ShowChangeReferrerPopUp">
+  <div class="portlet-body form custom-portlet-body">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="modelbox-div">
+          <div class="caption custom-caption change-referrer">
+            <h3> <span>Change Referrer</span></h3>
+            <a class="btn btn-danger" (click)="closeReferrerPopup()" title="Cancel">X</a>
+          </div>
+          <div class="modelbox-body custom-modelbox">
+            <div class="row margin-15-vr select-referrer">
+              <div class="col-md-3">
+                <label class="ref-label" for="refDoctor"><strong>Select Referrer:</strong></label>
+              </div>
+              <div class="col-md-9">
+                <select-referrer [selected-ref-id]="SelectedRefId" [allow-external]="true" [default-external]="true"
+                                 [selected-ref-name]="SelectedReferrerName" (on-referrer-change)="OnReferrerChanged($event)"
+                                 class="ref-er">
+                </select-referrer>
+              </div>
+            </div>
+          </div>
+          <div class="modelbox-footer footer-div">
+            <div class="all-buttons text-right footer-buttons">
+              <button type="button" class="btn btn-primary btn-sm margin-7-hr change-button" (click)="UpdateReferredBy()"> Change </button>
+              <button type="button" class="btn btn-cancel btn-sm margin-7-hr  cancel-button" (click)="closeReferrerPopup()"> Cancel </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-print-page *ngIf="showPrint" [print-data-header]="printDetails" (print-sucess)="callBackPrint()"></app-print-page>

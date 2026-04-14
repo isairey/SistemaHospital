@@ -1,0 +1,115 @@
+<style>
+    .field-container input[type="number"] {
+        width: 35%;
+    }
+
+    .field-container textarea {
+        width: 64%;
+    }
+
+    .field-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .col-details {
+        width: 25%;
+    }
+</style>
+<div class="field-with-table">
+
+    <div *ngIf="!IsQuestion">
+        <div class="dynamicFieldHolder" [formGroup]="NestedFormGroup">
+            <label *ngIf="Field.FieldConfig.label" class="field-label"
+                   for="id_input_element">{{Field.FieldConfig.label}}</label>
+            <div class="field-container">
+                <input class="ClinicalOptions" type="number" [formControlName]="FormControlNumber">
+                <textarea appFocusTextbox placeholder="Remarks" class="OptionsRemarks"
+                          [formControlName]="FormControlRemark"></textarea>
+            </div>
+
+            <div class="edit-container" *ngIf="EditMode">
+                <button class="btn orange btn-success btn-discard" (click)="CancelUpdate()">Discard</button>
+                <button class="btn green btn-success" (click)="UpdateFieldValue()">Update</button>
+            </div>
+        </div>
+        <div *ngIf="Field.PreviewConfig.FieldData && Field.PreviewConfig.FieldData.length > 0" class="table-container"
+             style="margin-top: 5px;">
+            <table class="table table-bordered tbl_hover table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-sn">SN</th>
+                        <th class="col-date">Date</th>
+                        <th class="col-details">Details</th>
+                        <th class="col-remark">Remarks</th>
+                        <th class="col-enterby">EnterBy</th>
+                        <th class="col-action">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of Field.PreviewConfig.FieldData; let i = index">
+
+                        <td class="col-sn">{{i+1}}</td>
+                        <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                        <td class="col-details" style="color:black">{{ data.FieldValue }} </td>
+                        <td class="col-remark" style="color:black">{{data.Remarks | truncate:100}}</td>
+                        <td class="col-enterby">{{data.EnteredBy}}</td>
+                        <td class="col-action">
+                            <i class="fa fa-edit" *ngIf="data.IsEditable"
+                               (click)="EditField(Field, data)"></i>
+                            <i class="fa fa-trash" *ngIf="data.IsEditable"
+                               (click)="DeleteFieldValue(Field, data)" style="cursor: pointer;"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div *ngIf="IsQuestion">
+        <div class="dynamicFieldHolder" [formGroup]="NestedFormGroup">
+            <label *ngIf="Question.FieldConfig.label" class="field-label"
+                   for="id_input_element">{{Question.FieldConfig.label}}</label>
+            <div class="field-container">
+                <input class="ClinicalOptions" type="number" [formControlName]="FormControlNumber">
+                <textarea appFocusTextbox placeholder="Remarks" class="OptionsRemarks"
+                          [formControlName]="FormControlRemark"></textarea>
+            </div>
+            <div class="edit-container" *ngIf="EditMode">
+                <button class="btn orange btn-success  btn-discard" (click)="CancelQuestionUpdate()">Discard</button>
+                <button class="btn green btn-success" (click)="UpdateQuestionFieldValue()">Update</button>
+            </div>
+        </div>
+        <div *ngIf="Question.ClinicalQuestionAnswers && Question.ClinicalQuestionAnswers.length > 0"
+             class="table-container" style="margin-top: 5px;">
+            <table class="table table-bordered tbl_hover table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-sn">SN</th>
+                        <th class="col-date">Date</th>
+                        <th class="col-details">Details</th>
+                        <th class="col-remark">Remarks</th>
+                        <th class="col-enterby">EnterBy</th>
+                        <th class="col-action">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of Question.ClinicalQuestionAnswers; let i = index">
+                        <td class="col-sn">{{i+1}}</td>
+                        <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                        <td class="col-details" style="color:black">{{data.AnswerValue}} </td>
+                        <td class="col-remark" style="color:black">{{data.Remarks | truncate:100}}</td>
+                        <td class="col-enterby">{{data.EnteredBy}}</td>
+                        <td class="col-action">
+                            <i class="fa fa-edit" *ngIf="data.IsEditable"
+                               (click)="EditQuestionField(Question, data)"></i>
+                            <i class="fa fa-trash" *ngIf="data.IsEditable"
+                               (click)="DeleteQuestionFieldValue(Question, data)" style="cursor: pointer;"></i>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

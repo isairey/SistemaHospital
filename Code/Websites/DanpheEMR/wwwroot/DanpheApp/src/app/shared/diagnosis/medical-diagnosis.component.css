@@ -1,0 +1,57 @@
+.diagnosis-container {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.diagnosis-header {
+  padding: 13px 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.performer {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.selected-diagnosis {
+  margin-top: 15px;
+}
+
+.diagnosis-text {
+  font-size: 1.2rem;
+  word-break: break-word;
+}
+
+.list-group-item {
+  padding: 0.5rem 1rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.hib_live_claim_diagnosis_section .form-control {
+  margin-bottom: 10px;
+}
+
+.remove_diagnosis {
+  color: red;
+}
+
+@media (max-width: 767px) {
+  .diagnosis-header {
+    font-size: 1rem;
+  }
+
+  .diagnosis-text {
+    font-size: 0.8rem;
+  }
+
+  .btn-sm {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+  }
+}

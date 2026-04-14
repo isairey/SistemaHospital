@@ -1,0 +1,81 @@
+<style>
+  .hos-sec {
+    padding-top: 5px;
+    padding-left: 30px;
+    width: auto;
+  }
+
+  hr {
+    border: 0;
+    height: 1px;
+    background-color: gray;
+    opacity: 0.5;
+  }
+</style>
+<div class="wrapper">
+  <form [formGroup]="Pat_Visit_Filter_DTO.FilterFormGroup">
+    <div class="row">
+      <div class="col-md-6 col-xs-12">
+        <div class="form-group">
+          <label style="vertical-align: top;margin-top: 7px; margin-right: 10px;">Department<b>:</b></label>
+          <div style="display: inline-block;">
+            <input danphe-auto-complete class="form-control" style="width:120%" [list-formatter]="DepartmentListFormatter"
+                   [source]="FilteredDepartment"
+                   [value-formatter]="FormatSelectedDepartment" placeholder="Select Department" formControlName="SelectedDepartment"
+                   display-property-name="DepartmentName"
+                   (ngModelChange)="AssignFilteredDoctorList()"
+                   [attr.disabled]="LockDepartment?true:null" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-xs-12">
+        <div class="form-group" style="margin-left:195px">
+          <label style="vertical-align: top;margin-top: 7px; margin-right: 10px;">Doctor<b>:</b></label>
+          <div style="display: inline-block;">
+            <input id="id" danphe-auto-complete class="form-control" style="width:120%" [list-formatter]="DoctorListFormatter"
+                   [source]="FilteredDoctorList"
+                   placeholder="Select Doctor" formControlName="SelectedEmployee" display-property-name="FullName"
+                   (valueChanged)="AssignFilteredDepartment()"
+                   [attr.disabled]="LockDoctor?true:null" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="display: flex; align-items: center; margin: 0;">
+      <div style="display: flex; width:100%">
+        <div style="display: flex;width:80%;">
+          <div style="display: flex; align-items: center; margin-right: 20px;">
+            <label><b>Visit Date</b></label>
+            <select class="form-control" style="width:120px;margin-left:25px" formControlName="VisitDateFilter"
+                    (change)="OnVisitDateChange($event)">
+              <option value="Today">Today</option>
+              <option value="Custom">Custom</option>
+            </select>
+          </div>
+          <div *ngIf="ShowCustomDateRange" style="display: flex; align-items: center;">
+            <from-to-date-select (on-change)="onDateChange($event)" [date-settings-name]="'common-range-with-today'">
+            </from-to-date-select>
+          </div>
+        </div>
+        <div class="pull-right" style="width:20%">
+          <button class="btn green btn-success margin-7-hr" style="margin-left:12%" type="submit" (click)="PatientFilter()">
+            <i class="fa fa-refresh"></i>Load
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<hr>
+<div class="wrapper">
+  <div class="row">
+    <div>
+      <div class="col-lg-12 col-sm-12">
+        <danphe-grid (grid-actions)="OpdPatientsVisitsGridActions($event)" [grid-colDefaults]="OPDPatVisitsGridColumn"
+                     [searchUsingHospitalNo]="SearchPatientUsingHospitalNo" (serverSearchText)="serverSearchTxt($event)"
+                     [grid-data]="OPDPatVisitList" [NepaliDateInGridParams]="NepaliDateInGridSettings">
+        </danphe-grid>
+      </div>
+    </div>
+  </div>
+</div>

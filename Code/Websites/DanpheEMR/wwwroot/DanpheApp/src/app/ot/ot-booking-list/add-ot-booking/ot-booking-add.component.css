@@ -1,0 +1,122 @@
+.parent {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(1, 1fr) 0.2fr;
+}
+
+.div1 {
+  grid-area: 1 / 1 / 2 / 2;
+  margin: 5px 10px 5px 15px;
+}
+
+.div2 {
+  grid-area: 1 / 2 / 2 / 3;
+  margin: 5px 15px 5px 10px;
+}
+
+.div3 {
+  grid-area: 2 / 1 / 3 / 3;
+  margin: 5px 5px 5px 15px;
+}
+
+.two-column-list {
+  margin: 5px 0px 0px 0px;
+  padding: 0px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 5px;
+  text-align: left;
+}
+
+th {
+  background-color: #948a85;
+  color: white;
+}
+
+.booking-select__list {
+  list-style: none;
+  padding: 0;
+  margin-top: 4px;
+}
+
+.booking-select__list .booking-select__item {
+  border: 1px solid #d2cbcb;
+  padding: 0 0px 0px 16px;
+  background: #fef9f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.booking-select__list .booking-select__item:nth-child(n) {
+  border-bottom: 0px;
+}
+
+.booking-select__list .booking-select__item:last-child {
+  border: 1px solid #d2cbcb;
+}
+
+.booking-select__list .booking-select__item .booking-select__item--title {}
+
+.booking-select__list .booking-select__item .booking-select__item--button,
+.booking-table .booking-table__button {
+  background-color: #ac3e3e;
+  border: none;
+  color: white;
+  font-size: 16px;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  zoom: 0.7;
+}
+
+.booking-select__list .booking-select__item .booking-select__item--button i,
+.booking-table .booking-table__button i {
+  margin-right: 0;
+}
+
+.booking-table-wrapper {
+  padding: 0 15px;
+}
+
+.booking-table-wrapper .booking-table td {
+  padding: 0 5px;
+}
+
+.col-md-6.mb-4 {
+  margin-bottom: 16px;
+}
+
+.custom_modal .form-wrapper {
+  padding: 16px !important;
+}
+
+@media only screen and (max-width: 1468px) and (min-width: 768px) {
+  .updateOTdetails {
+    font-size: 10px;
+    padding-left: 7px;
+  }
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 10px;
+  background-color: #f0f0f0;
+}

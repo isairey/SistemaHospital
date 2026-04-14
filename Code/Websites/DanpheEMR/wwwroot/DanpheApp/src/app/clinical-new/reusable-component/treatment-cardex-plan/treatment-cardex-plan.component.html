@@ -1,0 +1,328 @@
+<style>
+  .table thead th {
+    white-space: nowrap;
+    /* Prevents wrapping of text */
+    overflow: hidden;
+    /* Hides overflow text */
+    text-overflow: ellipsis;
+    /* Adds ellipsis for overflow text */
+    max-width: 150px;
+    /* Sets a max width for columns */
+    vertical-align: middle;
+    /* Centers the text vertically */
+  }
+
+  .table tbody td {
+    white-space: nowrap;
+    /* Prevents wrapping of text */
+    overflow: hidden;
+    /* Hides overflow text */
+    text-overflow: ellipsis;
+    /* Adds ellipsis for overflow text */
+    max-width: 150px;
+    /* Sets a max width for columns */
+    vertical-align: middle;
+    /* Centers the text vertically */
+  }
+
+  .clickable-icon {
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .clickable-icon:hover {
+    color: #007bff;
+  }
+</style>
+<!-- Cardex Table -->
+<div class="row align-items-center mt-5" style="padding-bottom: 20px;">
+  <div class="col-md-7 col-sm-12 text-left mb-2 mb-md-0">
+    <span style="font-weight: bold;">Cardex Plan</span>
+    <i class="fa fa-refresh clickable-icon" (click)="ReloadRequestedMedicationList()" style="margin-left: 10px;"></i>
+  </div>
+  <div class="col-md-3 col-sm-6 mb-2 mb-md-0">
+    <select onwheel="this.blur();" [(ngModel)]="SelectedStatusFilter" id="id_StatusFilter" class="form-control text-center"
+            (change)="OnStatusFilterChange()">
+      <option value="" selected><span>---Select Status---</span></option>
+      <option *ngFor="let status of MedicationStatus" [value]="status">{{status}}</option>
+    </select>
+  </div>
+  <div class="col-md-2 col-sm-6 text-right">
+    <div style="position: relative; width: 100%;">
+      <button class="btn btn-info" style="position: absolute; right: 0; white-space: nowrap; padding: 6px 12px;" (click)="AddNewCardexPlan()">
+        <i class="fa fa-plus"></i> Add New Plan
+      </button>
+    </div>
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table table-striped" id="Id_Table_CardexPlan">
+    <thead>
+      <tr>
+        <th>Generic Name</th>
+        <th>Brand Name</th>
+        <th>Duration</th>
+        <th>Frequency</th>
+        <th>Med. Schedule</th>
+        <th>Route</th>
+        <th>Strength</th>
+        <th>Dosage</th>
+        <th>Alternate Med.</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let plan of FilteredCardexPlanList">
+        <td>{{plan.GenericName}}</td>
+        <td>{{plan.ItemName}}</td>
+        <td>{{plan.Duration}} Days</td>
+        <td>{{plan.FrequencyAbbreviation}}</td>
+        <td>{{plan.MedicationSchedule}}</td>
+        <td>{{plan.RouteOfAdministration}}</td>
+        <td>{{plan.Strength}}</td>
+        <td>{{plan.Doses}}</td>
+        <td>{{plan.AlternateMedicine}}</td>
+        <td>{{plan.Status}}</td>
+        <td>
+          <button class="btn btn-info" (click)="AddTreatmentCardexPlan(plan)" *ngIf="!plan.IsAddedToPlan">
+            <i class="fa fa-plus">Add to Plan</i>
+          </button>
+          <button class="btn btn-warning" (click)="EditCardexPlan(plan)" *ngIf="plan.IsAddedToPlan">
+            <i class="fa fa-pencil"> Edit</i>
+          </button>
+          <button class="btn btn-info" (click)="ViewSelectedCardexPlan(plan)" *ngIf="plan.IsAddedToPlan">
+            <i class="fa fa-eye"> View</i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- Add To cardex plan popup -->
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowAddCardplanPopUp && !IsUpdate">
+  <div class="portlet-body form">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="modelbox-div">
+        <div class="modelbox-header">
+          <h4 class="margin-0-vr text-warning">
+            <strong>Add Medication to Cardex Plan</strong>
+          </h4>
+          <div class="close-modelbox">
+            <a class="btn btn-danger" (click)="ClosePopUp()" title="Cancel">X</a>
+          </div>
+        </div>
+        <add-treatment-cardex-plan [SelectedPatient]="SelectedPatient" [Selected-Medication]="Medication" [New-Cardex-Plan]="IsNewPlan"
+                                   [Prescriber-Id]="PrescriberId"
+                                   (callback-close)="ClosePopUp()" (callback-add)="CallBackAdd($event)"></add-treatment-cardex-plan>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Cardex plan popup -->
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowAddCardplanPopUp && IsUpdate">
+  <div class="portlet-body form">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="modelbox-div">
+        <div class="modelbox-header">
+          <h4 class="margin-0-vr text-warning">
+            <strong>Update Treatment Cardex Plan</strong>
+          </h4>
+          <div class="close-modelbox">
+            <a class="btn btn-danger" (click)="ClosePopUp()" title="Cancel">X</a>
+          </div>
+        </div>
+        <add-treatment-cardex-plan [SelectedPatient]="SelectedPatient" [Selected-Plan]="SelectedPlan" [New-Cardex-Plan]="IsNewPlan"
+                                   [Update-Cardex-Plan]="IsUpdate" (callback-close)="ClosePopUp()"
+                                   (callback-add)="CallBackAdd($event)"></add-treatment-cardex-plan>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Show medication log history popup -->
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShoMedicationView">
+  <div class="portlet-body form">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div">
+        <div class="modelbox-header col-md-12 row">
+          <div class="col-md-8">
+            <h4 class="margin-0-vr text-warning">
+              <strong>
+                Medication Cardex Details
+              </strong>
+            </h4>
+          </div>
+          <div class="col-md-4">
+            <label class="col-form-label">Prescribed By: </label> <strong style="color:blue">{{SelectedPlan.Prescriber}}</strong>
+          </div>
+          <div class="close-modelbox">
+            <a class="btn btn-danger" (click)="ClosePopUp()" title="Cancel">X</a>
+          </div>
+        </div>
+        <div class="form-section" style="margin: 10px;">
+          <div class="medicine-detail">
+            <div class="medicine-detail-container row">
+              <div class="medicine-info col-md-12">
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Brand Name</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedPlan.ItemName}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Generic Name</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedPlan.GenericName}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Strength</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedPlan.Doses}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Route</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedPlan.RouteOfAdministration}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Frequency</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedPlan.FrequencyAbbreviation}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Medication Schedule</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedPlan.MedicationSchedule}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Duration</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedPlan.Duration}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Is PRN?</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong>{{SelectedPlan.IsPRN}}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div *ngIf="SelectedPlan.CardexNote">
+                    <div class="form-group col-md-6">
+                      <div class="form-group row align-items-center">
+                        <label class="col-sm-4 col-form-label">Cardex Note</label>
+                        <div class="col-sm-1">:</div>
+                        <div class="col-sm-7">
+                          <strong>{{ SelectedPlan.CardexNote }}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="SelectedPlan.IsPRN">
+                    <div class="form-group col-md-6">
+                      <div class="form-group row align-items-center">
+                        <label class="col-sm-4 col-form-label">PRN Notes</label>
+                        <div class="col-sm-1">:</div>
+                        <div class="col-sm-7">
+                          <strong>{{ SelectedPlan.PRNNotes }}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6" *ngIf="SelectedPlan.AlternateMedicine">
+                    <div class="form-group row align-items-center">
+                      <label class="col-sm-4 col-form-label">Alternate Medicine</label>
+                      <div class="col-sm-1">:</div>
+                      <div class="col-sm-7">
+                        <strong><span style="color:blue">{{SelectedPlan.AlternateMedicine}}</span></strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- <div class="medication-history mt-4">
+              <h5>Medication History</h5>
+              <div class="date-range row mb-3">
+                <div class="col-md-7 mb-2">
+                  <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'Default'">
+                  </from-to-date-select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button class="btn btn-info w-100" (click)="FilterEntryLogs()">Filter</button>
+                </div>
+                <div class=" col-md-3 mb-2">
+                  <p>Medicine Started Date: {{SelectedActiveMedication.MedicationCreatedOn | DanpheDateTime:'format':'YYYY-MM-DD'}}</p>
+                  <p>Last Medication Date: {{SelectedActiveMedication.MedicationTakenDate |
+                    DanpheDateTime:'format':'YYYY-MM-DD'}}/{{SelectedActiveMedication.MedicationTakenTime}}
+                  </p>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Comment</th>
+                      <th>Entry By</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let entry of FilteredMedicationEntryLogs">
+                      <td>{{ entry.MedicationTakenDate | DanpheDateTime:'format':'YYYY-MM-DD'}}</td>
+                      <td>{{ entry.MedicationTakenTime }}</td>
+                      <td>{{ entry.Comment }}</td>
+                      <td>{{entry.EntryBy}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- pop up for all medication history page -->

@@ -1,0 +1,138 @@
+<div class="wrapper">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12 col" style="margin-bottom:2%;">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="row">
+                <label class="col-md-3" style="line-height:2; padding-top: 3px;text-align: left">Visit:</label>
+                <div class="col-md-9" style="padding-left:0px;">
+                  <select [(ngModel)]="SelectedVisitId" style="width:100%; height: 30px;">
+                    <option value="0">All</option>
+                    <option *ngFor="let visit of PatientVisits" value={{visit.PatientVisitId}}>{{visit.VisitDate |
+                      DanpheDateTime:'format':'YYYY-MM-DD' }}/{{visit.VisitCode}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="row">
+                <label class="col-md-4" style="line-height:2;padding-top: 3px;text-align: right">Billing Type:</label>
+                <div class="col-md-8" style="padding-left:0px;">
+                  <select [(ngModel)]="SelectedBillingType" style="width: 100%; height: 30px;">
+                    <option value="all">All</option>
+                    <option value="cash">Cash Sales</option>
+                    <option value="credit">Credit Sales</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <div class="row">
+                <label class="mt-checkbox mt-checkbox-outline" style="font-weight:bold;color:green;margin: 5px;">
+                  <input name="showSchemeFilter" type="checkbox" (click)="OnShowSchemeFilter()">
+                  <span></span>Show Scheme Filter
+                </label>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <!-- Bikesh: 10th_Nov_2024: Hidden is used to Renders Scheme Select initially to trigger LoadScheme, ensuring it subscribes to the service billing context for scheme selection and membership changes. -->
+              <div class="col-md-6" [hidden]="!ShowSchemeFilter">
+                <div class="row">
+                  <scheme-select [show-community]="false" [service-billing-context]="ServiceBillingContext"
+                                 [is-mandatory]="false" [selected-id]="SelectedSchemePriceCategory.SchemeId"
+                                 (on-membership-change)="OnSchemeChanged($event)">
+                  </scheme-select>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="ShowSchemeFilter">
+                <div class="row">
+                  <price-category-select
+                                         [selected-priceCategoryId]="SelectedSchemePriceCategory.PriceCategoryId"
+                                         (on-category-change)="OnPriceCategoryChange($event)">
+                  </price-category-select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1">
+              <button class="btn green btn-success pull-right" (click)="LoadBillingSalesReport()">Load
+                <i class="fa fa-refresh"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 col-sm-12">
+
+
+      <div class="grid-title-wrap">
+        <div style="text-align:right;z-index: 4;position: relative; margin-bottom: 5px;">
+          <button class="btn green btn-success" (click)="PrintBillingSalesSummary()"
+                  style="margin-left: 10px; ">
+            <span>Print</span>&nbsp;&nbsp;
+            &nbsp;&nbsp; <i class="glyphicon glyphicon-print"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="table-container" style="position: relative;" *ngIf="IsDataLoaded">
+            <table class="table table-bordered" style="margin-top: 0px;">
+              <thead style="background-color: rgb(224, 231, 240); color: black;">
+                <tr>
+                  <th style="text-align: center;">Visit</th>
+                  <th style="text-align: center;">Scheme</th>
+                  <th style="text-align: center;">Price Category</th>
+                  <th style="text-align: center;">Item Name</th>
+                  <th style="text-align: center;">Sales Qty</th>
+                  <th style="text-align: center;">Return Qty</th>
+                  <th style="text-align: center;">
+                    Total Qty
+                  </th>
+
+                  <th style="text-align: center;">Rate</th>
+                  <th style="text-align: center;">Sub Total</th>
+                  <th style="text-align: center;">Discount</th>
+                  <th style="text-align: center;">Total</th>
+                  <th style="text-align: center;">Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bill of BillingSalesSummaryList">
+                  <td style="text-align: center;">{{bill.VisitCode}}</td>
+                  <td style="text-align: center;">{{bill.SchemeName}}</td>
+                  <td style="text-align: center;">{{bill.PriceCategoryName}}</td>
+                  <td style="text-align: center;">{{bill.ItemName}}</td>
+                  <td style="text-align: center;">{{bill.Quantity}}</td>
+                  <td style="text-align: center;">{{bill.ReturnQuantity}}</td>
+                  <td style="text-align: center;">{{bill.TotalQuantity}}</td>
+                  <td style="text-align: center;">{{bill.SaleRate}}</td>
+                  <td style="text-align: center;">{{bill.SubTotal}}</td>
+                  <td style="text-align: center;">{{bill.DiscountAmount}}</td>
+                  <td style="text-align: center;">{{bill.Total}}</td>
+                  <td style="text-align: center;">{{bill.Remarks}}</td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <print-billing-sales-summary *ngIf="ShowBillingSalesSummaryPrintPage" [billing-sales-summary-list]="BillingSalesSummaryList"
+                                     [SelectedPatient]="SelectedPatient"
+                                     [show-billing-sales-summary-printpage]="ShowBillingSalesSummaryPrintPage"
+                                     (hide-print-billing-sales-summary)="HidePrintBillingSalesSummary()"></print-billing-sales-summary>
+      </div>
+
+    </div>
+  </div>
+</div>

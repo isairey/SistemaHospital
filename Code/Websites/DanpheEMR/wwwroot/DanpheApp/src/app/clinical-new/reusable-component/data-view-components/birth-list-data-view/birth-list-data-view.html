@@ -1,0 +1,20 @@
+<div class="table-container" style="margin-top: 5px;">
+  <table class="table table-bordered tbl_hover table-condensed">
+    <thead>
+      <tr style="background-color: #599be0; color: white;">
+        <th>Baby Gender</th>
+        <th>Birth Date</th>
+        <th>Birth Time</th>
+        <th>Weight(gm)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let birth of BirthList">
+        <td>{{birth.Gender}}</td>
+        <td>{{birth.BirthDate | DanpheDateTime:'format':'YYYY-MM-DD'}}</td>
+        <td>{{birth.BirthTime}}</td>
+        <td>{{birth.WeightOfBaby}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

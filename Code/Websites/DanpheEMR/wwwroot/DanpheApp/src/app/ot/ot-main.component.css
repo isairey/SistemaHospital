@@ -1,0 +1,14 @@
+ @keyframes blink {
+     50% {
+         opacity: 0;
+     }
+ }
+
+ .preview-feature {
+     color: red;
+     animation: blink 2s infinite;
+     float: right;
+     margin-top: 10px;
+     font-size: large;
+     font-style: italic;
+ }

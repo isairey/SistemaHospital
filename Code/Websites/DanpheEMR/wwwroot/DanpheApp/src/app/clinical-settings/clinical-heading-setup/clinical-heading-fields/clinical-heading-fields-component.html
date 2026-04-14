@@ -1,0 +1,33 @@
+<div class="margin-20-tp">
+  <a class="btn blue bordered" feature="button" (click)="AddHeadField()"><i class="fa fa-plus"></i>Add Medical Component</a>
+  <div *ngIf="ShowGrid" class="row">
+
+    <div class="col-md-12 col-xs-12 col-sm-12">
+      <danphe-grid [grid-colDefaults]="ClinicalHeadingFieldGridColumns" [grid-data]="ClinicalHeadingFields"
+                   (grid-actions)="ClinicalHeadingFieldGridActions($event)" [paginationPageSize]="100" [show-print-button]="false">
+      </danphe-grid>
+    </div>
+    <div style="margin-top:60px;">
+      <add-clinical-heading-field *ngIf="ShowHeadingFieldPopUp" (callback-add)="GetDataFromAdd($event)"
+                                  [Update]="Update" [cln-heading-to-edit]="ClinicalFieldToEdit">
+
+      </add-clinical-heading-field>
+    </div>
+
+  </div>
+  <div style="margin-top:60px;">
+    <manage-clinical-field-questionary *ngIf="ShowFieldQuestionary" (callback-add)="GetDataFromAdd($event)" (closePopup)="closeQuestionaryPopup()"
+                                       [Selected-FieldName]="SelectedFieldName">
+    </manage-clinical-field-questionary>
+  </div>
+
+
+  <div style="margin-top:60px;">
+    <manage-clinical-field-options *ngIf="ShowFieldQuestionaryOptions" (closePopup)="closeOptionPopup()" [Selected-FieldOption]="SelectedFieldOption"
+                                   [Show-FieldQuestionaryOptions]="ShowFieldQuestionaryOptions">
+
+    </manage-clinical-field-options>
+  </div>
+
+
+</div>

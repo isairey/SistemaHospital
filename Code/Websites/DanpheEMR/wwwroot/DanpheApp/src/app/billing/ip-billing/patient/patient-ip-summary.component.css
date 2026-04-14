@@ -1,0 +1,91 @@
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actionbar-btn-wrap {
+  display: flex;
+  align-items: center;
+  /* gap: 0 10px; */
+}
+
+.actionbar-btn-wrap .action-btn {
+  border: none !important;
+  margin: 0 2px;
+}
+
+.actionbar-btn-wrap .action-btn:hover {
+  /* color: #2d68ea !important; */
+}
+
+.action-bar label {
+  color: orange !important;
+  background-color: #f8f9fa !important;
+  margin: 0;
+  font-size: 15px;
+}
+
+.bill-child,
+.nxt-td {
+  width: 155px;
+}
+
+.page-bar table tr td {
+  padding: 3px 0;
+  vertical-align: middle;
+}
+
+.alert {
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 5px !important;
+}
+
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.progress-bar {
+  width: 10%;
+  height: 8px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #3498db;
+  width: 0;
+  border-radius: 5px;
+  animation: fillAnimation 2s ease-in-out infinite;
+}
+
+@keyframes fillAnimation {
+  0% {
+    width: 0;
+  }
+
+  50% {
+    width: 50%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+.phrm-bill-detail {
+  background-color: #e6e6e6;
+}
+
+.ipbilling-wrap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}

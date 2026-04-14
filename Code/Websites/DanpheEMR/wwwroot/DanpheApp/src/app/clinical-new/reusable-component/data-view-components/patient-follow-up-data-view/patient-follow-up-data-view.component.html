@@ -1,0 +1,17 @@
+<div class="table-container" style="margin-top: 5px;">
+    <table class="table table-bordered tbl_hover table-condensed">
+        <thead>
+            <tr style="background-color: #599be0; color: white;">
+                <th style="width: 50%;">Follow Up</th>
+                <th style="width: 50%;">Remarks</th>
+            </tr>
+        </thead>
+        <tbody *ngIf="FollowUpPatient && FollowUpPatient.length > 0">
+            <tr *ngFor="let followup of FollowUpPatient">
+                <td *ngIf="followup.FollowUpDays !== null && followup.FollowUpDays !== undefined" style="width: 50%;">{{followup.FollowUpDays}} {{
+                    followup.FollowUpDays === 1 ? 'Day' : 'Days' }} ({{followup.FollowUpDate| DanpheDateTime:'format':'YYYY-MM-DD'}})</td>
+                <td style="width: 50%;">{{followup.FollowUpRemarks}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,364 @@
+<div>
+  <div class="col-md-10 col-lg-10 backbutton">
+    <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+      <div>
+        <button class="btn btn-primary btn-sm" (click)="Back()"><i class="fa fa-angle-left"
+             style="margin-right: 5px;"></i> Back </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="col-md-3 searchbar"><input placeholder="Search" style="width:360px; margin-top: 5px;" class="searchtbx" type="text"
+             id="id_itemsearch"
+             onClick="this.select();"
+             (keyup)="OnQuickFilterChanged($event)">
+    </div>
+  </div>
+  <div class="col-md-10 col-lg-10 mt10">
+    <div class="table-wrap">
+      <table class="table table-striped table-hover inv_table">
+        <thead>
+          <tr style="font-size: 13px !important;">
+            <th>S.N.</th>
+            <th>Receipt No.</th>
+            <th>Request Date</th>
+            <th>Visit Type</th>
+            <th>Item Name</th>
+            <th>Batch</th>
+            <th>Expiry Date</th>
+            <th>SalePrice</th>
+            <th>Provisional Qty</th>
+            <th>Subtotal</th>
+            <th>Discount %</th>
+            <th>DiscountAmount</th>
+            <th>VAT %</th>
+            <th>VAT Amount</th>
+            <th>Amount</th>
+            <th class="text-center"> <label class="mt-checkbox mt-checkbox-outline">
+                <input type="checkbox" [(ngModel)]="SelectAllItems" class="zoomcheckbox"
+                       (change)="SelectAllCheckBoxOnChange($event)" title="Select All"
+                       [ngModelOptions]="{standalone: true}" />
+                <span></span> </label>
+            </th>
+            <th *ngIf="SchemePriceCategory && SchemePriceCategory.IsPharmacySalePriceEditable">Package Name</th>
+            <th>Store Name</th>
+            <th>User Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of ProvisionalItemsForFinalize; let i = index;" [ngClass]="{'hide-row': row.HideRow}">
+            <td>{{i+1}}</td>
+            <td>{{row.ReceiptNo}}</td>
+            <td>{{row.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD'}}</td>
+            <td>{{row.VisitType}}</td>
+            <td>{{row.ItemName}}</td>
+            <td>{{row.BatchNo}}</td>
+            <td>{{row.ExpiryDate | DanpheDateTime:'format':'YYYY-MM-DD'}}</td>
+            <td>{{row.SalePrice}}</td>
+            <td><input [(ngModel)]="row.DispatchQty" [ngModelOptions]="{standalone: true}" style="width:80px ; " min="0"
+                     class="form-control" type="text" value="" disabled></td>
+            <td>{{row.SubTotal | number: "1.2-4"}}</td>
+            <td>
+              <input [(ngModel)]="row.DiscountPercentage" [ngModelOptions]="{standalone: true}" style="width:80px ; "
+                     (focusout)="OnDiscountChange(i,row.DiscountPercentage,0)  ;ItemRowValueChanged(i)" min="0"
+                     class="form-control" type="number" (keyup.enter)="SetFocusById('dis-amt'+i)" onwheel="this.blur()">
+              <span class="error-msg" *ngIf="row.DiscountPercentage<0 || row.DiscountPercentage>100">Discount % range:
+                0-100%</span>
+            </td>
+            <td>
+              <input min="0" [(ngModel)]="row.TotalDisAmt" [ngModelOptions]="{standalone: true}" style="width:80px ; "
+                     (focusout)="OnDiscountChange(i,0,row.TotalDisAmt);ItemRowValueChanged(i)" class="form-control"
+                     type="number" id="{{ 'dis-amt'+i }}" onwheel="this.blur()">
+              <span class="error-msg" *ngIf="row.TotalDisAmt<0">invalid</span>
+            </td>
+            <td>{{row.VATPercentage}}</td>
+            <td>{{row.VATAmount}}</td>
+            <td>{{row.TotalAmount | number: "1.2-4"}}</td>
+            <td class="text-center"><label class="mt-checkbox mt-checkbox-outline">
+                <input class="zoomcheckbox" [(ngModel)]="row.IsSelected" name="IsSelected" type="checkbox"
+                       (change)="SelectItemCheckBoxOnChange(i)" [ngModelOptions]="{standalone: true}" title="select item">
+                <span></span> </label></td>
+            <td *ngIf="SchemePriceCategory && SchemePriceCategory.IsPharmacySalePriceEditable">
+              {{row.BillServiceItemName}}</td>
+            <td>{{row.WardName}}</td>
+            <td>{{row.WardUser}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row" style="margin-top: 30px;">
+      <div class="col-md-3">
+        <div class="invoice-history">
+          <div class="history-title"> <b>Invoice History</b> </div>
+          <table>
+            <tr>
+              <td>Deposit Balance <b class="colon">:</b></td>
+              <td>{{patSummary.DepositBalance}}</td>
+            </tr>
+            <tr>
+              <td>Credit <b class="colon">:</b></td>
+              <td style="text-decoration:underline;">{{patSummary.CreditAmount}}</td>
+            </tr>
+            <tr>
+              <td>Provisional Amount <b class="colon">:</b></td>
+              <td style="text-decoration:underline;">{{patSummary.ProvisionalAmt}}</td>
+            </tr>
+            <tr>
+              <td>Total Due<b class="colon">:</b></td>
+              <td>{{patSummary.TotalDue}}</td>
+            </tr>
+            <tr>
+              <td>Balance Amount <b class="colon">:</b></td>
+              <td style="font-weight: bold;color: red;font-size: 17px;"> {{patSummary.BalanceAmount}} </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="invoice-history">
+          <div class="history-title"> <b>Credit Limits and Balances</b> </div>
+          <table>
+            <tr>
+              <td>General Credit Limit<b class="colon">:</b></td>
+              <td>{{patSummary.GeneralCreditLimit}}</td>
+            </tr>
+            <tr>
+              <td>IP Credit Limit<b class="colon">:</b></td>
+              <td>{{patSummary.IpCreditLimit}}</td>
+            </tr>
+            <tr>
+              <td>OP Credit Limit<b class="colon">:</b></td>
+              <td>{{patSummary.OpCreditLimit}}</td>
+            </tr>
+            <tr>
+              <td>IP Balance<b class="colon">:</b></td>
+              <td>{{patSummary.IpBalance}}</td>
+            </tr>
+            <tr>
+              <td>OP Balance<b class="colon">:</b></td>
+              <td>{{patSummary.OpBalance}}</td>
+            </tr>
+
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 col-lg-2">
+    <div class="row">
+      <div>
+        <table class="accountinfo">
+          <tr>
+            <td>Sub Total:</td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="CurrentSale.SubTotal"
+                       disabled id="subtotal" name="subtotal" type="number">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Discount Percentage:</td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" min="0" [ngModelOptions]="{standalone: true}"
+                       [(ngModel)]="CurrentSale.DiscountPer" (focusout)="OnMainDiscountPercentChange()" id="discountpercent"
+                       name="discountpercent" type="number" (keyup.enter)="SetFocusById('discountamount')"
+                       onwheel="this.blur()">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Discount Amount: </td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" min="0" [ngModelOptions]="{standalone: true}"
+                       [(ngModel)]="CurrentSale.DiscountAmount" (focusout)="OnMainDiscountAmountChange()" id="discountamount"
+                       name="discountamount" type="number" (keyup.enter)="SetFocusById('tender')" onwheel="this.blur()">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Vat Amount: </td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="CurrentSale.VATAmount"
+                       name="discountamount" type="number" disabled>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Total Amount:</td>
+            <td>
+              <div class="form-group">
+                <input [(ngModel)]="CurrentSale.TotalAmount" [ngModelOptions]="{standalone: true}" disabled
+                       class="form-control" name="TotalAmount" type="number">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="SchemePriceCategory.IsCoPayment">
+            <td>PaymentMode:</td>
+            <td>
+              <div class="form-group">
+                <input [(ngModel)]="CurrentSale.CoPaymentMode" [ngModelOptions]="{standalone: true}" disabled
+                       class="form-control" name="TotalAmount" type="text">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="SchemePriceCategory.IsCoPayment">
+            <td>Received Amount:</td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" [ngModelOptions]="{standalone: true}"
+                       [(ngModel)]="CurrentSale.ReceivedAmount" id="change" name="change" type="number" onwheel="this.blur()"
+                       min="0"
+                       style="font-weight:bold;height: 40px;font-size:30px !important;background-color:#0773bc; color:#fff;margin-bottom: 3px;">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="SchemePriceCategory.IsCoPayment">
+            <td>CoPay Cash:</td>
+            <td>
+              <div class="form-group">
+                <input [(ngModel)]="CurrentSale.CoPaymentCashAmount" [ngModelOptions]="{standalone: true}" disabled
+                       class="form-control" name="TotalAmount" type="number">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="SchemePriceCategory.IsCoPayment">
+            <td>CoPay Credit:</td>
+            <td>
+              <div class="form-group">
+                <input [(ngModel)]="CurrentSale.CoPaymentCreditAmount" [ngModelOptions]="{standalone: true}" disabled
+                       class="form-control" name="TotalAmount" type="number">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="CurrentSale.PaymentMode !=='credit'">
+            <td>Tender:</td>
+            <td>
+              <div class="form-group">
+                <input min="0" class="form-control" [ngModelOptions]="{standalone: true}"
+                       [(ngModel)]="CurrentSale.Tender" (focusout)="ChangeTenderAmount()" id="tender" name="tender"
+                       type="number" onwheel="this.blur()">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="CurrentSale.PaymentMode !=='credit'">
+            <td>Change:</td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="CurrentSale.Change"
+                       (focusout)="AllCalculation()" id="change" name="change" type="number" onwheel="this.blur()" min="0">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Paid Amount: <i class="glyphicon glyphicon-hand-right blink" style="color:red;font-size:10px;"></i></td>
+            <td>
+              <div class="form-group">
+                <input [(ngModel)]="CurrentSale.PaidAmount" [ngModelOptions]="{standalone: true}"
+                       class="form-control blink" name="PaidAmount" type="number" disabled>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="dot">
+            <td colspan="2" class="text-capitalize">In Words : <b>{{CurrentSale.PaidAmount | NumberInWords}} </b>Only.
+              <br />
+              <br />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <payment-mode-info [deposit-balance]="patSummary.DepositBalance"
+                                 [total-amount]="SchemePriceCategory.IsCoPayment ?CurrentSale.ReceivedAmount: CurrentSale.TotalAmount"
+                                 [page-name]="'ProvisionalSale'" [default-payment-mode]="SchemePriceCategory.DefaultPaymentMode"
+                                 [is-coPayment]="SchemePriceCategory.IsCoPayment"
+                                 [is-credit-only-scheme]="SchemePriceCategory.IsCreditOnlyScheme"
+                                 [default-credit-organization]="SchemePriceCategory.DefaultCreditOrganizationId"
+                                 (on-paymentMode-change)="PaymentModeChanges($event)"
+                                 (on-creditOrganization-change)="CreditOrganizationChanges($event)" [show-deduct-from-deposit]="'true'"
+                                 (on-multiple-paymentMode)="MultiplePaymentCallBack($event)"
+                                 [disable-paymentMode-dropdown]="DisablePaymentModeDropDown" [clear-payment-detail]="ClearPaymentDetail">
+              </payment-mode-info>
+            </td>
+          </tr>
+          <tr>
+            <td>Remarks:<sup *ngIf="CurrentSale.PaymentMode=='credit'">*</sup></td>
+            <td>
+              <div class="form-group">
+                <textarea [(ngModel)]="CurrentSale.Remark" [ngModelOptions]="{standalone: true}" class="form-control"
+                          name="Remarks"></textarea>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="ShowDepositReturnCheckbox && patSummary.DepositBalance > CurrentSale.PaidAmount">
+            <td colspan="2" style="color: black !important;">
+              <label class="mt-checkbox mt-checkbox-outline">
+                <input type="checkbox" [(ngModel)]="IsReturnDepositChecked"
+                       (change)="CheckReturnDepositCheckbox($event)" title="Select"
+                       [ngModelOptions]="{standalone: true}" /><span></span>
+              </label>
+              <span>Return Remaining Deposit</span>&nbsp;
+              <span>
+                (Deposit Balance:
+                <span *ngIf="CurrentSale.PaymentMode.toLowerCase()!== 'credit'">
+                  <span *ngIf="DepositRefundAmount > 0">
+                    {{DepositRefundAmount | number: "1.2-4"}}
+                  </span>
+                  <span *ngIf="DepositRefundAmount ===0">
+                    {{patSummary.DepositBalance | number: "1.2-4"}}
+                  </span>
+                </span>
+                )
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="IsReturnDepositChecked && IsPendingSettlements && ShowDepositReturnCheckbox">
+            <td colspan="2">
+              <sup>Other invoices are pending for this patient, Please verify before proceeding</sup>
+            </td>
+          </tr>
+        </table>
+        <div class="col-md-12" style="padding-top:5px; margin-top: 10px;" *ngIf="this.IsOtherProvisionalRemaining">
+          <p style="color: red;">Note: There are some other provisional remaining for this patient.</p>
+        </div>
+        <div class="col-md-12" style="padding-top: 5px; margin-top: 10px; margin-right: 1px;">
+          <div class="row">
+            <ng-container>
+              <div class="col-md-4">
+                <input DanpheConfirmationDialog type="submit" id="btnPrint" [title]="ConfirmationTitle"
+                       [message]="ConfirmationMessage" (confirm)="PrintReceipt()" (cancel)="handleCancel()"
+                       class="btn green btn-success tooltip printinvoice" [disabled]="Loading" value="Print Invoice">
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen inv_modal" *ngIf="ShowSaleInvoice">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="modelbox-div clearfix">
+          <a class="btn btn-danger history-del-btn" (click)="OnInvoicePopUpClose()" title="Cancel"><i
+               class="fa fa-close"></i></a>
+          <div class="form-body">
+            <div class="col-md-12">
+              <div class="row printStyle print-border">
+                <div style="text-align:center;">
+                  <pharmacy-invoice-print [invoice-id]="InvoiceId" (call-back-print)="Close()">
+                  </pharmacy-invoice-print>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

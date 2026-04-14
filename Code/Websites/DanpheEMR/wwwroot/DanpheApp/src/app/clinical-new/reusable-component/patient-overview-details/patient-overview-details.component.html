@@ -1,0 +1,225 @@
+<style>
+  .patient-header {
+    width: 100%;
+    padding: 20px;
+    background-color: #efefef;
+    box-shadow: 2px black;
+  }
+
+  .patient-header-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1px 20px;
+  }
+
+  .allergy-indicator {
+    margin-right: 10px;
+    color: red;
+    font-weight: bold;
+    font-size: 12px;
+  }
+
+  .patient-name {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 15px;
+  }
+
+  .ip-button {
+    width: 50px;
+    height: 20px;
+    border-radius: 15px !important;
+    background-color: rgb(135, 234, 135);
+    color: whitesmoke;
+    border: none;
+  }
+
+  .patient-header-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-top: 5px;
+    grid-auto-flow: dense;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  .patient-header-content.expanded {
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .patient-header-first-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-top: 5px;
+    grid-auto-flow: dense;
+  }
+
+  .patient-header-item {
+    display: flex;
+    align-items: center;
+    padding: 1px 0;
+  }
+
+  .header-content-title {
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 120px;
+    padding-right: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .header-content-title::after {
+    content: ":";
+    margin-left: 3px;
+  }
+
+  .header-content-value {
+    font-size: 12px;
+    font-weight: normal;
+    text-align: left;
+  }
+
+  .patient-header-content>.patient-header-item:nth-child(3n+2),
+  .patient-header-content>.patient-header-item:nth-child(3n+3) {
+    margin-left: 130px;
+  }
+
+  .patient-header-first-row>.patient-header-item:nth-child(3n+2),
+  .patient-header-first-row>.patient-header-item:nth-child(3n+3) {
+    margin-left: 130px;
+  }
+
+  .row::before,
+  .row::after {
+    content: none !important;
+  }
+
+  .expand-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.3s ease;
+    color: rgb(51, 122, 183);
+  }
+
+  .expand-button:hover {
+    transform: scale(1.1);
+    color: #007bff;
+  }
+
+  .expand-button i {
+    font-size: 18px;
+  }
+</style>
+<div class="container patient-header">
+  <div class="row">
+    <div class="col-12 d-flex justify-content-between align-items-center patient-header-name">
+      <div class="d-flex align-items-center" style="margin-top: 10px;">
+        <strong class="patient-name">{{SelectedPatient.Name}}</strong>
+        <span style="margin-left: 15px;">{{SelectedPatient.Age}}</span>
+      </div>
+      <div class="d-flex align-items-center" style="margin-top: 10px;">
+        <span class="allergy-indicator" *ngIf="AllergyNames">Allergy: </span>
+        <span class="header-content-value" style="margin-left: 5px; margin-right: 10px;font-weight: bold;"
+              *ngIf="AllergyNames">{{AllergyNames}}</span>
+        <button class="ip-button" *ngIf="IsInPatient">IP</button>
+        <button class="ip-button" *ngIf="IsOutPatient">OP</button>
+        <button class="ip-button" *ngIf="IsEmergencyPatient">ER</button>
+        <button class="expand-button" (click)="ToggleExpanded()">
+          <i [class]="IsExpanded ? 'fa fa-chevron-up' : 'fa fa-chevron-down'"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row patient-header-first-row" style="margin-left: 15px;">
+    <div class="patient-header-item" *ngIf="SelectedPatient?.PatientCode">
+      <label class="header-content-title">Hospital No.</label>
+      <span class="header-content-value" style="margin-bottom: 1px;">{{SelectedPatient.PatientCode}}</span>
+    </div>
+    <div class="patient-header-item">
+      <label class="header-content-title">Address</label>
+      <span class="header-content-value" style="margin-bottom: 1px;">{{coreService.SortPatientAddress(_selectedPatientService.SelectedPatient,
+        'global_patient_address')}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.VisitCode && IsInPatient">
+      <label class="header-content-title">IP Number</label>
+      <span class="header-content-value" style="margin-bottom: 1px;">{{SelectedPatient.VisitCode}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="!IsInPatient">
+      <label class="header-content-title">Appointment Type</label>
+      <span class="header-content-value" style="margin-bottom: 1px;">{{SelectedPatient.AppointmentType}}</span>
+    </div>
+  </div>
+  <div class="row patient-header-content" [ngClass]="{'expanded': IsExpanded}" style="margin-left: 15px;">
+    <div class="patient-header-item" *ngIf="SelectedPatient?.PhoneNumber && IsPatientContactMandatory">
+      <label class="header-content-title">Contact</label>
+      <span class="header-content-value">{{SelectedPatient.PhoneNumber}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.SchemeName">
+      <label class="header-content-title">Scheme</label>
+      <span class="header-content-value">{{SelectedPatient.SchemeName}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.AdmittedDate">
+      <label class="header-content-title">Date of Admission</label>
+      <date-lbl class="header-content-value" [value]="SelectedPatient.AdmittedDate" [show-time]="true"></date-lbl>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.WardBed">
+      <label class="header-content-title">Ward/Bed</label>
+      <span class="header-content-value">{{SelectedPatient.WardBed}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.WardName && IsOutPatientOREmergency">
+      <label class="header-content-title">Ward Name</label>
+      <span class="header-content-value">{{SelectedPatient.WardName}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.AdmittingDoctorName">
+      <label class="header-content-title">Attending Dr</label>
+      <span class="header-content-value">{{SelectedPatient.AdmittingDoctorName}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.AppointmentDate && IsOutPatient">
+      <label class="header-content-title">Visit Date</label>
+      <span class="header-content-value">{{RenderedAppointmentDateTime}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.AppointmentDate && IsEmergencyPatient">
+      <label class="header-content-title">Visit Date</label>
+      <span class="header-content-value">{{SelectedPatient.AppointmentDate| DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.DepartmentName && IsOutPatientOREmergency">
+      <label class="header-content-title">Department</label>
+      <span class="header-content-value">{{SelectedPatient.DepartmentName}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.Doctor && IsOutPatientOREmergency">
+      <label class="header-content-title">Visiting Doctor</label>
+      <span class="header-content-value">{{SelectedPatient.Doctor}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.CareOfPersonName && IsInPatient">
+      <label class="header-content-title">Primary Contact</label>
+      <span class="header-content-value">{{SelectedPatient.CareOfPersonName}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.CareOfPersonPhoneNo && IsInPatient">
+      <label class="header-content-title">Primary Contact No.</label>
+      <span class="header-content-value">{{SelectedPatient.CareOfPersonPhoneNo}}</span>
+    </div>
+    <div class="patient-header-item" *ngIf="SelectedPatient?.DischargeDate && IsDischarged">
+      <label class="header-content-title">Discharge Date</label>
+      <date-lbl class="header-content-value" [value]="SelectedPatient.DischargeDate" [show-time]="true"></date-lbl>
+    </div>
+    <div class="patient-header-item" *ngIf="ConsultantDoctors && ConsultantDoctors.length > 0">
+      <label class="header-content-title">Consultants</label>
+      <div class="header-content-value">
+        <div *ngFor="let consultant of ConsultantDoctors">
+          {{ consultant }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

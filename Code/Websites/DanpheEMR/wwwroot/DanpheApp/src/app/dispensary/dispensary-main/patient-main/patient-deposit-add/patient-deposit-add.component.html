@@ -1,0 +1,138 @@
+<div class="popup-static portlet box portlet-fullscreen inv_modal" *ngIf="ShowDepositAdd">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <div class="modelbox-div clearfix">
+          <div class="caption lb-caption no-margin">
+            <h3>
+              <span>Add Deposit</span>
+            </h3>
+            <a class="btn btn-danger" (click)="Close()" title="Cancel"><i class="fa fa-times"></i></a>
+          </div>
+          <form class="form-horizontal hm-form">
+            <div class="form-body">
+              <div class="form-group">
+                <label class="control-label col-md-5">Patient Name<b>:</b></label>
+                <div class="col-md-7">
+                  {{selectedPatient.ShortName}}
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-6">
+                  <div class="row">
+                    <label class="control-label col-md-5">Age<b>:</b></label>
+                    <div class="col-md-7">
+                      {{selectedPatient.Age}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="row">
+                    <label class="control-label col-md-5">Gender<b>:</b></label>
+                    <div class="col-md-7">
+                      {{selectedPatient.Gender}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-5">Deposit Type<b>:</b><sup style="color: red;">*</sup></label>
+                <div class="col-md-7">
+                  <select [(ngModel)]="depositData.TransactionType" [ngModelOptions]="{standalone: true}"
+                          (change)="SetFocusById('id_deposithead')">
+                    <option value="Deposit" selected>Add Deposit</option>
+                    <option *ngIf="depositData.DepositBalance>0" value="ReturnDeposit">Return Deposit</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-5">Deposit Head<b>:</b><sup style="color: red;">*</sup></label>
+                <div class="col-md-7">
+                  <select [(ngModel)]="SelectedDepositHead" [ngModelOptions]=" {standalone: true}"
+                          (change)="OnDepositHeadChange($event,'id_depositAmount')"
+                          id="id_deposithead" name="DepositType">
+                    <option *ngFor="let depositHead of DepositHeadList" [ngValue]="depositHead" [selected]="depositHead.IsDefault">
+                      {{depositHead.DepositHeadName}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-5">Amount<b>:</b><sup style="color: red;">*</sup></label>
+                <div class="col-md-7">
+                  <input [(ngModel)]="depositData.DepositAmount" class="form-control" placeholder="DepositAmount" name="DepositAmount" type="number"
+                         id="id_depositAmount" value="0" (keyup.enter)="SetFocusById('id_phrm_depositor')">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-5">
+                  <ng-container *ngIf="depositData.TransactionType === 'ReturnDeposit'">
+                    Refunded To
+                  </ng-container>
+                  <ng-container *ngIf="depositData.TransactionType ==='Deposit'">Depositor Name</ng-container><b>:</b><sup
+                       style="color: red;">*</sup></label>
+                <div class="col-md-7">
+                  <input id="id_phrm_depositor" [(ngModel)]="depositData.CareOf" class="form-control" placeholder="Enter Name"
+                         name="DepositorName" type="text" (keyup.enter)="SetFocusById('id_phrm_depositorContact')">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-5">
+                  <ng-container *ngIf="depositData.TransactionType ==='ReturnDeposit'">Receiver Contact</ng-container>
+                  <ng-container *ngIf="depositData.TransactionType ==='Deposit'">Depositor Contact</ng-container><b>:</b></label>
+                <div class="col-md-7">
+                  <input [(ngModel)]="depositData.CareOfContact" class="form-control" placeholder="Enter Contact No" name="DepositorContact"
+                         type="text" id="id_phrm_depositorContact" (keyup.enter)="SetFocusById('id_deposit_remarks')">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-5">Remarks<span *ngIf="depositData.TransactionType !=='ReturnDeposit'">(Optional)</span><sup
+                       *ngIf="depositData.TransactionType ==='ReturnDeposit'">*</sup><b>:</b></label>
+                <div class="col-md-7">
+                  <textarea [(ngModel)]="depositData.Remarks" [ngModelOptions]="{standalone: true}" name="Remark" type="text"
+                            id="id_deposit_remarks"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-12">
+                  <payment-mode-info [total-amount]="depositData.DepositAmount" [page-name]="'DispensaryDeposit'"
+                                     [transaction-type]="depositData.TransactionType" (on-paymentMode-change)="PaymentModeChanges($event)"
+                                     [show-deduct-from-deposit]="'true'" (on-multiple-paymentMode)="MultiplePaymentCallBack($event)">
+                  </payment-mode-info>
+                </div>
+              </div>
+              <div class="form-actions no-gutters">
+                <div class="col-md-12">
+                  <input type="button" class="btn green btn-success" (click)="SubmitDeposit(true)" [disabled]="loading"
+                         value="{{depositData.TransactionType == 'Deposit' ? 'Add Deposit' : 'Return Deposit' }} and Print" />
+                  <input type="button" class="btn green btn-success" (click)="SubmitDeposit(false)" [disabled]="loading"
+                         value="{{depositData.TransactionType == 'Deposit' ? 'Add Deposit' : 'Return Deposit' }}" />
+                </div>
+                <div class="col-md-12 no-gutters">
+                  <div class="deposit_bal">
+                    <h3>Deposit Balance: <b> {{depositData.DepositBalance}}</b></h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--popup for print deposit-->
+<div class="popup-static portlet box portlet-fullscreen inv_modal" *ngIf="ShowPrint">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="modelbox-div clearfix">
+          <div class="caption lb-caption no-border" style="text-align:center; color:black; text-decoration:underline;">
+            <a class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+          </div>
+          <phrm-deposit-receipt [deposit]="DepositPrintData"></phrm-deposit-receipt>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,148 @@
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowViewPrintPopup">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div clearfix">
+          <div class="caption custom-caption no-margin">
+            <a
+               class="btn btn-danger"
+               (click)="CloseViewPrintPopup()"
+               title="Cancel">X</a>
+          </div>
+
+          <div id="id_consultation_form">
+            <div style="display: flex;">
+              <div style="width: 15%;"></div>
+              <div style="width: 70%;">
+                <billing-header *ngIf="InvoiceDisplaySettings.ShowHeader"></billing-header>
+              </div>
+              <div style="width: 15%;"></div>
+            </div>
+            <hr style="margin: 20px 0px 10px 0px !important;">
+            <div style="text-align: center; margin: 5px 0px 0px 0px;">
+              <label><b>Consultation Form</b></label>
+            </div>
+            <hr style="margin: 0px 0px 15px 0px;">
+
+            <div class="patient-details" style="border: 1px solid #000; padding: 10px; margin: 15px 15px;">
+              <div style="display: flex; flex-direction: column; width: 100%; padding-left: 30px !important;">
+                <div style="display: flex; margin: 5px 0px !important;">
+                  <div style="width: 60%;">
+                    <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Patient Name:</b></label>{{
+                    SelectedPatient.Name }}
+                  </div>
+                  <div style="width: 40%;">
+                    <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Hospital Number:</b></label>{{
+                    SelectedPatient.PatientCode }}
+                  </div>
+                </div>
+                <div style="display: flex; margin: 5px 0px !important;">
+                  <div style="width: 60%;">
+                    <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Age/Gender:</b></label>{{
+                    SelectedPatient.Age}}
+                  </div>
+                  <div style="width: 40%;">
+                    <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Requesting Date:</b></label>{{
+                    ConsultationRequest.RequestedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}
+                  </div>
+                </div>
+                <div style="display: flex; margin: 5px 0px !important;" *ngIf="HasWardBedDetails">
+                  <div style="width: 60%;" *ngIf="HasWardBedDetails">
+                    <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Ward/Bed:</b></label>{{SelectedPatient.BedCode }}
+                  </div>
+                  <div style="width: 40%;" *ngIf="HasIpNumber">
+                    <label style="display: inline-block; width: 135px; color: #4682B4;"><b>IP Number:</b></label>{{
+                    SelectedPatient.VisitCode }}
+                  </div>
+                </div>
+                <div style="display: flex; margin: 5px 0px !important;">
+                  <div style="width: 60%;">
+                    <label style="display: inline-block; width: 135px; color: #4682B4;"><b>To Doctor:</b></label><span style="font-weight: bold;">{{
+                      SelectedConsultationRequest.ConsultingDoctorName }}</span>
+                  </div>
+                  <div style="width: 40%;">
+                    <label style="display: inline-block; width: 135px; color: #4682B4;"><b>To Department:</b></label><span
+                          style="font-weight: bold;">{{ SelectedConsultationRequest.ConsultingDepartmentName }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin: 15px 15px 15px 15px !important; padding-bottom: 10px;">
+              <div class="col-md-12">
+                <span style="text-decoration: underline"><b>Purpose of Consultation:</b></span>
+              </div>
+              <p style="height: fit-content; margin: 15px 15px 0px 15px;">{{ SelectedConsultationRequest.PurposeOfConsultation }}</p>
+              <div style="display: flex; text-align: left; margin-top: 80px;">
+                <div style="width: 60%;"></div>
+                <div style="width: 40%;" class="doctor-details">
+                  <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Requesting Doctor:</b></label>
+                  <span><b>{{ SelectedConsultationRequest.RequestingConsultantName }}</b></span>
+                </div>
+              </div>
+              <div style="display: flex; text-align: left;">
+                <div style="width: 60%;"></div>
+                <div style="width: 40%;" class="doctor-details">
+                  <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Department:</b></label>
+                  <span>{{ SelectedConsultationRequest.RequestingDepartmentName }}</span>
+                </div>
+              </div>
+              <div style="display: flex; margin-top: 20px; text-align: left;">
+                <div style="width: 60%;"></div>
+                <div style="width: 40%;" class="doctor-details">
+                  <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Signature:</b></label>
+                  <span>&nbsp;</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" style="margin: 15px 15px 15px 15px !important; padding-bottom: 10px;">
+              <div class="col-md-12">
+                <span style="text-decoration: underline"><b>Consultant's Reports (Including evidence/Physical examination/ and review of Medical
+                    Record):</b></span>
+              </div>
+              <p style="height: fit-content; margin: 15px 15px 0px 15px !important;">{{ SelectedConsultationRequest.ConsultantResponse }}</p>
+              <div style="display: flex; width: 100%; text-align: left; margin-top: 80px;">
+                <div style="width: 60%;"></div>
+                <div style="width: 40%;" class="doctor-details">
+                  <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Consulting Doctor:</b></label>
+                  <span><b>{{ SelectedConsultationRequest.ConsultingDoctorName }}</b></span>
+                </div>
+              </div>
+              <div style="display: flex; width: 100%; text-align: left;">
+                <div style="width: 60%;"></div>
+                <div style="width: 40%;" class="doctor-details">
+                  <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Department:</b></label>
+                  <span>{{ SelectedConsultationRequest.ConsultingDepartmentName }}</span>
+                </div>
+              </div>
+              <div style="display: flex; width: 100%; margin-top: 20px; text-align: left;">
+                <div style="width: 60%;"></div>
+                <div style="width: 40%;" class="doctor-details">
+                  <label style="display: inline-block; width: 135px; color: #4682B4;"><b>Signature:</b></label>
+                  <span>&nbsp;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="id_add_new_request" style="margin-top: 15px">
+            <div class="col-md-12">
+              <div class="modelbox-footer">
+                <div class="all-buttons text-center" style="display: flex; justify-content: center; align-items: center;">
+                  <input
+                         type="button"
+                         id="add"
+                         class="btn green btn-success margin-7-hr"
+                         (click)="PrintConsultationForm()"
+                         value="Print"
+                         style="color: white; background-color: #5cb85c; border: none; padding: 10px 15px; border-radius: 4px;" />
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="margin-20-tp">
+  <a class="btn blue bordered" feature="button" (click)="ShowAddChiefComplainPage()"><i class="fa fa-plus"></i>Add New Chief Complaint</a>
+
+  <div class="row">
+
+
+    <div class="col-md-12 col-xs-12 col-sm-12">
+      <danphe-grid [grid-colDefaults]="ChiefComplainsGridColumns"
+                   [grid-data]="CLNChiefComplainsList"
+                   (grid-actions)="ChiefComplainsGridActions($event)"
+                   [paginationPageSize]="100"
+                   [show-print-button]="false">
+      </danphe-grid>
+    </div>
+
+  </div>
+  <div style="margin-top:50px;">
+    <add-chief-complains [chief-complain-to-edit]="ChiefComplainToEdit" [show-Add-New-Page]="ShowNewChiefComplainsPage"
+                         [update]="UpdateChiefComplain"
+                         (callback-add)="GetDataFromAdd($event)">
+    </add-chief-complains>
+  </div>
+</div>

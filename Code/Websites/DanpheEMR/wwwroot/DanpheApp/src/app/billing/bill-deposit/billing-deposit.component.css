@@ -1,0 +1,91 @@
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+  border: none;
+}
+
+.depositForm p {
+  font-size: 12px;
+  color: #434343;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+
+.mb-1 {
+  margin-bottom: 0.4rem;
+}
+
+.legendMessage .legend {
+  padding: 0;
+  display: flex;
+  font-size: 12px;
+  margin: 10px 0;
+  /* gap: 0 5px; */
+  justify-content: flex-end;
+}
+
+.legendMessage .legend i {
+  margin: 0;
+  color: #fb6161;
+}
+
+
+#id_deposit_danpheLoading h3 {
+  text-align: center;
+  margin: 10px 20px 0 0;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #ffffff;
+  font-weight: bold;
+
+}
+
+.progress-bar {
+  position: relative;
+  height: 8px;
+  width: 200px;
+  background: #ffffff;
+  border-radius: 25px !important;
+  overflow: hidden;
+}
+
+.progress-fill {
+  position: absolute;
+  height: 10px;
+  width: 0%;
+  animation: progress-forward 3s infinite;
+  background: rgb(11, 219, 122);
+  border-radius: 15px;
+}
+
+
+@keyframes progress-forward {
+  0% {
+    width: 0%;
+  }
+
+  25% {
+    width: 50%;
+  }
+
+  50% {
+    width: 75%;
+  }
+
+  75% {
+    width: 85%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+/* .page-content-white .page-content .page-bar {
+  z-index: 0 !important;
+} */

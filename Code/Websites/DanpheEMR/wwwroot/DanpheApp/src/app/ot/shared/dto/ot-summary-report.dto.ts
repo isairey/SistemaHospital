@@ -1,0 +1,28 @@
+export class OTSummaryReport_DTO {
+    OTBookingId: number = 0;
+    PatientVisitId: number = 0;
+    PatientId: number = 0;
+    PriceCategoryId: number = 0;
+    HospitalNumber: string = "";
+    PatientName: string = "";
+    AgeSex: string = "";
+    IncomingWard: string = "";
+    OTStartTime: string = "";
+    OTConcludeDateTime: string = "";
+    SurgeryCode: string = "";
+    SurgeryName: string = "";
+    Priority: number = 0;
+    SurgeryType: string = "";
+    Surgeon: string = "";
+    Diagnosis: string = "";
+    Anaesthesias: string = "";
+    MachineName: string = "";
+    MachineCost: number = 0;
+    OTSchedule: string = "";
+    Implants: string = "";
+    ImplantCost: number = 0;
+    BillingItems: string = "";
+    SurgeryAmount: number = 0;
+    Remarks: string = "";
+    IsSeroPositive: boolean = false;
+}

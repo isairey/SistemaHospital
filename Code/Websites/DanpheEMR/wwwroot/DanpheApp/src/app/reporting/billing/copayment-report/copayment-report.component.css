@@ -1,0 +1,43 @@
+.container {
+    background: white;
+    margin: 20px;
+}
+
+.header-text {
+    text-align: center;
+    margin-top: 40px !important;
+    width: 190%;
+}
+
+.page-body {
+    margin-top: 20px;
+}
+
+.report-data {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 98%;
+    margin-left: 30px !important;
+    margin-top: 20px !important;
+}
+
+.report-data th,
+.report-data td {
+    border: 1px solid black;
+    text-align: center;
+    height: 30px;
+}
+
+.signature {
+    margin-left: 30px !important;
+    margin-top: 20px !important;
+}
+
+.table-cell {
+    height: 30px;
+}
+
+.no-space {
+    height: 80px;
+    ;
+}

@@ -1,0 +1,29 @@
+<div class="row g-0" style="width: 100%;">
+  <div class="col-lg-7 col-md-8 col-sm-8 radiologyreport-header topcontainer">
+    <p class="radiologyreportheading">Radiology Reports</p>
+    <!-- <span><i class="fa-solid fa-circle-info"></i></span> -->
+
+    <span>
+      <div class="hover-text" style="margin-top: 0px; margin-left: 0px">
+        <i class="fa fa-info-circle infoicon" data-toggle="tooltip"></i>
+        <span class="tooltip-text" id="top">
+          <div>
+            Click on the 'View Details' button at the top corner to see more
+            information!
+          </div>
+        </span>
+      </div>
+    </span>
+  </div>
+  <div class="col-lg-5 col-md-4 col-sm-4 radiologyreportsummary topcontainer">
+    <button class="viewdetails" (click)="OnButtonClick()">
+      <label for="viewradiologyreportdetails" class="viewradiologyreportdetails point-cursor">View Details</label>
+      <i class="fa fa-angle-right arrowicon"></i>
+    </button>
+  </div>
+</div>
+
+<!-- radioDetailsChart -->
+<div class="chart-container">
+  <canvas #radiologychart></canvas>
+</div>

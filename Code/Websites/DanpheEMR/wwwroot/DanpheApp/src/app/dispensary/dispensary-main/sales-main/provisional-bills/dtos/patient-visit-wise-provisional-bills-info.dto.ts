@@ -1,0 +1,20 @@
+export class PatientVisitWiseProvisionalBillsInfo_DTO {
+  PatientId: number = 0;
+  PatientCode: string = '';
+  ShortName: string = '';
+  DateOfBirth: string = '';
+  Gender: string = '';
+  Address: string = '';
+  CountrySubDivisionName: string = '';
+  ContactNo: string = '';
+  PANNumber: string = '';
+  LastCreditBillDate: string = '';
+  TotalCredit: number = 0;
+  PatientVisitId: number = 0;
+  SchemeName: string = '';
+  SchemeId: number = 0;
+  VisitType: string = '';
+  WardNumber: string = '';
+  CountryName: string = '';
+  MunicipalityName: string = '';
+}

@@ -1,0 +1,12 @@
+﻿<div>
+    <input type="button" class="btn green btn-success" (click)="AddVoucher()" value="Create Voucher" />
+    <voucher-add [showAddPage]="showAddPage"
+                 [selectedVoucher]="selectedVoucher"
+                 (callback-add)="CallBackAdd($event)"></voucher-add>
+</div>
+<div class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+        <danphe-grid [grid-colDefaults]="voucherGridColumns" [grid-data]="voucherList" (grid-actions)="VoucherGridActions($event)">
+        </danphe-grid>
+    </div>
+</div>

@@ -1,0 +1,171 @@
+<form [formGroup]="OTCheckList.OTCheckListValidator" class="form-horizontal hm-form">
+
+    <div class="col-md-12" style="padding: 0px;">
+        <div class="col-md-6">
+            <div class="col-md-4" style="display: flex; justify-content: space-between;">
+                <label>CheckList Name<sup> *</sup></label>
+                <span>:</span>
+            </div>
+            <div class="col-md-5">
+                <input formControlName="CheckListName" class="col-md-12" type="text" name="CheckListName" id="id_txt_checklistname"
+                       (keyup.enter)="GoToNextElement($event, 'id_txt_displayname')" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-4" style="display: flex; justify-content: space-between;">
+                <label>Display Name<sup> *</sup></label>
+                <span>:</span>
+            </div>
+            <div class="col-md-5">
+                <input formControlName="DisplayName" class="col-md-12" type="text" name="DisplayName" id="id_txt_displayname"
+                       (keyup.enter)="GoToNextElement($event, 'id_dropdown_input_type')" />
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12" style="margin-top: 5px; padding: 0px;">
+        <div class="col-md-6">
+            <div class="col-md-4" style="display: flex; justify-content: space-between;">
+                <label>Input Type<sup> *</sup></label>
+                <span>:</span>
+            </div>
+
+            <div class="col-md-5">
+                <select formControlName="InputType" name="Input Type" class="col-md-12"
+                        id="id_dropdown_input_type"
+                        #inputTypeDropdown
+                        (keydown)="HandleDropdownKeyEvents($event, 'id_dropdown_input_type')"
+                        (change)="OnCheckListInputTypeSelect($event)">
+                    <option value="" selected="true">--Select Input Type--</option>
+                    <option value="{{inputType.DisplayText}}" *ngFor="let inputType of OTCheckListInputTypes;let i = index;">
+                        {{inputType.DisplayText}}
+                    </option>
+                </select>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-4" style="display: flex; justify-content: space-between;">
+                <label>Display Sequence<sup> *</sup></label>
+                <span>:</span>
+            </div>
+            <div class="col-md-5">
+                <input formControlName="DisplaySequence" class="col-md-12" type="number" name="DisplaySequence" id="id_txt_display_sequence"
+                       (wheel)="coreService.PreventNumberChangeOnScroll($event)" (keyup.enter)="GoToNextElement($event, 'id_checkbox_isActive')" />
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12" style="margin-top: 5px; padding: 0px;">
+        <div class="col-md-6">
+            <div class="col-md-4" style="display: flex; justify-content: space-between;">
+                <label for="id_checkbox_isActive" style="cursor: pointer;">Is Active<sup> *</sup></label>
+                <span>:</span>
+            </div>
+            <div class="col-md-5">
+                <input formControlName="IsActive" type="checkbox" id="id_checkbox_isActive" name="IsActive" style="cursor: pointer;"
+                       [value]="true" (keyup.enter)="GoToNextElement($event, 'id_checkbox_isMandatory')">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-4" style="display: flex; justify-content: space-between;">
+                <label for="id_checkbox_isMandatory" style="cursor: pointer;">Is Mandatory<sup> *</sup></label>
+                <span>:</span>
+            </div>
+            <div class="col-md-5">
+                <input formControlName="IsMandatory" type="checkbox" id="id_checkbox_isMandatory" name="IsMandatory"
+                       style="cursor: pointer;" [value]="true" (keyup.enter)="GoToNextElement($event, 'id_btn_save_ot_checklist')">
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<div class="col-md-12" style="margin-top: 5px; margin-bottom: 20px; padding: 10px 10px 0px 10px;">
+    <button id="id_btn_clear_ot_checklist" class="btn orange btn-success" (click)="ClearOTCheckListFormControls()"
+            style="float: right; margin-left: 10px;">
+        Discard
+    </button>
+    <button id="id_btn_save_ot_checklist" class="btn green btn-success" (click)="SaveOTCheckList()" style="float: right; margin-left: 10px;">
+        {{ IsCheckListUpdate? 'Update' : 'Save' }}
+    </button>
+</div>
+
+
+
+<div class="row" style="padding: 10px; margin: 0px;">
+    <danphe-grid [grid-colDefaults]="OTCheckListGridColumns"
+                 [grid-data]="MSTCheckList"
+                 (grid-actions)="OTCheckListGridActions($event)"> </danphe-grid>
+</div>
+
+
+
+<div *ngIf="ShowAddLookUpPage" class="popup-static portlet box portlet-fullscreen custom_modal">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="modelbox-div clearfix">
+                    <div class="caption custom-caption" style="margin: 0px 0px 15px 0px;">
+                        <h3> <span> {{ SelectedOTCheckList.DisplayName }} </span>
+                        </h3>
+                        <a class="btn btn-danger" (click)="CloseAddLookUpPage()" title="Cancel">X</a>
+                    </div>
+                    <div style="margin: 5px, 0px;">
+                        <div class="col-md-1">
+                            <label style="font-weight: 900;">Value </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input placeholder="Enter LookUp" class="col-md-12" style="margin-left: 5px;"
+                                   [(ngModel)]="CurrentLookUp"
+                                   id="id_txt_lookup"
+                                   (keyup.enter)="GoToNextElement($event, (CurrentLookUp !== null) ? 'id_btn_add_update_lookup' : 'id_btn_save_lookup')" />
+                        </div>
+                        <div class="col-md-5 float-right">
+                            <button id="id_btn_clear_lookup" class="btn orange btn-success"
+                                    (click)="ClearLookUp()"
+                                    style="float: right; margin-left: 10px;">
+                                {{ 'Discard' }}
+                            </button>
+                            <button id="id_btn_add_update_lookup" class="btn green btn-success"
+                                    (click)="AddLookUp()"
+                                    style="float: right; margin-left: 10px;"
+                                    (keyup.enter)="GoToNextElement($event, 'id_txt_lookup')">
+                                {{ IsLookUpUpdate ? 'Update' : 'Add' }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="margin-top: 10px; margin-bottom: 10px;">
+                        <table class="col-md-10">
+                            <thead>
+                                <th>S.N.</th>
+                                <th>Value</th>
+                                <th>Action</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of CurrentLookUpList let i=index;">
+                                    <td style="width: 10%;">{{ i+1 }}</td>
+                                    <td style="width: 70%;">{{ item }}</td>
+                                    <td style="width: 20%;">
+                                        <i id="id_btn_edit_lookup" class="fa fa-edit"
+                                           style="cursor: pointer; color: blue; margin-right: 10px; zoom: 1.5;"
+                                           (click)="EditLookUp(i)"></i>
+                                        <i id="id_btn_delete_lookup" class="fa fa-trash" style="cursor: pointer; color: red; zoom: 1.5;"
+                                           (click)="DeleteLookUp(i)"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-12" style="padding: 0px 15px 5px 0px;">
+                        <button id="id_btn_save_lookup" class="btn green btn-success" (click)="SaveLookUp()"
+                                style="float: right; margin-left: 10px;">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

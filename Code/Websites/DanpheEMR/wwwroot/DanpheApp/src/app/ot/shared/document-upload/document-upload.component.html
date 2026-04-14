@@ -1,0 +1,6 @@
+<button class="dropdown-toggle grid-btnCstm" type="button" (click)="fileInput.click()">
+    <i class="fa fa-upload" aria-hidden="true"></i>
+    <input
+           #fileInput style="margin-left: 50%;display: none;" accept="image/jpeg, image/jpg, image/png" type='file'
+           (change)="HandleFileInput($event)">
+</button>

@@ -1,0 +1,48 @@
+<div class="wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="caption custom-caption">
+                <i class="glyphicon glyphicon-asterisk"></i>
+                <span class="caption-subject">InPatient Outstanding Report</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-1" style="text-align: right !important;">Operator:</div>
+            <div class="col-md-2">
+                <select [(ngModel)]="Operator">
+                    <option *ngFor="let filter of OperatorFilters" [value]="filter.FilterValue">
+                        {{ filter.FilterName }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-1">Amount:</div>
+            <div class="col-md-2">
+                <input type="number" [(ngModel)]="Amount" (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                       placeholder="Enter Amount">
+            </div>
+            <div class="col-md-2 col-xs-12">
+                <button class="btn blue"
+                        type="button"
+                        (click)="Load()">
+                    <i class="fa fa-search"></i> Show Report
+                </button>
+            </div>
+            <div style="font-size: 13px;color: grey;">
+                *Note: This is a provisional report, and the total amount is subject to change after clearance
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-sm-12" *ngIf="InpatientOutstandingReportList.length>0">
+            <danphe-grid
+                         [grid-colDefaults]="InpatientOutstandingReportColumns"
+                         [grid-data]="InpatientOutstandingReportList"
+                         [grid-exportOptions]="gridExportOptions"
+                         [grid-showExport]="true" [NepaliDateInGridParams]="NepaliDateInGridSettings">
+            </danphe-grid>
+        </div>
+    </div>
+</div>

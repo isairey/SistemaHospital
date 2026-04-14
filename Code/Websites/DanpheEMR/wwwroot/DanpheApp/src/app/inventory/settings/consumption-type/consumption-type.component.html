@@ -1,0 +1,31 @@
+<div class="popup-static portlet box portlet-fullscreen inv_modal">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="modelbox-div clearfix">
+                    <div class="caption lb-caption">
+                        <h3> <span *ngIf="!IsEditMode">Add Consumption Type</span> <span *ngIf="IsEditMode">Update Consumption Type</span> </h3>
+                        <a class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+                    </div>
+                    <form class="col-md-12" [formGroup]="consumptionTypeForm">
+                        <div class="form-group">
+                            <label>Consumption Type Name</label>
+                            <input type="text" class="form-control" formControlName="ConsumptionTypeName"
+                                   [(ngModel)]="ConsumptionType.ConsumptionTypeName">
+                            <span class="text-danger"
+                                  *ngIf="(ConsumptionFormControl.ConsumptionTypeName.touched||submitted) && ConsumptionFormControl.ConsumptionTypeName.errors && ConsumptionFormControl.ConsumptionTypeName.errors.required">
+                                Consumption Type is required
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <input type="button" class="btn green btn-success margin-7-hr" *ngIf="!IsEditMode" (click)="Save()" value="Save"
+                                   [disabled]="Loading" id="btn_save_consumption_type" />
+                            <input type="button" class="btn green btn-success margin-7-hr" *ngIf="IsEditMode" (click)="Update()" value="Update"
+                                   [disabled]="Loading" id="btn_update_consumption_type" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

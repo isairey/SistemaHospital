@@ -1,0 +1,26 @@
+<div class="table-container" style="margin-top: 5px;">
+  <table class="table table-bordered tbl_hover table-condensed">
+    <thead>
+      <tr style="background-color: #599be0; color: white;">
+        <th>Requesting Dept</th>
+        <th>Requested On</th>
+        <th>Requesting Dr.</th>
+        <th>Consulted On</th>
+        <th>Consulting Dept</th>
+        <th>Consulting Dr.</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let consult of ConsultationRequestList">
+        <td>{{consult.RequestingDepartmentName}}</td>
+        <td>{{consult.RequestedOn | DanpheDateTime:'format':'YYYY-MM-DD'}}</td>
+        <td>{{consult.RequestingConsultantName}}</td>
+        <td>{{consult.ConsultedOn | DanpheDateTime:'format':'YYYY-MM-DD'}}</td>
+        <td>{{consult.ConsultingDepartmentName}}</td>
+        <td>{{consult.ConsultingDoctorName}}</td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>

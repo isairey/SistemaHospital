@@ -1,0 +1,42 @@
+
+export class GetOTBookingDetails_DTO {
+    OTBookingId: number = null;
+    HospitalNumber: string = null;
+    PatientName: string = null;
+    AgeSex: string = null;
+    PatientId: number = null;
+    PatientVisitId: number = null;
+    PriceCategoryId: number = null;
+    BookedForDate: string = null;
+    ICDDiagnosis: string = null;
+    OtherDiagnosis: string = null;
+    Procedures: string = null;
+    UseAnaesthesia: boolean = false;
+    Anaesthesias: string = null;
+    OTMachineId: number = null;
+    CreatedBy: string = null;
+    CreatedOn: string = null;
+    ModifiedBy: string = null;
+    ModifiedOn: string = null;
+    CancellationRemarks: string = null;
+    Remarks: string = null;
+    Status: string = null;
+    PatientCode: string = null;
+    PhoneNumber: string = null;
+    SurgeryId: number = 0;
+    SurgeryType: string = "";
+    OTPriority: string = "";
+    Address: string = "";
+    PrescribedBy: number = 0;
+    OTStartTime: string = "";
+    OTConcludeTime: string = "";
+    ConcludeRemarks: string = "";
+    IsOnScheduledTime: boolean = true;
+    IsSeroPositive: boolean = false;
+    OutTimeCharge: number = 0;
+    OTExpectedDuration: number = 0;
+    MunicipalityName: string = "";
+    CountrySubDivisionName: string = "";
+    CountryName: string = "";
+    WardNumber: number = 0;
+}

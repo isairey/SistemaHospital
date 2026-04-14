@@ -1,0 +1,101 @@
+<style>
+  @page {
+    size: A4 landscape;
+    margin-top: 8px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    font-size: 70%;
+    scale: 70%;
+    color: #333333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body {
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    color: #333333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  table td,
+  table th {
+    padding: 0;
+    font-size: 12px;
+  }
+
+  .column {
+    float: left;
+    padding: 5px;
+  }
+
+  .box-body {
+    padding: 0px 10px 0 10px;
+    color: #333333
+  }
+
+  .c_name {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin-bottom: 0;
+    margin-top: 0;
+    color: #333333
+  }
+
+  .c_paragraphs {
+    font-size: 12px !important;
+    margin: 0 0 0 0;
+    padding: 0;
+    font-weight: normal;
+    color: #333333
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    color: #333333;
+  }
+
+  table td,
+  table th {
+    text-align: left;
+    vertical-align: top !important;
+    color: #333333 !important;
+    font-weight: normal !important;
+  }
+
+  table th {
+    font-weight: bold !important;
+  }
+</style>
+
+<div class="popup-static portlet box portlet-fullscreen custom_modal modal-dialog modal-dialog-centered"
+     *ngIf="ShowInvestigationResultsPrintPage">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="modelbox-div clearfix">
+          <div class="caption custom-caption no-margin" style="padding: 0;">
+            <a class="btn btn-danger" (click)="ClosePopUp()" title="Cancel">X</a>
+
+          </div>
+
+          <div class="sheet form-body col-md-12 hm-form" id="printableContent">
+            <smart-printable-hospital-header></smart-printable-hospital-header>
+            <div style="font-size: medium; font-weight: bold; text-align: center; margin-top: 2rem;">Lab Investigation Results</div>
+            <patient-details-card></patient-details-card>
+            <div id="div-investigation-results">
+            </div>
+          </div>
+          <div style="text-align:center;z-index: 4;position: relative; margin-bottom: 25px; margin-top: 15px;">
+            <button class="btn green btn-success" (click)="Print()">
+              <span>Print</span>&nbsp;&nbsp;
+              &nbsp;&nbsp; <i class="glyphicon glyphicon-print"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,720 @@
+<style>
+  .table thead tr th {
+    font-size: 12px;
+  }
+</style>
+<div class="wrapper">
+  <div class="form-body">
+    <div class="col-md-12">
+      <div>
+        <div>
+          <button class="btn btn-sm" (click)="CloseClaimScrubbingPopUp()" style="color: blue;"><i
+               class="fa fa-angle-left"></i>&nbsp;&nbsp;&nbsp;Back</button>
+        </div>
+        <div class=" col-md-12" style="padding:5px;margin-top: 15px;">
+          <div class="col-md-8">
+            <div class="col-md-12" style="background-color: #e7ecf1;border:1px solid">
+              <div class="col-md-4">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>
+                      Patient Name
+                    </label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>
+                      {{ claimDetail.PatientName }}
+                    </label>
+                  </div>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                  <div class="col-md-6">
+                    <label>
+                      Claim Code
+                    </label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>
+                      {{ claimDetail.ClaimCode }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>
+                      Hospital No.
+                    </label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>
+                      {{ claimDetail.HospitalNo }}
+                    </label>
+                  </div>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                  <div class="col-md-6">
+                    <label>
+                      Member No.
+                    </label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>
+                      {{ claimDetail.MemberNumber}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>
+                      Age/Sex
+                    </label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>
+                      {{ claimDetail.AgeSex }}
+                    </label>
+                  </div>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                  <div class="col-md-6">
+                    <label>
+                      Scheme
+                    </label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>
+                      {{ claimDetail.SchemeName}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12" style="margin-top: 15px; border: 1px solid;" *ngIf="BillingInvoicesList.length">
+              <div class="col-md-12">
+                <div class="col-md-6">
+                  <h4>
+                    Billing Invoices
+                  </h4>
+                </div>
+                <div class="col-md-6" style="margin-top:5px; padding-right:0px;">
+                  <button class="btn green btn-success" style="float:right"
+                          [disabled]="!ShowBillingGenerateDocumentButton"
+                          (click)="GenerateCombineBillingDocument()">
+                    Generate Doc </button>
+                </div>
+                <table class="table table-responsive dispatch-report-table">
+                  <thead class="table-header-bg">
+                    <tr>
+                      <th scope="col" style="width: 50px;">
+                        <input type="checkbox" id="checkbox_billReview_selectAllInvoices" [(ngModel)]="SelectAllBillingInvoices"
+                               (change)="HandleBillWiseBillingCheckBox($event)">
+                      </th>
+                      <th scope="col" class="wd-80"> S.N. </th>
+                      <th scope="col" class="wd-80"> Invoice No. </th>
+                      <th scope="col" class="wd-80"> Invoice Date </th>
+                      <th scope="col" class="wd-80"> Total Amount </th>
+                      <th scope="col" class="wd-130"> Claimable Amount </th>
+                      <th scope="col" class="wd-130">IsClaimable </th>
+                      <th scope="col" class="wd-130">Actions </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let bill of BillingInvoicesList; let i = index;">
+                      <tr>
+                        <td>
+                          <input type="checkbox" [(ngModel)]="bill.IsBillingSelected" (change)="HandleBillingMainLevelCheckBox($event)">
+                        </td>
+                        <td class="wd-80">{{ i+1 }}</td>
+                        <td class="wd-80"> <a
+                             (click)="OpenBillPreviewPage(i)">{{bill.InvoiceNo}}</a>
+                        </td>
+                        <td class="wd-80"> {{bill.InvoiceDate | date:'yyyy-MM-dd'}} </td>
+                        <td class="wd-80"> {{bill.TotalAmount | number : "1.0-4"}} </td>
+                        <td class="wd-80"> {{(bill.TotalAmount - bill.NonClaimableAmount) |
+                          number : "1.0-4"}} </td>
+                        <td class="wd-80"> {{bill.IsClaimable ? 'Yes' : 'No'}} </td>
+                        <td class="wd-80">
+                          <div class="dropdown" style="display:inline-block;">
+                            <button class="dropdown-toggle grid-btnCstm" type="button"
+                                    data-toggle="dropdown">Actions...
+                              <span class="caret"> </span>
+                            </button>
+                            <ul class="dropdown-menu grid-ddlCstm">
+                              <li>
+                                <input class="no-border" DanpheConfirmationDialog
+                                       id="btnUpdateAmount" type="submit"
+                                       [title]="confirmationTitle"
+                                       [message]="confirmationMessageForRevertToBillReview"
+                                       (confirm)="HandleConfirmForRevertToBillReview(bill)"
+                                       (cancel)="HandleCancel()"
+                                       style="background-color: transparent;"
+                                       value="Revert (To Bill Review)" />
+                              </li>
+                              <li *ngIf="bill.IsClaimable">
+                                <a (click)="SetInvoiceNonClaimable(bill)">
+                                  Set Non-Claimable
+                                </a>
+                              </li>
+                              <li *ngIf="!bill.IsClaimable">
+                                <a (click)="SetInvoiceClaimable(bill)">
+                                  Set Claimable
+                                </a>
+                              </li>
+                              <!-- <li>
+                                <a
+                                   (click)="!(bill.IsDocumentGenerated || !IsClaimReadyForSubmit) && GenerateDocument(bill)">
+                                  Generate Doc
+                                </a>
+                              </li> -->
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-md-12" style="margin-top: 15px; border: 1px solid;" *ngIf="PharmacyInvoicesList.length">
+              <div class="col-md-12">
+                <div class="col-md-6">
+                  <h4>
+                    Pharmacy Invoices
+                  </h4>
+                </div>
+                <div class="col-md-6" style="margin-top:5px; padding-right:0px;">
+                  <button class="btn green btn-success" style="float:right"
+                          [disabled]="!ShowPharmacyGenerateDocumentButton || IsAllPharmacyDocumentGenerated"
+                          (click)="GenerateCombinePharmacyDocument()">
+                    Generate Doc </button>
+                </div>
+                <table class="table table-responsive dispatch-report-table">
+                  <thead class="table-header-bg">
+                    <tr>
+                      <th scope="col" style="width: 50px;">
+                        <input type="checkbox" id="checkbox_billReview_selectAllInvoices" [(ngModel)]="SelectAllPharmacyInvoices"
+                               (change)="HandleBillWisePharmacyCheckBox($event)">
+                      </th>
+                      <th scope="col" class="wd-80"> S.N. </th>
+                      <th scope="col" class="wd-80"> Invoice No. </th>
+                      <th scope="col" class="wd-80"> Invoice Date </th>
+                      <th scope="col" class="wd-80"> Total Amount </th>
+                      <th scope="col" class="wd-130"> Claimable Amount </th>
+                      <th scope="col" class="wd-130">IsClaimable </th>
+                      <th scope="col" class="wd-130">Actions </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let bill of PharmacyInvoicesList; let i = index;">
+                      <tr>
+                        <td>
+                          <input type="checkbox" [(ngModel)]="bill.IsPharmacySelected" (change)="HandlePharmacyMainLevelCheckBox($event)">
+                        </td>
+                        <td class="wd-80">{{ i+1 }}</td>
+                        <td class="wd-80"> <a
+                             (click)="OpenBillPreviewPage(i)">{{bill.InvoiceNo}}</a>
+                        </td>
+                        <td class="wd-80"> {{bill.InvoiceDate | date:'yyyy-MM-dd'}} </td>
+                        <td class="wd-80"> {{bill.TotalAmount | number : "1.0-4"}} </td>
+                        <td class="wd-80"> {{(bill.TotalAmount - bill.NonClaimableAmount) |
+                          number : "1.0-4"}} </td>
+                        <td class="wd-80"> {{bill.IsClaimable ? 'Yes' : 'No'}} </td>
+                        <td class="wd-80">
+                          <div class="dropdown" style="display:inline-block;">
+                            <button class="dropdown-toggle grid-btnCstm" type="button"
+                                    data-toggle="dropdown">Actions...
+                              <span class="caret"> </span>
+                            </button>
+                            <ul class="dropdown-menu grid-ddlCstm">
+                              <li>
+                                <input class="no-border" DanpheConfirmationDialog
+                                       id="btnUpdateAmount" type="submit"
+                                       [title]="confirmationTitle"
+                                       [message]="confirmationMessageForRevertToBillReview"
+                                       (confirm)="HandleConfirmForRevertToBillReview(bill)"
+                                       (cancel)="HandleCancel()"
+                                       style="background-color: transparent;"
+                                       value="Revert (To Bill Review)" />
+                              </li>
+                              <li *ngIf="bill.IsClaimable">
+                                <a (click)="SetInvoiceNonClaimable(bill)">
+                                  Set Non-Claimable
+                                </a>
+                              </li>
+                              <li *ngIf="!bill.IsClaimable">
+                                <a (click)="SetInvoiceClaimable(bill)">
+                                  Set Claimable
+                                </a>
+                              </li>
+                              <!-- <li>
+                                <a
+                                   (click)="!(bill.IsDocumentGenerated || !IsClaimReadyForSubmit) && GenerateDocument(bill)">
+                                  Generate Doc
+                                </a>
+                              </li> -->
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
+
+
+
+            <div class="col-md-12" style="margin-top: 15px; border: 1px solid;">
+              <div class="col-md-12">
+                <div class="col-md-12">
+                  <h4>
+                    Reports
+                  </h4>
+                </div>
+                <table class="table table-responsive dispatch-report-table">
+                  <thead class="table-header-bg">
+                    <tr>
+                      <th scope="col" class="wd-80"> S.N. </th>
+                      <th scope="col" class="wd-80"> ReportsOf</th>
+                      <th scope="col" class="wd-80"> Report Name </th>
+                      <th scope="col" class="wd-80"> Report Created Date </th>
+                      <th scope="col" class="wd-130">Actions </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let report of claimWiseReportData; let i = index;">
+                      <tr>
+                        <td class="wd-80">{{ i+1 }}</td>
+                        <td class="wd-80"> {{report.ReportOf }} </td>
+                        <td class="wd-80"> <a
+                             (click)="OpenReportDetailPage(report)">{{report.ReportName}}</a>
+                        </td>
+                        <td class="wd-80"> {{report.ReportCreatedDate | date:'yyyy-MM-dd'}}
+                        </td>
+                        <td class="wd-80">
+                          <input class="btn green btn-success"
+                                 [disabled]="report.IsDocGenerated" id="generateDoc"
+                                 type="submit" (click)="GenerateDocForReport(report)"
+                                 style="background-color: transparent;color: red;"
+                                 value="Generate Doc" />
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-md-12">
+                <div class="col-md-6">
+                  <h4>
+                    Documents
+                  </h4>
+                </div>
+                <div class="col-md-6">
+                  <button class="btn green btn-success" style="float:right"
+                          (click)="OpenNewDocumentUploadPopUp()">
+                    <span>
+                      <i class="fa fa-upload" aria-hidden="true"></i>
+                    </span>
+                    New Document Upload
+                  </button>
+                </div>
+                <table class="table table-responsive dispatch-report-table">
+                  <thead class="table-header-bg">
+                    <tr>
+                      <th scope="col" class="wd-80"> S.N. </th>
+                      <th scope="col" class="wd-80"> FileName </th>
+                      <th scope="col" class="wd-80"> Document Type </th>
+                      <th scope="col" class="wd-80"> Size </th>
+                      <th scope="col" class="wd-130"> Remarks </th>
+                      <th scope="col" class="wd-130"> Uploaded By/On </th>
+                      <th scope="col" class="wd-130">Actions </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let file of uploadedDocuments; let i = index;">
+                      <tr>
+                        <td class="wd-80">{{ i+1 }}</td>
+                        <td class="wd-80">{{file.FileDisplayName}}</td>
+                        <td class="wd-80"> {{file.FileExtension }} </td>
+                        <td class="wd-80"> {{ file.Size}} </td>
+                        <td class="wd-80"> <input type="text" class="form-control"
+                                 [(ngModel)]="file.FileDescription">
+                        </td>
+                        <td class="wd-80"> {{file.FileUploadedBy}}/{{ file.UploadedOn }}
+                        </td>
+                        <td class="wd-80">
+                          <div class="dropdown" style="display:inline-block;">
+                            <button class="dropdown-toggle grid-btnCstm" type="button"
+                                    data-toggle="dropdown">Actions...
+                              <span class="caret"> </span>
+                            </button>
+                            <ul class="dropdown-menu grid-ddlCstm">
+                              <li>
+                                <a (click)="RemoveDocument(i,file)">
+                                  Remove
+                                </a>
+                              </li>
+                              <li>
+                                <a (click)="PreviewFile(i, file)">
+                                  Preview
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Provider's Scheme:</label>
+                </div>
+                <div class="col-md-7">
+                  <select placeholder="Select Scheme" class="form-control">
+                    <option>All</option>
+                    <option>Medical</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-12" style="border:1px solid;padding:5px;margin-top: 15px;">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Total Amount</label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>{{ totalAmount | number : "1.0-4" }}</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Claimable Amount</label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>{{ claimableAmount | number : "1.0-4" }}</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Non-Claimable Amount</label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>{{ nonClaimableAmount | number : "1.0-4" }}</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Claimed Amount</label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <input type="number" onwheel="this.blur();" class="form-control"
+                           [(ngModel)]="claimDetail.ClaimedAmount">
+                  </div>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                  <div class="col-md-6">
+                    <label>In Words</label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-6">
+                    <label>{{ claimDetail.ClaimedAmount | NumberInWords | CapitalFirstLetter
+                      }}</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Remarks</label>
+                    <span style="float:right">:</span>
+                  </div>
+                  <div class="col-md-12">
+                    <textarea class="form-control"
+                              [(ngModel)]="claimDetail.ClaimRemarks"></textarea>
+                  </div>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                  <div class="col-md-12">
+                    <button class="btn green btn-success" style="float:right"
+                            (click)="ClaimPreview()">
+                      Claim Preview
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="claimDetail.ApiIntegrationName === NGHISApiIntegrationName">
+
+                <!-- This is temporarily commented for now. We will be needing this. -->
+                <div class="col-md-12" style="margin-top: 5px;" *ngIf="IsLatestHIBAPI">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label>NMCNo:</label>
+                      <div class="autocomplete-item">
+                        <input danphe-auto-complete class="form-control"
+                               [(ngModel)]="SelectedNMCNo" [source]="DoctorsNMCNoList"
+                               [list-formatter]="NMCNoListFormatter"
+                               placeholder="--Select NMCNo--"
+                               display-property-name="DoctorName" value-property-name=null
+                               onClick="this.select();" (valueChanged)="OnNMCNoSelect()"
+                               max-num-list="100" id="id_nmc" [grid-sort]="'DoctorName'"
+                               match-formatted="true" />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <table class="tbl table-bordered">
+                        <tr *ngFor="let doc of SelectedNMCNoList; let i =index;">
+                          <td style="font-size: 10px;">{{doc.DoctorName}} </td>
+                          <td style="font-size: 10px;">{{doc.NMCNo}} </td>
+                          <td><i style="color: red;" class="fa fa-close"
+                               (click)="RemoveSelectedNMCNO(i)"></i>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 8px;">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <label>Diagnosis:</label>
+                      <div class="autocomplete-item">
+                        <input danphe-auto-complete class="form-control"
+                               [(ngModel)]="SelectedICDCode" [source]="DiagnosisList"
+                               [list-formatter]="ICDCodeFormatter"
+                               placeholder="--Select Diagnosis--"
+                               display-property-name="ICDDescription" value-property-name=null
+                               onClick="this.select();" (valueChanged)="OnDiagnosisSelect()"
+                               max-num-list="100" id="Input_ICDCode"
+                               [grid-sort]="'ICDDescription'" match-formatted="true"
+                               [attr.disabled]="claimDetail.ClaimApiResponseId && claimDetail.ClaimApiResponseId>0? true: null"
+                               #Input_ICDCode />
+                      </div>
+                    </div>
+                    <div class="col-md-7">
+                      <table class="tbl table-bordered">
+                        <tr *ngFor="let icdCode of SelectedDiagnosisList; let i =index;">
+                          <td style="font-size: 10px;">({{icdCode.ICDCode}}){{icdCode.ICDDescription}} </td>
+                          <td><i style="color: red;" class="fa fa-close"
+                               (click)="RemoveSelectedICDCode(i)"></i>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12" style="margin-top: 10px;">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <label>Explanations:</label>
+                      <textarea class="form-control" [(ngModel)]="ExplanationContent"></textarea>
+                      <button class="btn btn-green" (click)="AddExplanation()">Add</button>
+                    </div>
+                    <div class="col-md-7">
+                      <table class="tbl table-bordered">
+                        <tr *ngFor="let explanation of ExplanationContents; let i =index;">
+                          <td style="font-size: 10px;">{{explanation}} </td>
+                          <td><i style="color: red;" class="fa fa-close"
+                               (click)="RemoveExplanation(i)"></i>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12" style="margin-top: 30px;">
+                <div class="row">
+                  <input DanpheConfirmationDialog id="btnSaveAsDraft" type="submit"
+                         [title]="confirmationTitle" [message]="confirmationMessageForSaveAsDraft"
+                         (confirm)="HandleConfirmForSaveAsDraft()" (cancel)="HandleCancel()"
+                         style="font-weight: bold;margin-right: -2px;" class="btn green btn-success"
+                         value="Save As Draft" [disabled]="loading" />
+                  <input DanpheConfirmationDialog id="btmSubmitClaim" type="submit"
+                         [title]="confirmationTitle" [message]="confirmationMessageForSubmitClaim"
+                         (confirm)="HandleConfirmForSubmitClaim()" (cancel)="HandleCancel()"
+                         style="font-weight: bold;margin-right: -2px;" class="btn green btn-success"
+                         value="Submit Claim"
+                         [disabled]="loading || !IsClaimReadyForSubmit || (claimDetail.ClaimApiResponseId && claimDetail.ClaimApiResponseId>0)" />
+                  <input id="btmDocumentSubmit" type="submit" (click)="SubmitDocument()"
+                         style="font-weight: bold;margin-right: -2px;" class="btn green btn-success"
+                         value="Submit Document"
+                         [disabled]="loading || (!IsClaimDocumentReadyForSubmit && !(claimDetail.ClaimApiResponseId && claimDetail.ClaimApiResponseId>0))" />
+                  <input id="btmPaymentReadySubmit" type="submit"
+                         (click)="SetClaimReadyForPayment()"
+                         style="font-weight: bold;margin-top: 10px;" class="btn green btn-success"
+                         value="Prepare Claim Payment"
+                         [disabled]="loading || !IsClaimReadyForPayment" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-1 hidden-xs hidden-sm"> </div>
+    </div>
+  </div>
+</div>
+<!-- </div> -->
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="showImageFilePreviewPopUp">
+  <div class="portlet-body form">
+    <div class="form-body">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12 col-sm-12 col-xs-12 modelbox-div">
+          <div class="col-md-12">
+            <h4 style="text-align:center">
+              <b>
+                <a style="float:right; border-radius: 50% !important;
+                                    margin-top: -50px; margin-right: -50px;" class="btn btn-danger  hidden-print"
+                   (click)="CloseFilePreviewPopUp()" title="Cancel">X</a>
+              </b>
+            </h4>
+          </div>
+          <div class="col-md-12">
+            <h4 class="margin-0-vr">Document Preview</h4>
+          </div>
+          <img width="100%" style="height: 550px;" class="img-responsive" [src]="fileSrc" />
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="showNonImageFilePreviewPopUp">
+  <div class="portlet-body form">
+    <div class="form-body">
+      <div class="col-md-12">
+        <div class="col-md-12 col-sm-12 col-xs-12 modelbox-div">
+          <div class="col-md-12">
+            <h4 style="text-align:center">
+              <b>
+                <a style="float:right; border-radius: 50% !important;
+                                    margin-top: -50px; margin-right: -50px;" class="btn btn-danger  hidden-print"
+                   (click)="CloseFilePreviewPopUp()" title="Cancel">X</a>
+              </b>
+            </h4>
+          </div>
+          <div class="col-md-12">
+            <h4 class="margin-0-vr">Document Preview</h4>
+          </div>
+          <div class="col-md-12" style="padding:5px;margin-top: 15px;">
+            <iframe *ngIf="fileSrc" [src]="fileSrc" width="100%" height="550px">
+            </iframe>
+          </div>
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+<document-upload *ngIf="showNewDocumentUploadPopUp" [PatientContext]="claimDetail"
+                 (documentUpload-close)="CloseNewDocumentUploadPopUp()" (document-upload)="GetUploadedDocument($event)">
+</document-upload>
+
+<ins-bill-preview *ngIf="showBillPreviewPage" [redirectionPathAfterPrint]="'/ClaimManagement/Scrubbing'"
+                  [show-bill-preview-page]="showBillPreviewPage" [selected-bill]="selectedInvoice"
+                  (hide-bill-preview-page)="CloseBillPreviewPage($event)">
+</ins-bill-preview>
+
+<ins-claim-preview *ngIf="showClaimPreviewPage" [show-claim-preview-page]="showClaimPreviewPage"
+                   [claim-submission-id]="claimDetail.ClaimSubmissionId" [claimed-amount]="claimDetail.ClaimedAmount"
+                   (hide-claim-preview-page)="CloseClaimPreviewPage($event)">
+
+</ins-claim-preview>
+<ins-claim-pharmacy-invoice-view *ngIf="showPharmacyInvoice" [invoice]="PharmacyInvoice">
+
+</ins-claim-pharmacy-invoice-view>
+
+<ins-claim-billing-invoice-view *ngIf="showBillingInvoice" [invoice]="BillingInvoice">
+
+</ins-claim-billing-invoice-view>
+
+<danphe-view-imaging-report *ngIf="showImagingReport" (on-report-edit)="GetBackOnClose($event)"
+                            [requisitionId]="requisitionId" [reportViewFromClaimManagement]="IsCustomizeFields"
+                            [RadiologyReportFromClaimScrubbing]="RadiologyReportFromClaimScrubbing"></danphe-view-imaging-report>
+
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="showLabReportPopup">
+  <div class="portlet-body form">
+    <div class="form-body">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12 col-sm-12 col-xs-12 modelbox-div">
+          <div class="col-md-12">
+            <h4 style="text-align:center">
+              <b>
+                <a style="float:right; border-radius: 50% !important;
+                                    margin-top: -50px; margin-right: -50px;" class="btn btn-danger  hidden-print"
+                   (click)="CloseReportPopUp()" title="Cancel">X</a>
+              </b>
+            </h4>
+          </div>
+          <danphe-lab-results [showReport]="showReport" [showAddEditResult]="showAddEditResult"
+                              [printReportFromGrid]="printReportFromGrid" [requisitionIdList]="requisitionIdList"
+                              [verificationRequired]="verificationRequired" [showReportFromClaimScrubbing]="showLabReport"
+                              [enableResultEdit]="enableResultEdit" [from-claim-scrubbing]="showHeader"
+                              [show-print-button-from-claim-scrubbing]="ShowPrintButton">
+          </danphe-lab-results>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="showDischargeSummaryViewPopup">
+  <div class="portlet-body form">
+    <div class="form-body">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12 col-sm-12 col-xs-12 modelbox-div">
+          <div class="col-md-12">
+            <h4 style="text-align:center">
+              <b>
+                <a style="float:right; border-radius: 50% !important;
+                                    margin-top: -50px; margin-right: -50px;" class="btn btn-danger  hidden-print"
+                   (click)="CloseReportPopUp()" title="Cancel">X</a>
+              </b>
+            </h4>
+          </div>
+          <discharge-summary-view [selectedADT]="selectedDischarge"
+                                  [showSummaryView]="showSummaryView"></discharge-summary-view>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<danphe-view-imaging-report *ngIf="IsRadiologyReportView"
+                            (callback-After-imaging-report-Response)="OnImgingDataReceived($event)" [requisitionId]="requisitionId"
+                            [reportViewFromClaimManagement]="IsCustomizeFields"
+                            [RadiologyReportFromClaimScrubbing]="RadiologyReportFromClaimScrubbing"></danphe-view-imaging-report>
+
+<danphe-lab-results *ngIf="IsLabReportView" [showReport]="showReport" [showAddEditResult]="showAddEditResult"
+                    [printReportFromGrid]="printReportFromGrid" [requisitionIdList]="requisitionIdList"
+                    [verificationRequired]="verificationRequired" [showReportFromClaimScrubbing]="showLabReport"
+                    [enableResultEdit]="enableResultEdit" (callback-After-Response)="OnLabDataReceived($event)"
+                    [from-claim-scrubbing]="showHeader" [show-print-button-from-claim-scrubbing]="ShowPrintButton">
+</danphe-lab-results>
+
+<discharge-summary-view *ngIf="IsDischargeSummaryReportView" [selectedADT]="selectedDischarge"
+                        [showSummaryView]="showSummaryView"
+                        (call-back-after-discharge-summary-report-response)="OnDischargeSummaryDataReceived($event)"></discharge-summary-view>

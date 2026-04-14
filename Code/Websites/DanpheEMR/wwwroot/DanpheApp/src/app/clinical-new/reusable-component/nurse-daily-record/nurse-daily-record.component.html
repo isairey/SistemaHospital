@@ -1,0 +1,138 @@
+<style>
+  tbody>tr>td {
+    border: 1px solid #e7ecf1 !important;
+  }
+
+  .boxm {
+    margin: 5px;
+  }
+</style>
+<div class="portlet light bordered">
+
+  <div class="portlet-title cstm-pt-title" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="cstm-portlet-caption" style="flex-grow: 1;">
+      Nurse's Daily Record
+    </div>
+    <div class="tools" style="margin-left: auto; margin-right: 10px;">
+      <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+      <a href="javascript:;" class="fullscreen" data-original-title="" title=""> </a>
+    </div>
+  </div>
+  <div class="portlet-body">
+    <div class="container" style="margin:0px; padding:0px; width: 100%;">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="d-flex" style="justify-content: left;">
+            <div class="p-2 boxm">
+              <div style="display: flex;">
+                <label class="boxm">Last</label>
+                <input type="number" [(ngModel)]="Days" id="inputBox" (change)="ConvertDaysToDate(Days)"
+                       (wheel)="CoreService.PreventNumberChangeOnScroll($event)" class="form-control">
+                <label class="boxm">Days</label>
+              </div>
+            </div>
+
+            <div class="p-2 boxm">
+              <button type="button" class="btn green p-2" (click)="LoadReport()">
+                <i class="fa fa-search"></i> Show Result
+              </button>
+            </div>
+
+            <div class="p-2 boxm">
+              <button class="btn btn-success" (click)="ShowPrintPopUp()">
+                <span style="margin-right:4px;">Print</span> <i class="glyphicon glyphicon-print"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered tbl_hover table-condensed" *ngIf="(VitalsList && VitalsList.length)">
+        <thead>
+          <tr style="background-color: #599be0; color: white;">
+            <!-- <th>Created On</th> -->
+            <th>Date</th>
+            <th>Time</th>
+            <th *ngFor="let vitalGroup of VitalsList">
+              {{ vitalGroup.VitalsName }}<span *ngIf="vitalGroup.Unit"> ({{ vitalGroup.Unit }})</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let grouped of PatientVitals">
+            <!-- <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A' }}</td> -->
+            <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].Date}}</td>
+            <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].Time}}</td>
+            <td *ngFor="let group of grouped.VitalsGroupsByCreatedOn">
+              {{ group.VitalsData[0].VitalsValue }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowPrintPagePopUp">
+  <div class="portlet-body form">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="modelbox-div">
+        <div id="printableContent" class="modelbox-body">
+          <div class="row">
+            <smart-printable-hospital-header></smart-printable-hospital-header>
+            <div style="text-align: center; width: 100%;" class="nurse-daily-record-title">
+              <span style="font-size: medium; font-weight: bold;">
+                Nurse's Daily Record
+              </span>
+            </div>
+
+
+            <patient-details-card></patient-details-card>
+            <div class="table-container" style="margin-top: 5px;">
+              <table class="table table-bordered tbl_hover table-condensed">
+                <thead>
+                  <tr style="background-color: #599be0; color: white;">
+                    <!-- <th>Created On</th> -->
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th *ngFor="let vitalGroup of VitalsList">
+                      {{ vitalGroup.VitalsName }}<span *ngIf="vitalGroup.Unit"> ({{ vitalGroup.Unit }})</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let grouped of PatientVitals">
+                    <!-- <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A' }}</td> -->
+                    <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].Date}}</td>
+                    <td>{{ grouped.VitalsGroupsByCreatedOn[0].VitalsData[0].Time}}</td>
+                    <td *ngFor="let group of grouped.VitalsGroupsByCreatedOn">
+                      {{ group.VitalsData[0].VitalsValue }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="close-modelbox">
+          <button class="btn btn-danger" (click)="ClosePopup()">
+            X
+          </button>
+        </div>
+        <div class="modelbox-footer">
+          <div class="all-buttons text-right">
+            <button class="btn green btn-success btn-sm hidden-print" (click)="printVitals()" value="Print"
+                    title="Print Page">
+              Print <i class="fa fa-print" style="margin-left:10px;"></i>
+            </button>
+            <button type="button" class="btn btn-cancel" (click)="ClosePopup()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

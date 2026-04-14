@@ -1,0 +1,119 @@
+<style>
+  .border-container {
+    border: 2px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+</style>
+<div class="row border-container" style="margin-top: -86px; margin-left: 10px;" *ngIf="ShowFlex">
+  <div class="col-md-7">
+    <h5 class="bold">Manage Options</h5>
+    <form [formGroup]="ClinicalOption.CLNQuestionaryOptionValidator" class="form-horizontal hm-form">
+      <div class="form-body col-md-12 hm-form">
+        <div class="form-group">
+          <div class="col-md-5" style="margin-left: -20px;">
+            <label for="FieldOption">Option Name </label>
+          </div>
+          <div class="col-md-7" style="margin-left: -10px;">
+            <input class="form-control" type="text" id="Option" placeholder="Option" formControlName="QuestionOption">
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-md-5 d-flex align-items-center justify-content-center">
+    <div class="form-body col-md-12 hm-form">
+      <div class="form-group">
+        <input *ngIf="!ShowUpdate" type="button" id="add_ClinicalQuestionaryOptions" style="margin-top: 35px; margin-left: -20px;"
+               class="btn green btn-success"
+               (click)="AddClinicalFieldQuestionaryOption()"
+               value="Add" />
+        <input *ngIf="ShowUpdate" type="button" id="update_ClinicalQuestionaryOptions" style="margin-top: 35px; margin-left:-20px;"
+               class="btn green btn-success"
+               (click)="UpdateClinicalQuestionaryOptions()"
+               value="Update" />
+        <input type="button" id="clear_ClinicalQuestionaryOptions" style="margin-top: 35px; margin-left: 2px;" class="btn red btn-danger"
+               (click)="ClearClinicalQuestionaryOptions()"
+               value="Clear" />
+
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 60px;">
+    <div class="form-body hm-form">
+      <danphe-grid [grid-colDefaults]="ClinicalQuestionaryOptionGridColumns" [grid-data]="CLNFieldQuestionaryOptionsAdd"
+                   (grid-actions)="ClinicalQuestionaryOptionGridActions($event)" [show-print-button]="false">
+      </danphe-grid>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Manage Options-->
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="!ShowFlex">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="modelbox-div ref_modal_div clearfix" style="margin-left: 30px; margin-right: 30px; padding-bottom: 20px;">
+          <div class="caption custom-caption no-margin">
+            <h3>
+              <span>
+                <span *ngIf="!UpdateOptions">Add Options</span>
+                <span *ngIf="UpdateOptions">Update Options</span>
+              </span>
+            </h3>
+            <a class="btn btn-danger" (click)="Close()">X</a>
+          </div>
+          <div class="col-md-6">
+            <h5 class="bold">Manage Options : {{SelectedFieldOption.FieldName}}</h5>
+            <form [formGroup]="ClinicalFieldOption.CLNFieldOptionsValidator" class="form-horizontal hm-form">
+              <div class="form-body col-md-12 hm-form">
+                <div class="form-group" style="margin-left: -30px;">
+                  <div class="col-md-5">
+                    <label for="FieldOption">Option Name :</label>
+                  </div>
+                  <div class="col-md-7" style="margin-left: -20px;">
+
+                    <input class="form-control" type="text" id="Option" placeholder="Option" formControlName="Options">
+                    <span class="color-red font-sm"
+                          *ngIf="ClinicalFieldOption.CLNFieldOptionsValidator.get('Options').invalid && ClinicalFieldOption.CLNFieldOptionsValidator.get('Options').touched">Option
+                      is required</span>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-center justify-content-center">
+            <div class="form-body col-md-12 hm-form">
+              <div class="form-group">
+                <input *ngIf="!UpdateOptions" type="button" id="add_ClinicalOptions" style="margin-top: 35px;" class="btn green btn-success"
+                       (click)="AddClinicalFieldOptions()"
+                       value="Add" />
+                <input *ngIf="UpdateOptions" type="button" id="update_ClinicalOptions" style="margin-top: 35px;" class="btn green btn-success"
+                       (click)="UpdateClinicalFieldOption()"
+                       value="Update" />
+                <input type="button" id="clear_ClinicalOptions" style="margin-top: 35px;" class="btn red btn-danger"
+                       (click)="ClearClinicalFieldOption()"
+                       value="Clear" />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 60px;">
+            <div class="form-body col-md-12 hm-form">
+
+              <danphe-grid [grid-colDefaults]="ClinicalFieldOptionGridColumns" [grid-data]="CLNFieldOptions"
+                           (grid-actions)="ClinicalFieldOptionGridActions($event)" [show-print-button]="false">
+              </danphe-grid>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>

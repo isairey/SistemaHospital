@@ -1,0 +1,307 @@
+.fractionsummary-header {
+  display: flex;
+  height: 45px;
+  margin-top: -10px;
+}
+
+.fractionsummaryheading {
+  margin-right: 5px;
+  font-size: 16px;
+  color: #666; /* Text color */
+  font-weight: bold;
+}
+
+.viewfractionsummarydetails {
+  margin-right: 3px;
+  color: #777;
+  margin-left: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.viewdetails {
+  border: 1px solid #888;
+  border-radius: 5px !important;
+  height: 27px;
+  justify-content: center;
+  /* width: 40%; */
+  float: right;
+  margin-left: 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+}
+
+.fractionsummary {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* For Table */
+
+.table-container {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 95%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Style the table header */
+.table-container thead {
+  background-color: #f2f2f2;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Style the table header cells */
+th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Style the table body cells */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Hover effect on table rows */
+tbody tr:hover {
+  background-color: #ddd;
+}
+
+/* Style the virtual scroll items */
+.example-item {
+  transition: background-color 0.3s ease;
+}
+
+.example-item:hover {
+  background-color: #ddd;
+}
+
+.flex-end {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.fractiontype label {
+  color: #666;
+}
+
+.fractiontype {
+  margin-left: 3px;
+  /* font-weight: bold; */
+}
+
+#fractiontype {
+  border-radius: 5px;
+  /* margin-left: 5px; */
+  border-color: #ddd;
+  width: 95%;
+}
+.fractiontypeLabel {
+  font-size: 20px;
+  color: #666; /* Text color */
+  font-weight: bold;
+}
+
+.fromtodate {
+  border-radius: 5px !important;
+  /* margin-left: 5px; */
+  border-color: #ddd;
+  width: 95%;
+}
+
+.fractiontypelabel,
+.fromtodate {
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+/* For Tooltip */
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  width: 150px; /* Increased width for better display */
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left; /* Adjusted text alignment */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Added box-shadow for better visibility */
+}
+
+.hover-text:hover .tooltip-text {
+  visibility: visible;
+}
+
+.hover-text {
+  position: relative;
+  display: inline-block;
+  margin: 40px;
+  font-family: Arial;
+  text-align: center;
+}
+
+.info {
+  color: #666;
+  margin-top: 12px;
+}
+
+.arrowicon {
+  color: #666;
+  font-weight: 700;
+}
+
+.viewdetails:hover {
+  cursor: pointer;
+  background-color: #0773bc;
+}
+
+.viewdetails:active {
+  background-color: #0056a3;
+  transform: scale(0.98);
+}
+
+.viewdetails:hover .viewfractionsummarydetails {
+  color: white;
+}
+
+.viewdetails:hover .arrowicon {
+  color: white !important;
+}
+
+.fromtocontainer {
+  padding-left: 100px;
+  margin-top: 10px;
+}
+
+.search-container {
+  position: sticky !important;
+  top: 0;
+  z-index: 1000;
+  display: inline-block;
+  margin-top: 0px;
+  margin-left: 5px;
+  border-radius: 5px !important;
+  overflow: hidden;
+  border: 1px solid #888;
+}
+
+.search-input {
+  width: calc(100% - 5px);
+  padding-left: 10px;
+  padding-right: 10px;
+  border: none;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: white;
+}
+
+@media only screen and (max-width: 1468px) and (min-width: 768px) {
+  .fractionsummaryheading {
+    margin-right: 5px;
+    font-size: 12px;
+    color: #666; /* Text color */
+    font-weight: bold;
+    margin-top: 3px;
+  }
+  .info {
+    font-size: 11px;
+    margin-top: 5px;
+  }
+  .arrowicon {
+    font-size: 14px;
+  }
+
+  .fractionsummary {
+    margin-top: -10px;
+  }
+  .viewdetails {
+    width: 80px;
+    height: 20px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .viewfractionsummarydetails {
+    margin-right: 2px;
+    color: #777;
+    margin-left: 2px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 6px;
+  }
+  .fractionsummary-header {
+    margin-top: -15px;
+    padding-left: 0px;
+    height: 25px;
+  }
+
+  .fractiontype label {
+    font-size: 13px;
+  }
+
+  .fractiontype {
+    margin-top: 15px;
+  }
+
+  #fractiontype {
+    width: 120px;
+    font-size: 14px;
+    font-size: 12px;
+  }
+
+  .fromtodate {
+    width: 90%;
+    height: 20px;
+    font-size: 12px;
+  }
+
+  th {
+    font-size: 12px;
+  }
+
+  td {
+    font-size: 12px;
+  }
+
+  .table-container {
+    max-height: 200px;
+    width: 90%;
+  }
+
+  .topcontainer {
+    padding-right: 0px;
+  }
+
+  #top {
+    float: right;
+  }
+
+  .fromtocontainer {
+    padding-left: 100px;
+  }
+}

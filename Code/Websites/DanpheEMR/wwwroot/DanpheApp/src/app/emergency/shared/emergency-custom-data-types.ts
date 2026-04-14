@@ -1,0 +1,1 @@
+export type FinalizedPatientStatus = { IsSelected: boolean, Value: string };

@@ -1,0 +1,131 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <div class="row" style="margin-bottom: 10px;">
+                <label class="control-label col-md-3">Package Name<sup>*</sup><b>:</b></label>
+                <div class="col-md-9">
+                    <form [formGroup]="Package.PackageValidator">
+                        <input type="text" class="form-control" [(ngModel)]="Package.PharmacyPackageName" id="id_packagename" placeholder="Enter Package Name" (keyup.enter)="coreService.FocusInputById('id_packagecode')" formControlName="PharmacyPackageName" />
+                        <span class="color-red font-sm" *ngIf="Package.IsDirty('PharmacyPackageName')" [hidden]="Package.IsValidCheck('PharmacyPackageName','required')">Package Name is
+                            required</span>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row" style="margin-bottom: 10px;">
+                <label class="control-label col-md-3">Package Code<sup>*</sup><b>:</b></label>
+                <div class="col-md-9">
+                    <form [formGroup]="Package.PackageValidator">
+                        <input type="text" class="form-control" id="id_packagecode" placeholder="Enter Package Code" [(ngModel)]="Package.PackageCode" (keyup.enter)="coreService.FocusInputById('id_package_description')" formControlName="PackageCode" />
+                        <span class="color-red font-sm" *ngIf="Package.IsDirty('PackageCode')" [hidden]="Package.IsValidCheck('PackageCode','required')">Package Code is required</span>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row" style="margin-bottom: 10px;">
+                <label class="control-label col-md-3">Description<b>:</b></label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" id="id_package_description" placeholder="Enter Description" [(ngModel)]="Package.Description" (keyup.enter)="coreService.FocusInputById('id_generic')" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <div>
+        <table class="table table-striped table-hover inv_table table-bordered table-form">
+            <thead>
+                <tr>
+                    <th><b>GenericName</b></th>
+                    <th><b>Item Name</b></th>
+                    <th><b>Qty</b></th>
+                    <th><b>Action</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <form [formGroup]="PackageItem.PackageItemsValidator">
+                            <input danphe-auto-complete class=" form-control" id="generic" [(ngModel)]="SelectedGeneric" [source]="FilteredGenericList" [list-formatter]="phrmGenericListFormatter" placeholder="--Select Generic Name--" display-property-name="GenericName" value-property-name=null onClick="this.select();" (focusout)="AssignSelectedGenName(SelectedGeneric)" min-chars="1" [grid-sort]="'GenericName'" match-formatted="true" (keyup.enter)="coreService.FocusInputById('item-box')" id="id_generic" formControlName="GenericName">
+                            <span class="color-red font-sm" *ngIf="PackageItem.IsDirty('GenericName')" [hidden]="PackageItem.IsValidCheck('GenericName','required')">Generic
+                                Name is
+                                required</span>
+                        </form>
+                    </td>
+                    <td>
+                        <form [formGroup]="PackageItem.PackageItemsValidator">
+                            <input danphe-auto-complete class="form-control" [(ngModel)]="SelectedItem" [source]="FilteredItemList" [list-formatter]="phrmItemListFormatter" placeholder="--Select Medicine--" display-property-name="ItemName" value-property-name=null onClick="this.select();" (focusout)="onItemSelect(SelectedItem)" max-num-list="100" style="width:250px;" id="item-box" [grid-sort]="'ItemName'" match-formatted="true" (keyup.enter)="coreService.FocusInputById('item_pkg_qty')" formControlName="ItemName" min-chars="1" />
+                            <span style="color: red" *ngIf="PackageItem.IsDirty('ItemName')" [hidden]="PackageItem.IsValidCheck('ItemName','required')"> ItemName is required
+                            </span>
+                            <div class="color-red" *ngIf="PackageItem.IsDirty('ItemName')" [hidden]="PackageItem.IsValidCheck('ItemName','invalidItem')">Invalid
+                                Item</div>
+                        </form>
+                    </td>
+                    <td>
+                        <form [formGroup]="PackageItem.PackageItemsValidator">
+                            <input type="number" id="item_pkg_qty" (keyup.enter)="coreService.FocusInputById('btn-add')" [(ngModel)]="PackageItem.Quantity" (wheel)="coreService.PreventNumberChangeOnScroll($event)" formControlName="Quantity">
+                            <div style="color: red" *ngIf="PackageItem.IsDirty('Quantity')" [hidden]="PackageItem.IsValidCheck('Quantity','required')"> Quantity
+                                is required</div>
+                            <div class="color-red" *ngIf="PackageItem.IsDirty('Quantity')" [hidden]="PackageItem.IsValidCheck('Quantity','invalidNumber')">
+                                Not Valid quantity<br></div>
+                        </form>
+                    </td>
+                    <td>
+                        <button type="button" id="btn-add" class="btn green btn-success" (click)="AddPackage()" (keyup.enter)="coreService.FocusInputById('item-box')">
+                            <i class="fa fa-plus"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="col-md-12">
+    <table class="table table-striped table-hover inv_table table-bordered table-form">
+        <thead>
+            <tr>
+                <th><b>#</b></th>
+                <th><b>GenericName</b></th>
+                <th><b>Item Name</b></th>
+                <th><b>Item Code</b></th>
+                <th><b>Qty</b></th>
+                <th><b>Action</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let pkg of PackageItemsList; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{pkg.GenericName}}</td>
+                <td>{{pkg.ItemName}}</td>
+                <td>{{pkg.ItemCode}}</td>
+                <td>
+                    <input type="number" (keyup.enter)="coreService.FocusInputById('save')" [(ngModel)]="pkg.Quantity" (wheel)="coreService.PreventNumberChangeOnScroll($event)" [disabled]="!pkg.CanEditQuantity" (focusout)="OnQuantityEditing()">
+                </td>
+                <td>
+                    <button type="button" id="btn-edit" class="btn btn-primary" (click)="EditPackage(i)">
+                        <i class="fa fa-edit"></i></button>
+                    <button type="button" id="btn-remove" class="btn btn-danger" (click)="RemovePackageItem(i)">
+                        <i class="fa fa-times"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="col-md-12">
+    <div class="col-md-8">
+        <div class="text-right">
+            <span>Total Quantity:&nbsp; {{TotalPackageQuantity}}</span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="text-right" style="margin-bottom: 20px;">
+            <div *ngIf="!IsEditMode">
+                <button type="button" id="save" class="btn green btn-success" (click)="SavePackage()">Save</button>
+            </div>
+            <div *ngIf="IsEditMode">
+                <button type="button" id="save" class="btn green btn-success" (click)="UpdatePackage()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,144 @@
+<style>
+    /*dont remove this   --Yogesh... multiple select options will not be visible in fullscreen mode if removed*/
+    ::ng-deep .cdk-overlay-container {
+        z-index: 20000 !important;
+    }
+
+    /*----------------*/
+
+    .field-container textarea {
+        width: 64%;
+    }
+
+    .field-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .col-details {
+        width: 25%;
+    }
+</style>
+
+<div class="field-with-table">
+
+    <div *ngIf="!IsQuestion">
+        <div class="dynamicFieldHolder" [formGroup]="NestedFormGroup">
+            <label *ngIf="Field.FieldConfig.label" class="field-label">{{Field.FieldConfig.label}}</label>
+            <div class="field-container">
+                <mat-form-field appearance="outline" class="ClinicalOptions">
+                    <mat-select [formControlName]="FormControlOption" multiple>
+                        <mat-option *ngFor="let item of Field.FieldConfig.options" [value]="item.value">
+                            {{item.label}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <textarea appFocusTextbox class="mul-remark" placeholder="Remarks"
+                          [formControlName]="FormControlRemark"></textarea>
+            </div>
+            <div class="edit-container" *ngIf="EditMode">
+                <button class="btn orange btn-success btn-discard" (click)="CancelUpdate()">Discard</button>
+                <button class="btn green btn-success" (click)="UpdateFieldValue()">Update</button>
+            </div>
+        </div>
+
+        <div *ngIf="Field.PreviewConfig.FieldData && Field.PreviewConfig.FieldData.length > 0" class="table-container"
+             style="margin-top: 5px;">
+            <table class="table table-bordered tbl_hover table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-sn">SN</th>
+                        <th class="col-date">Date</th>
+                        <th class="col-details">Details</th>
+                        <th class="col-remark">Remarks</th>
+                        <th class="col-enterby">EnterBy</th>
+                        <th class="col-action">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let data of Field.PreviewConfig.FieldData; let i = index">
+                        <tr *ngIf="data.ClinicalOptionsData && data.ClinicalOptionsData.length>0">
+                            <td class="col-sn">{{i+1}}</td>
+                            <td class="col-date">{{data.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                            <td class="col-details" style="color:black">
+                                <ng-container *ngFor="let option of data.ClinicalOptionsData; let j = index">
+                                    <span>{{ option.Options }}</span><span
+                                          *ngIf="j < data.ClinicalOptionsData.length - 1">,&nbsp;</span>
+                                </ng-container>
+                            </td>
+                            <td class="col-remark" style="color:black">{{data.Remarks | truncate:100}}</td>
+                            <td class="col-enterby">{{data.EnteredBy}}</td>
+                            <td class="col-action">
+                                <i class="fa fa-edit" *ngIf="data.IsEditable"
+                                   (click)="EditField(Field, data)"></i>
+                                <i class="fa fa-trash" *ngIf="data.IsEditable"
+                                   (click)="DeleteFieldValue(Field, data)" style="cursor: pointer;"></i>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div *ngIf="IsQuestion">
+        <div class="dynamicFieldHolder" [formGroup]="NestedFormGroup">
+            <label *ngIf="Question.FieldConfig.label" class="field-label">{{Question.FieldConfig.label}}</label>
+            <div class="field-container">
+                <mat-form-field appearance="outline" class="ClinicalOptions">
+                    <mat-select [formControlName]="FormControlOption" multiple>
+                        <mat-option *ngFor="let item of Question.FieldConfig.options" [value]="item.value">
+                            {{item.label}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <textarea appFocusTextbox class="mul-remark" placeholder="Remarks"
+                          [formControlName]="FormControlRemark"></textarea>
+            </div>
+
+            <div class="edit-container" *ngIf="EditMode">
+                <button class="btn orange btn-success btn-discard" (click)="CancelQuestionUpdate()">Discard</button>
+                <button class="btn green btn-success" (click)="UpdateQuestionFieldValue()">Update</button>
+            </div>
+        </div>
+        <div *ngIf="Question.ClinicalQuestionOptions && Question.ClinicalQuestionOptions.length > 0"
+             class="table-container" style="margin-top: 5px;">
+            <table class="table table-bordered tbl_hover table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-sn">SN</th>
+                        <th class="col-date">Date</th>
+                        <th class="col-details">Details</th>
+                        <th class="col-remark">Remarks</th>
+                        <th class="col-enterby">EnterBy</th>
+                        <th class="col-action">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let data of Question.ClinicalQuestionOptions;let i = index">
+                        <tr *ngIf="data.QuestionOptions && data.QuestionOptions.length > 0">
+                            <td class="col-sn">{{i+1}}</td>
+                            <td class="col-date">
+                                {{data.QuestionOptions[0].CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD HH:mm A'}}</td>
+                            <td class="col-details" style="color:black">
+                                <ng-container *ngFor="let option of data.QuestionOptions; let j = index">
+                                    <span>{{ option.QuestionOption }}</span><span
+                                          *ngIf="j < data.QuestionOptions.length - 1">,&nbsp;</span>
+                                </ng-container>
+                            </td>
+                            <td class="col-remark" style="color:black"><span
+                                      *ngIf="data.QuestionOptions[0]">{{data.QuestionOptions[0].Remarks |
+                                    truncate:100}}</span></td>
+                            <td class="col-enterby">{{data.QuestionOptions[0].EnteredBy}}</td>
+                            <td class="col-action">
+                                <i class="fa fa-edit" *ngIf="data.IsEditable"
+                                   (click)="EditQuestionField(Question, data)"></i>
+                                <i class="fa fa-trash" *ngIf="data.IsEditable"
+                                   (click)="DeleteQuestionFieldValue(Question, data)" style="cursor: pointer;"></i>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

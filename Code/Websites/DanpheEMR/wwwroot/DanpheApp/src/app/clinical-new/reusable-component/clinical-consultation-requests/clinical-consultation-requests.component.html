@@ -1,0 +1,40 @@
+<div style="margin: 0px; padding: 0px">
+  <div class="row" style="padding-left: 15px;">
+    <div
+         class="portlet-title cstm-pt-title"
+         style="display: flex; justify-content: space-between;">
+      <div class="cstm-portlet-caption">
+        Consultation Requests
+      </div>
+      <button
+              class="btn green btn-success"
+              name="name"
+              value=""
+              id="id_btn_new_consultation_request"
+              (click)="AddNewRequest()">
+        <span class="glyphicon glyphicon-plus"></span> New Request
+      </button>
+    </div>
+  </div>
+  <danphe-grid
+               [grid-colDefaults]="ConsultationRequestGridColumns"
+               [grid-data]="ConsultationRequestList"
+               (grid-actions)="ConsultationRequestGridActions($event)"
+               [NepaliDateInGridParams]="NepaliDateInGridSettings"
+               [show-print-button]="false">
+  </danphe-grid>
+
+  <clinical-new-request
+                        *ngIf="ShowAddNewRequestPopup"
+                        [ShowAddNewRequestPopup]="ShowAddNewRequestPopup"
+                        [IsNewRequest]="IsNewRequest"
+                        [SelectedConsultationRequest]="SelectedConsultationRequest"
+                        (OnAddNewRequestPopupClose)="AddNewRequestCallBack($event)">
+  </clinical-new-request>
+  <clinical-consultation-request-view-print
+                                            *ngIf="ShowViewPrintPopup"
+                                            [ShowViewPrintPopup]="ShowViewPrintPopup"
+                                            [SelectedConsultationRequest]="SelectedConsultationRequest"
+                                            (OnCloseViewPrintPopupClose)=" ViewPageCallBack($event)">
+  </clinical-consultation-request-view-print>
+</div>

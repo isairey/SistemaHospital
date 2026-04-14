@@ -1,0 +1,68 @@
+<!-- <tab-group>
+</tab-group> -->
+
+<style>
+    .container-Main {
+        transition: all 0.3s ease;
+    }
+
+    .container-Main.fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: #fff;
+        overflow: auto;
+    }
+
+    .nav-tabs {
+        background-color: #e9e9e9;
+        transition: all 0.3s ease;
+    }
+
+    .nav-tabs>li.active>a,
+    .nav-tabs>li.active>a:focus,
+    .nav-tabs>li.active>a:hover {
+        color: #555;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+        cursor: default;
+    }
+
+    .nav-pills,
+    .nav-tabs {
+        margin-bottom: 10px;
+    }
+
+    .ml-auto {
+        margin-left: auto;
+    }
+
+    .glyphicon-arrow-left {
+        margin-right: 5px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="container-Main" [ngClass]="{'fullscreen': IsMaximized}" style="margin: 0; padding:0;">
+    <ul class="nav nav-tabs">
+        <li *ngFor="let tab of MainTabsList" (click)="SelectTab(tab)" [class.active]="tab.IsActive">
+            <a>{{tab.Title}}</a>
+        </li>
+        <li class="ml-auto" style="float:right;">
+            <a (click)="toggleMaximize($event)">
+                <span *ngIf="!IsMaximized" class="glyphicon glyphicon-resize-full" style="font-weight: bold"></span>
+                <span *ngIf="IsMaximized" class="glyphicon glyphicon-resize-small" style="font-weight: bold"></span>
+            </a>
+        </li>
+        <li class="ml-auto" style="float:right;">
+            <a (click)="BackToPreviousPage()">
+                <span class="glyphicon glyphicon-backward"></span> Back
+            </a>
+        </li>
+    </ul>
+    <ng-container #container></ng-container>
+</div>

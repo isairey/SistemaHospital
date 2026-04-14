@@ -1,0 +1,81 @@
+<div class="incentive-inner-wrap">
+  <div class="row">
+    <div class="col-md-6 col-sm-12">
+      <!-- <div class="pull-right">
+        <button class="btn btn-primary" (click)="ExportAllIncentiveDate()">
+          <i class="fa fa-file-excel-o"></i>
+          Export
+        </button>
+      </div> -->
+      <div>
+        <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'billing-reports'">
+        </from-to-date-select>
+        <div class="form-group">
+          <div class="row" style="display: flex; justify-content: space-evenly; margin-left: 10px; margin-right: 10px;">
+            <!-- Patient Search -->
+            <div style="flex: 2; margin-right: 1rem;">
+              <label for="Patient Search">Patient Search</label>
+              <div class="form-group autocomplete-item">
+                <input danphe-auto-complete id="srch_PatientList" class="col-md-12 form-control searchtbx" [(ngModel)]="patientObj"
+                       [list-formatter]="PatientListFormatter" [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+                       placeholder="search by HospitalNo, Patient Name" display-property-name="ShortName" value-property-name=null
+                       (ngModelChange)="PatientInfoChanged()" onClick="this.select();" max-num-list="500"
+                       (keyup.enter)="SetFocusOn('id_srch_ItemList')" [min-chars]="patientSearchMinCharacterCount" match-formatted="true"
+                       [grid-sort]="'ShortName'" style="width: 100% !important;" />
+              </div>
+            </div>
+            <!-- Item Search -->
+            <div style="flex: 2; margin-right: 1rem;">
+              <label for="Item Search">Item Search</label>
+              <div class="form-group autocomplete-item">
+                <input danphe-auto-complete type="text" class="form-control"
+                       display-property-name="ItemName" id="id_srch_ItemList"
+                       [list-formatter]="ItemsListFormatter"
+                       (ngModelChange)="OnItemSelected($event)"
+                       [source]="ServiceItems" [(ngModel)]="SelectedItem"
+                       value-property-name=null max-num-list="30"
+                       onClick="this.select();" [min-chars]="1" match-formatted="true"
+                       [match-property-csv]="'ItemCode,ItemName'" [grid-sort]="'ItemName'"
+                       (keyup.enter)="SetFocusOn('id_btnLoadData')"
+                       placeholder="Item Name" style="overflow: auto; max-height: 200px;">
+              </div>
+            </div>
+            <!-- Load Button -->
+            <div style="flex: 1; display: flex; justify-content: center; align-items: center; margin-top: 8px;">
+              <button class="btn green btn-success" type="button" id="id_btnLoadData"
+                      (click)="LoadData()" [disabled]="btndisabled">
+                <i class="fa fa-refresh"></i>
+                Load
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <danphe-grid [grid-colDefaults]="billTxnItmGridColumns"
+                   [grid-data]="allBillTxnItemsList"
+                   (grid-actions)="TxnItemGridActions($event)"
+                   [show-ServerSideSearch]="false"
+                   [show-print-button]="false"
+                   [supressPagination]="true"
+                   [resizeColumnToFit]="false"
+                   [fixed-height-px]="'400px'"
+                   [NepaliDateInGridParams]="NepaliDateInGridSettings"
+                   [date-settings-name]="'inctv-txns'">
+
+      </danphe-grid>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="round-shadow-div no-padding" style="overflow: inherit;">
+      <inctv-edit-fraction *ngIf="showEditFraction"
+                           [selectedTxnItem]="selectedBillTxnItem"
+                           [EmpIncentiveInfo]="EmpIncentiveInfo"
+                           [employeeList]="allEmpList"
+                           [show-invoice-hdr-info]="true"
+                           (on-close)="EditFractionOnClose($event)">
+      </inctv-edit-fraction>
+    </div>
+  </div>
+</div>

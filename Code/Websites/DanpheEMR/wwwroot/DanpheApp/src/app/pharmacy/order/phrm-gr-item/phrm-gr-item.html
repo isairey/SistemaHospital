@@ -1,0 +1,510 @@
+<div class="popup-static portlet box portlet-fullscreen inv_modal">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="modelbox-div clearfix">
+          <div class="caption lb-caption">
+            <h3> <span *ngIf="!IsUpdate">Add GR Item</span> <span *ngIf="IsUpdate">Update GR Item</span> </h3>
+            <a class="btn btn-danger" (click)="Close()" title="Cancel"><i class="fa fa-times"></i></a>
+          </div>
+          <!--Model Box Body Start-->
+          <form [formGroup]="GoodReceiptItem.GoodReceiptItemValidator" class="form-horizontal hm-form">
+            <div class="form-body">
+              <div class="row">
+                <div class="col-md-6">
+
+                  <div class="form-group">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">Generic Name:</label>
+                      <div class="col-md-8">
+                        <div class="div-relative autocomplete-item">
+                          <input danphe-auto-complete class="" [(ngModel)]="SelectedGeneric" [source]="GenericList"
+                                 [list-formatter]="GenericNameListFormatter" placeholder="Select GenericName" display-property-name="GenericName"
+                                 value-property-name=null min-chars="1" max-num-list="30" (valueChanged)="AssignSelectedGenName()"
+                                 onClick="this.select();" match-formatted="true" [grid-sort]="'GenericName'" style="width:100%"
+                                 [ngModelOptions]="{standalone: true}" id="txt_GenericName"
+                                 [attr.disabled]="IsGReditAfterModification ? true: (IsUpdate) ? true :null"
+                                 (keyup.enter)="SetFocusById('txt_ItemName',300)" />
+                          <a style="z-index:initial" *ngIf="!GoodReceiptItem || !GoodReceiptItem.GenericName || (Loading == false) && !IsUpdate"
+                             class="fa fa-question" (click)="AddGenericPopUp()" title="Unable to find item ? Click to add to Master">
+                            <i class="fa fa-question"></i>
+                          </a>
+                          <a *ngIf="Loading==true" style="z-index:initial" title="GenericName is Loading.">
+                            <i class="fa fa-spinner"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">Item Name<sup>*</sup>:</label>
+                      <div class="col-md-8">
+                        <div class="div-relative autocomplete-item">
+                          <input danphe-auto-complete class="" [(ngModel)]="SelectedItem" [source]="ItemListFiltered"
+                                 [list-formatter]="ItemListFormatter" placeholder="Select an Item" display-property-name="ItemName"
+                                 value-property-name=null [min-chars]="1" max-num-list="30" (valueChanged)="AssignSelectedItem()"
+                                 onClick="this.select();" match-formatted="true" [grid-sort]="'ItemName'" style="width:100%" id="txt_ItemName"
+                                 [ngModelOptions]="{standalone:true}"
+                                 [attr.disabled]="IsGReditAfterModification ? true: (IsUpdate == true) ? true :null"
+                                 (keyup.enter)="(IsPackingItem == true ) ? SetFocusById('ddl_packing') : SetFocusById('txt_BatchNo')" />
+
+                          <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('ItemName')"
+                               [hidden]="GoodReceiptItem.IsValidCheck('ItemName','required') || GoodReceiptItem.IsValidCheck('ItemName','notRegisteredItem')">
+                            Name is required
+                          </div>
+                          <a [attr.disabled]="IsUpdate?null: true" style="z-index:initial"
+                             *ngIf="!GoodReceiptItem || !GoodReceiptItem.ItemId || (Loading == false)&& !IsUpdate" class="fa fa-question"
+                             (click)="AddItemPopUp()" title="Unable to find item ? Click to add to Master">
+                            <i class="fa fa-question"></i>
+                          </a>
+                          <a *ngIf="Loading==true" style="z-index:initial" title="Item is Loading.">
+                            <i class="fa fa-spinner"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group" *ngIf="IsPackingItem">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">Packing<sup>*</sup>:</label>
+                      <div class="col-md-8">
+                        <input danphe-auto-complete class="" [(ngModel)]="GoodReceiptItem.Packing" [source]="PackagingTypeList"
+                               [list-formatter]="PackingListsFormatter" display-property-name="PackingName" value-property-name=null min-chars="0"
+                               max-num-list="30" (focusout)="AssignPackingQty()" onClick="this.select();" match-formatted="true"
+                               [ngModelOptions]="{standalone:true}" id="ddl_packing" (keyup.enter)="SetFocusById('txt_BatchNo')"
+                               style="width: 100%;" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" *ngIf="!IsExpiryNotApplicable">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">BatchNo <sup>*</sup>:</label>
+                      <div class="col-md-8">
+                        <input class="form-control" type="text" onClick="this.select();" maxlength="50" [(ngModel)]="GoodReceiptItem.BatchNo"
+                               id="txt_BatchNo" (keyup.enter)="SetFocusById('ExpiryDate')" formControlName="BatchNo" style="width:100%" />
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('BatchNo')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('BatchNo','required')">
+                          required
+                        </div>
+                        <span class="color-red font-sm" *ngIf="GoodReceiptItem.IsDirty('BatchNo')"
+                              [hidden]="GoodReceiptItem.IsValidCheck('BatchNo','pattern')">Enter Batch No</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">RackNo:</label>
+                      <div class="col-md-8">
+                        <div class="input-group" style="width: 100%;">
+                          <div class="icheck-inline">
+                            <input disabled [(ngModel)]="GoodReceiptItem.RackNo" [ngModelOptions]="{standalone: true}" min="0" style="width: 100%;"
+                                   id="RackNo" onClick="this.select();" name="RackNo" type="text">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" *ngIf="!IsExpiryNotApplicable">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">Exp. Date:</label>
+                      <div class="col-md-8">
+                        <input class="form-control" [(ngModel)]="GoodReceiptItem.ExpiryDate" id="ExpiryDate" onClick="this.select();"
+                               (keyup.enter)="(IsPackingItem) ? SetFocusById('txt_StripQty') : SetFocusById('ItemQTy')" formControlName="ExpiryDate"
+                               style="width: 100%;" type="month" />
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('ExpiryDate')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('ExpiryDate','required')">
+                          Required
+                        </div>
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('ExpiryDate')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('ExpiryDate','wrongDate')">
+                          Not a valid date
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" *ngIf="IsPackingItem">
+                    <div class="row no-margin">
+                      <!-- This is For Packing Quantity/Strip Quantity -->
+                      <label class="control-label col-md-4">Packing Qty <sup>*</sup>:</label>
+                      <div class="col-md-8">
+                        <input class="form-control" type="number" min="1" [(ngModel)]="GoodReceiptItem.StripQty"
+                               (ngModelChange)="CalculationForPackingValues()" formControlName="ItemQTy" style="width: 100%;"
+                               (keyup.enter)="SetFocusById('FreeQuantity')" name="stripQty" id="txt_StripQty" onClick="this.select();"
+                               onFocus="this.select();" placeholder="Enter Strip quantity" />
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('ItemQTy')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('ItemQTy','required')">
+                          required (minimum 1)</div>
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('ItemQTy')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('ItemQTy','wrongValue')">required positive qty</div>
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('ItemQTy')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('ItemQTy','wrongDecimalValue')">required whole number
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" *ngIf="ShowPendingQty">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">Pending Qty:</label>
+                      <div class="col-md-8">
+                        <input [(ngModel)]="GoodReceiptItem.PendingQuantity" [attr.disabled]="true"
+                               (ngModelChange)="CalculationForPHRMGoodsReceiptItem()" [ngModelOptions]="{standalone:true}" onFocus="this.select();"
+                               min="0" style="width:80px" name="PendingQuantity" type="number" style="width: 100%;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" *ngIf="!IsPackingItem">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">Item Qty<sup>*</sup>:</label>
+                      <div class="col-md-8">
+                        <input [(ngModel)]="GoodReceiptItem.ItemQTy" (ngModelChange)="CalculationForPHRMGoodsReceiptItem()" formControlName="ItemQTy"
+                               (keyup.enter)="(ShowFreeQty) ? SetFocusById('FreeQuantity'): (IsPackingItem) ? SetFocusById('StripRate') : SetFocusById('GRItemPrice')"
+                               onClick="this.select();" (focusout)="CalculationForPHRMGoodsReceiptItem()" id="ItemQTy" onFocus="this.select();"
+                               min="0" style="width:80px" name="ReceivedQuantity" type="number" style="width: 100%;">
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('ItemQTy')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('ItemQTy','required')">required (minimum 0)
+                        </div>
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('ItemQTy')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('ItemQTy','wrongValue')">
+                          required positive qty
+                        </div>
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('ItemQTy')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('ItemQTy','wrongDecimalValue')">
+                          required whole number
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" *ngIf="ShowFreeQty">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">Free Qty:</label>
+                      <div class="col-md-8">
+                        <div class="input-group" style="width: 100%;">
+                          <div class="icheck-inline">
+                            <input *ngIf="IsPackingItem" [(ngModel)]="GoodReceiptItem.FreeStripQuantity"
+                                   (ngModelChange)="CalculationForPackingValues()" formControlName="FreeQuantity"
+                                   (keyup.enter)="(IsPackingItem) ? SetFocusById('txt_StripRate') : SetFocusById('GRItemPrice')"
+                                   onFocus="this.select();"
+                                   min="0" style="width: 100%;" id="FreeQuantity" onClick="this.select();" name="FreeQty" type="number">
+                            <input *ngIf="!IsPackingItem" [(ngModel)]="GoodReceiptItem.FreeQuantity"
+                                   (ngModelChange)="CalculationForPHRMGoodsReceiptItem()" formControlName="FreeQuantity"
+                                   (keyup.enter)="(IsPackingItem) ? SetFocusById('StripRate') : SetFocusById('GRItemPrice')" onFocus="this.select();"
+                                   min="0" style="width: 100%;" id="FreeQuantity" onClick="this.select();" name="FreeQty" type="number">
+                            <!-- <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('FreeQuantity')"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      [hidden]="GoodReceiptItem.IsValidCheck('FreeQuantity','required')">required (Minimum 0)
+                            </div> -->
+                            <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('FreeQuantity')"
+                                 [hidden]="GoodReceiptItem.IsValidCheck('FreeQuantity','required')">required (minimum 0)
+                            </div>
+                            <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('FreeQuantity')"
+                                 [hidden]="GoodReceiptItem.IsValidCheck('FreeQuantity','wrongValue')">
+                              required positive qty
+                            </div>
+                            <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('FreeQuantity')"
+                                 [hidden]="GoodReceiptItem.IsValidCheck('FreeQuantity','wrongDecimalValue')">
+                              required whole number
+                            </div>
+                            <a *ngIf="!!GoodReceiptItem.ItemId" id="itemPriceHistoryTooltip" class="tooltip list-tooltip ">
+                              <span class="fa fa-info" style="margin-left:5px;padding: 3px 6px 3px 6px;background-color: #c8c8d2;border-radius: 9px;">
+                              </span>
+                              <p class="tooltiptext tooltip-list-type ttptextdown no-print"
+                                 *ngIf="GoodReceiptItem.ItemFreeQuantityHistory.length;else noFreeQuantity">
+                                <span class="tooltip-header">Free Qty History</span>
+                                <span *ngFor="let itemRate of GoodReceiptItem.ItemFreeQuantityHistory">
+                                  Free({{itemRate.FreeQuantity}}) On Purchased({{itemRate.ReceivedQuantity}}) : {{itemRate.SupplierName}} :
+                                  {{itemRate.GoodReceiptDate | date: 'yyyy-M-d'}}
+                                </span>
+                              </p>
+                              <ng-template #noFreeQuantity>
+                                <p class="tooltiptext ttptextdown no-print">
+                                  No Free Quantity.
+                                </p>
+                              </ng-template>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" *ngIf="ShowFreeQty">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">Total Qty:</label>
+                      <div class="col-md-8">
+                        <div class="input-group" style="width: 100%;">
+                          <div class="icheck-inline">
+                            <input disabled [(ngModel)]="GoodReceiptItem.TotalQuantity" [ngModelOptions]="{standalone:true}" min="0"
+                                   style="width: 100%;" id="TotalQuantity" onClick="this.select();" name="TotalQty" type="number">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="row no-margin">
+                      <!-- This is for Strip Rate/Packing Rate -->
+                      <label class="control-label col-md-4">Rate<sup>*</sup>:</label>
+                      <div class="col-md-8">
+                        <input *ngIf="IsPackingItem" type="number" [(ngModel)]="GoodReceiptItem.StripRate" onClick="this.select();"
+                               onFocus="this.select();" formControlName="GRItemPrice" style="width: 100%;" (keyup.enter)="SetFocusById('Margin')"
+                               (ngModelChange)="CalculationForPackingValues()" name="StripRate" min="0" id="txt_StripRate" />
+                        <input *ngIf="!IsPackingItem" type="number" [(ngModel)]="GoodReceiptItem.GRItemPrice" min="0" name="GRItemPrice"
+                               style="width: 100%;" id="GRItemPrice" onClick="this.select();" formControlName="GRItemPrice"
+                               [attr.disabled]="(IsPackingItem || IsGReditAfterModification) ? '' : null" (keyup.enter)="SetFocusById('Margin')"
+                               onFocus="this.select();" (ngModelChange)="CalculationForPHRMGoodsReceiptItem()" />
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('GRItemPrice')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('GRItemPrice','required')">
+                          required (minimum 1)
+                        </div>
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('GRItemPrice')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('GRItemPrice','wrongValue')">
+                          required positive qty
+                        </div>
+                        <a *ngIf="!!GoodReceiptItem.ItemId" id="itemPriceHistoryTooltip" class="tooltip list-tooltip ">
+                          <span class="fa fa-info" style="margin-left:5px;padding: 3px 6px 3px 6px;background-color: #c8c8d2;border-radius: 9px;">
+                          </span>
+                          <p class="tooltiptext tooltip-list-type ttptextdown no-print"
+                             *ngIf="GoodReceiptItem.ItemRateHistory.length;else noPriceHistoryMessage">
+                            <span class="tooltip-header">Rate History</span>
+                            <span *ngFor="let itemRate of GoodReceiptItem.ItemRateHistory">
+                              Rs.{{itemRate.GRItemPrice}}-{{itemRate.SupplierName}}-{{itemRate.GoodReceiptDate | date: 'yyyy-M-d'}}
+                            </span>
+                          </p>
+                          <ng-template #noPriceHistoryMessage>
+                            <p class="tooltiptext ttptextdown no-print">
+                              No price available.
+                            </p>
+                          </ng-template>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">Margin%:</label>
+                      <div class="col-md-8">
+                        <input *ngIf="IsPackingItem" class="form-control" type="number" [(ngModel)]="GoodReceiptItem.AdjustedMargin" id="Margin"
+                               onFocus="this.select();" formControlName="AdjustedMargin" style="width: 100%;"
+                               (keyup.enter)="SetFocusById('StripSalePrice')"
+                               (focusout)="GoodReceiptItem.Margin = GoodReceiptItem.AdjustedMargin ? GoodReceiptItem.AdjustedMargin : 0;CalculationForPackingValues();"
+                               (keyup)="GoodReceiptItem.Margin = GoodReceiptItem.AdjustedMargin ? GoodReceiptItem.AdjustedMargin : 0;CalculationForPackingValues();"
+                               name="AdjustedMargin" min="0" onClick="this.select();" [attr.disabled]="IsGReditAfterModification?true:null">
+                        <input *ngIf="!IsPackingItem" class="form-control" type="number" [(ngModel)]="GoodReceiptItem.AdjustedMargin" id="Margin"
+                               onFocus="this.select();" formControlName="AdjustedMargin" style="width: 100%;"
+                               (keyup.enter)="SetFocusById('SalePrice')"
+                               (focusout)="GoodReceiptItem.Margin = GoodReceiptItem.AdjustedMargin ? GoodReceiptItem.AdjustedMargin : 0;CalculationForPHRMGoodsReceiptItem();"
+                               (keyup)="GoodReceiptItem.Margin = GoodReceiptItem.AdjustedMargin ? GoodReceiptItem.AdjustedMargin : 0;CalculationForPHRMGoodsReceiptItem();"
+                               name="AdjustedMargin" min="0" onClick="this.select();" [attr.disabled]="IsGReditAfterModification?true:null">
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('AdjustedMargin')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('AdjustedMargin','required')">
+                          required (Minimum 0)
+                        </div>
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('AdjustedMargin')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('AdjustedMargin','wrongValue')">
+                          enter positive value
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">SalePrice:</label>
+                      <div class="col-md-8">
+                        <input *ngIf="IsPackingItem" [(ngModel)]="GoodReceiptItem.StripSalePrice" (focusout)="OnStripSalePriceChange()"
+                               (keyup)="OnStripSalePriceChange()" onClick="this.select();" onFocus="this.select();" formControlName="SalePrice"
+                               min="0" name="SalePrice" id="StripSalePrice" type="number" style="width: 100%;"
+                               (keyup.enter)="SetFocusById('MRP')"
+                               [attr.disabled]="IsGReditAfterModification?true:null">
+                        <input *ngIf="!IsPackingItem" [(ngModel)]="GoodReceiptItem.SalePrice" (focusout)="OnSalePriceChange()"
+                               (keyup)="OnSalePriceChange()"
+                               onClick="this.select();" onFocus="this.select();" formControlName="SalePrice" min="0" name="SalePrice" id="SalePrice"
+                               type="number" style="width: 100%;" (keyup.enter)="SetFocusById('MRP')"
+                               [attr.disabled]="IsGReditAfterModification?true:null">
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('SalePrice')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('SalePrice','required')">required
+                          (Minimum 0)</div>
+                        <a *ngIf="!!GoodReceiptItem.ItemId" id="itemMRPHistoryTooltip" class="tooltip list-tooltip ">
+                          <span class="fa fa-info" style="margin-left:5px;padding: 3px 6px 3px 6px;background-color: #c8c8d2;border-radius: 9px;">
+                          </span>
+                          <p class="tooltiptext tooltip-list-type ttptextdown no-print"
+                             *ngIf="GoodReceiptItem.ItemMRPHistory.length;else noMRPHistoryMessage">
+                            <span class="tooltip-header">SalePrice History</span>
+                            <span *ngFor="let itemMRP of GoodReceiptItem.ItemMRPHistory">
+                              Rs.{{itemMRP.SalePrice}}-{{itemMRP.SupplierName}}-{{itemMRP.GoodReceiptDate | date: 'yyyy-M-d'}}
+                            </span>
+                          </p>
+                          <ng-template #noMRPHistoryMessage>
+                            <p class="tooltiptext ttptextdown no-print">
+                              No SalePrice available.
+                            </p>
+                          </ng-template>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="row no-margin">
+                      <label class="control-label col-md-4">MRP:</label>
+                      <div class="col-md-8">
+                        <input *ngIf="!IsPackingItem" class="form-control" type="number" [(ngModel)]="GoodReceiptItem.MRP" id="MRP"
+                               onFocus="this.select();" formControlName="MRP" style="width: 100%;"
+                               (keyup.enter)="(ShowCCCharge) ? SetFocusById('CCCharge') : SetFocusById('VATPercentage')" name="MRP" min="0"
+                               onClick="this.select();">
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('MRP')" [hidden]="GoodReceiptItem.IsValidCheck('MRP','required')">
+                          required (Minimum 0)
+                        </div>
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('MRP')" [hidden]="GoodReceiptItem.IsValidCheck('MRP','wrongValue')">
+                          enter positive value
+                        </div>
+
+                        <input *ngIf="IsPackingItem" class="form-control" type="number" [(ngModel)]="GoodReceiptItem.StripMRP"
+                               (ngModelChange)="OnStripMRPChange()" id="StripMRP" onFocus="this.select();" formControlName="StripMRP"
+                               style="width: 100%;"
+                               (keyup.enter)="(ShowCCCharge) ? SetFocusById('CCCharge') : SetFocusById('VATPercentage')" name="StripMRP" min="0"
+                               onClick="this.select();">
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('StripMRP')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('StripMRP','required')">
+                          required (Minimum 0)
+                        </div>
+                        <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('StripMRP')"
+                             [hidden]="GoodReceiptItem.IsValidCheck('StripMRP','wrongValue')">
+                          enter positive value
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="col-md-6">
+                    <div class="form-group" *ngIf="ShowCCCharge">
+                      <div class="row no-margin">
+                        <label class="control-label col-md-4">
+                          CC Charge%:
+                        </label>
+                        <div class="col-md-8">
+                          <input class="form-control" type="number" min="0" [(ngModel)]="GoodReceiptItem.CCCharge" onFocus="this.select();"
+                                 style="width: 100%;" formControlName="CCCharge"
+                                 (keyup.enter)="IsItemLevelDiscount ? SetFocusById('DiscountPercentage'):SetFocusById('VATPercentage');"
+                                 [attr.disabled]="IsGReditAfterModification?true:null" id="CCCharge" onClick="this.select();"
+                                 (focusout)="CalculationForPHRMGoodsReceiptItem()" name="CCCharge" />
+                          <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('CCCharge')"
+                               [hidden]="GoodReceiptItem.IsValidCheck('CCCharge','required') && GoodReceiptItem.IsValidCheck('CCCharge','min') && GoodReceiptItem.IsValidCheck('CCCharge','max')">
+                            CC Charge % Range: 0-100%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group" *ngIf="ShowFreeQty">
+                      <div class="row no-margin">
+                        <label class="control-label col-md-4">
+                          CC Amt:
+                        </label>
+                        <div class="col-md-8">
+                          <input class="form-control" type="number" min="0" style="width: 100%;" [(ngModel)]="GoodReceiptItem.CCAmount" disabled
+                                 [ngModelOptions]="{standalone:true}" name="FreeGoodsAmount" placeholder="Enter re-order quantity" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="row no-margin">
+                        <label class="control-label col-md-4">Sub-Total :</label>
+                        <div class="col-md-8">
+                          <input class="form-control" type="number" [(ngModel)]="GoodReceiptItem.SubTotal" [ngModelOptions]="{standalone:true}"
+                                 disabled min="0" name="SubTotal" style="width: 100%;" placeholder="" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group" *ngIf="IsItemLevelDiscount">
+                      <div class="row no-margin">
+                        <label class="control-label col-md-4">
+                          Discount%:
+                        </label>
+                        <div class="col-md-8">
+                          <input class="form-control" type="number" min="0" formControlName="DiscountPercentage" style="width: 100%;"
+                                 id="DiscountPercentage" (keyup.enter)="SetFocusById('DiscountAmount')"
+                                 [(ngModel)]="GoodReceiptItem.DiscountPercentage" onFocus="this.select();"
+                                 (focusout)="CalculationForPHRMGoodsReceiptItem()" name="DiscountPercent" onClick="this.select();" value="{{0}}" />
+                          <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('DiscountPercentage')"
+                               [hidden]="GoodReceiptItem.IsValidCheck('DiscountPercentage','min') && GoodReceiptItem.IsValidCheck('DiscountPercentage','max')">
+                            Discount % Range: 0-100%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group" *ngIf="IsItemLevelDiscount">
+                      <div class="row no-margin">
+                        <label class="control-label col-md-4">Discount Amt:</label>
+                        <div class="col-md-8">
+                          <div class="input-group" style="width: 100%;">
+                            <div class="icheck-inline">
+                              <input class="form-control" type="number" [(ngModel)]="GoodReceiptItem.DiscountAmount" id="DiscountAmount"
+                                     onClick="this.select();" [ngModelOptions]="{standalone:true}" value="{{0}}" name="DiscountAmount"
+                                     (keyup.enter)="SetFocusById('VATPercentage')" style="width: 100%;" (focusout)="DiscountAmountOnChange()"
+                                     onFocus="this.select();" placeholder="" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="row no-margin">
+                        <label class="control-label col-md-4">VAT%:</label>
+                        <div class="col-md-8">
+                          <div class="div-relative">
+                            <input [(ngModel)]="GoodReceiptItem.VATPercentage" formControlName="VATPercentage" id="VATPercentage"
+                                   onClick="this.select();" min="0" style="width: 100%;" name="VATPercentage" type="number"
+                                   (keyup.enter)="SetFocusById('btn_Save')" onFocus="this.select();"
+                                   (ngModelChange)="CalculationForPHRMGoodsReceiptItem()" value="">
+                            <div style="color:red" *ngIf="GoodReceiptItem.IsDirty('VATPercentage')"
+                                 [hidden]="GoodReceiptItem.IsValidCheck('VATPercentage','required') && GoodReceiptItem.IsValidCheck('VATPercentage','min') && GoodReceiptItem.IsValidCheck('VATPercentage','max')">
+                              VAT % Range: 0-100%
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="row no-margin">
+                        <label class="control-label col-md-4">VAT Amt:</label>
+                        <div class="col-md-8">
+                          <input class="form-control" type="number" style="width: 100%;" (ngModelChange)="CalculationForPHRMGoodsReceiptItem()"
+                                 [(ngModel)]="GoodReceiptItem.VATAmount" [ngModelOptions]="{standalone:true}" value="{{0}}" name="VATAmount" disabled
+                                 placeholder="" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="row no-margin">
+                        <label class="control-label col-md-4">Total Amount:</label>
+                        <div class="col-md-8">
+                          <input class="form-control" type="number" [(ngModel)]="GoodReceiptItem.TotalAmount" [ngModelOptions]="{standalone:true}"
+                                 value="{{0}}" disabled min="0" style="width: 100%;" name="TotalAmount" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-actions" style="float: right;">
+                      <button *ngIf="!IsUpdate" type="button" id="btn_Save" class="btn green btn-success" (click)="Save()" (keyup.enter)="Save()"
+                              value="Save">
+                        Save</button>
+                      <!-- update must have same id, for enter key assignment -->
+                      <button *ngIf="IsUpdate" type="button" id="btn_Save" class="btn green btn-success" (click)="Update()"
+                              (keyup.enter)="Update()">Update</button>
+                      <input type="button" class="btn btn-danger" (click)="Close()" value="Discard" />
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <phrm-item-add *ngIf="ShowAddItemPopUp" [showAddPage]="ShowAddItemPopUp" (callback-add)="OnNewItemAdded($event)">
+  </phrm-item-add>
+  <generic-type-add *ngIf="ShowAddGenericPopUp" [showAddPage]="ShowAddGenericPopUp" (callback-add)="OnNewGenericAdded($event)">
+  </generic-type-add>
+</div>

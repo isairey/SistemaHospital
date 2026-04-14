@@ -1,0 +1,135 @@
+<style>
+    :fullscreen {
+        background-color: white;
+    }
+
+    :-webkit-full-screen {
+        background-color: white;
+    }
+
+    :-moz-full-screen {
+        background-color: white;
+    }
+
+    :-ms-fullscreen {
+        background-color: white;
+    }
+
+    li::marker {
+        content: none;
+    }
+
+    #tprChart {
+        transition: width 0.3s ease;
+        /* Smooth resizing */
+    }
+</style>
+<div>
+    <div class="no-print col-md-12" style="padding: 15px; margin: 0px; text-align: right;">
+        <span>Last</span>
+        <input style="margin: 0px 5px; width: 10rem;" type="number" [(ngModel)]="NoOfDays"
+               (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+               (input)="OnNumberOfDaysChange(NoOfDays)">
+        <span style="margin-right: 15px;">Days</span>
+        <button
+                class="btn green btn-success" type="button" (click)="LoadVitals()"
+                [disabled]="loading">
+            <i class="fa fa-refresh"></i>
+            Load
+        </button>
+        <li style="float:right;padding-top: 5px;padding-left: 2px">
+
+            <a (click)="ToggleFullScreen()" class="glyphicon glyphicon-resize-full" style="font-weight: bold">
+            </a>
+        </li>
+    </div>
+    <div id="tprChart" #tprChart style="margin: 10px;">
+        <div #headerAndPatientDetail>
+            <div class="print-only">
+                <smart-printable-hospital-header></smart-printable-hospital-header>
+                <patient-details-card></patient-details-card>
+            </div>
+            <label
+                   style="margin: 0px; text-align: center; font-size: x-large; font-weight: bold; text-decoration: underline; width: 100%;">
+                Graphic (T.P.R) Chart
+            </label>
+            <div style="padding: 0px; margin: 0px 0px 0px 15px" *ngIf="ShowChart">
+                <h4 style="font-size: small; font-weight: bold;">Vitals Graph</h4>
+            </div>
+        </div>
+        <div class="col-md-12" *ngIf="ShowChart">
+            <canvas class="print-canvas" id="canvas"></canvas>
+        </div>
+        <div #biometricsAndOutput>
+            <div class="col-md-12" *ngIf="ShowBiometrics" style="width: 100%; margin: 15px 0px 10px 0px;">
+                <h4 style="font-size: small; font-weight: bold;">Biometrics Records</h4>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                    <thead>
+                        <tr class="header-row" style="background-color: inherit;">
+                            <th
+                                rowspan="2" style="background-color: #9999FF; border: 1px solid black; padding: 0px 3px;">
+                                Created On
+                            </th>
+                            <th
+                                [attr.colspan]="GetColSpan(column, AllDateTimeSet)" *ngFor="let column of UniqueDateSet"
+                                style="background-color: #9999FF; border: 1px solid black; padding: 0px 3px;">
+                                {{ column | DanpheDateTime:'format':'YYYY-MM-DD'}}
+                            </th>
+                        </tr>
+                        <tr class="header-row" style="background-color: inherit;">
+                            <ng-container *ngFor="let column of AllDateTimeSet">
+                                <th style="background-color: #9999FF; border: 1px solid black; padding: 0px 3px;">
+                                    {{ column | DanpheDateTime: 'format':'HH:mm A' }}
+                                </th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let vitalName of GetVitalsNames()" style="background-color: #EAF2D3;">
+                            <td style="border: 1px solid black; padding: 0px 3px;"><strong>{{ vitalName }}</strong></td>
+                            <td *ngFor="let column of AllDateTimeSet" style="border: 1px solid black; padding: 0px 3px;">
+                                {{ GetVitalsValues(vitalName, column) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-12" *ngIf="ShowOutput" style="width: 100%;">
+                <h4 style="font-size: small; font-weight: bold;">Output Records</h4>
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
+                    <thead>
+                        <tr class="header-row" style="background-color: inherit;">
+                            <th rowspan="2" style="background-color: #9999FF; border: 1px solid black; padding: 0px 3px;">Created On</th>
+                            <th [attr.colspan]="GetColSpanForOutput(column, AllDateTimeSetForOutput)" *ngFor="let column of UniqueDateSetForOutput"
+                                style="background-color: #9999FF; border: 1px solid black; padding: 0px 3px;">
+                                {{ column | DanpheDateTime:'format':'YYYY-MM-DD'}}</th>
+                        </tr>
+                        <tr class="header-row" style="background-color: inherit;">
+                            <ng-container *ngFor="let column of AllDateTimeSetForOutput">
+                                <th style="background-color: #9999FF; border: 1px solid black; padding: 0px 3px;">
+                                    {{ column | DanpheDateTime:'format':'HH:mm A' }}</th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let output of GetOutputTypes()" style="background-color: #EAF2D3;">
+                            <td style="border: 1px solid black; padding: 0px 3px;"><strong>{{ output.displayName }}</strong></td>
+                            <td *ngFor="let column of AllDateTimeSetForOutput" style="border: 1px solid black; padding: 0px 3px;">
+                                {{ GetOutputValuesForOutput(output.baseType, column) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="no-print col-md-12" style="padding: 15px; margin: 0px 0px 15px 0px; text-align: center;" *ngIf="ShowChart || ShowBiometrics">
+        <button
+                class="btn green btn-success" type="button" (click)="PrintTPRGraph()"
+                [disabled]="loading">
+            <i class="fa fa-print"></i>
+            Print
+        </button>
+    </div>
+</div>

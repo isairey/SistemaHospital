@@ -1,0 +1,62 @@
+<div class="row">
+    <div class="form-body">
+        <div class="col-md-12">
+            <div class="caption custom-caption"> <i class="glyphicon glyphicon-asterisk"></i> <span class="caption-subject">Pharmacy Final Summary
+                    Report</span> </div>
+            <div class="row">
+                <div class="col-md-4 col-xs-12">
+                    <div class="row">
+                        <label><b>Select Patient</b><b>:</b></label>
+                        <div style="display: inline-block;">
+                            <div class="div-relative autocomplete-item">
+                                <input id="SearchPatientBox" autocomplete="off" danphe-auto-complete class="form-control"
+                                       [(ngModel)]="SearchedPatient" [source]="AllPatientSearchAsync.bind(this)"
+                                       [path-to-data]="'Results'" (valueChanged)="OnPatientChanged()"
+                                       [list-formatter]="patientListFormatter" placeholder="-- Search Patient --"
+                                       display-property-name="ShortName" value-property-name=null onClick="this.select();"
+                                       max-num-list="500" min-chars="1" match-formatted="true" [grid-sort]="'ShortName'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <label><b>Visit Type:</b></label>
+                    <div style="display: inline-block;">
+                        <select class="form-control" [(ngModel)]="VisitType">
+                            <option *ngFor="let option of VisitTypes" [ngValue]="option.value">{{option.label}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-12">
+                    <label><b>DischargeStatementBill:&nbsp;&nbsp;</b></label>
+                    <div style="display: inline-block;">
+                        <div class="input-group">
+                            <div class="icheck-inline">
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input id="discharge_statement" type="checkbox" [(ngModel)]="ShowDischargeStatementBillReport" />
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <div class="form-group">
+                        <button class="btn blue" type="button" (click)="LoadReport()" [disabled]="loading">
+                            <span *ngIf="!loading">Search</span>
+                            <span *ngIf="loading">Loading...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <danphe-grid [grid-colDefaults]="PHRMBillsSummaryReportColumns" [grid-data]="billSummaryReportData"
+                         [show-print-button]="showPrintButton" (grid-actions)="SaleInvoiceGridActions($event)">
+            </danphe-grid>
+        </div>
+    </div>
+</div>
+<bill-summary-detail *ngIf="showBillDetailView" [PatientVisitId]="PatientVisitId" (callback-close)="Close()"></bill-summary-detail>

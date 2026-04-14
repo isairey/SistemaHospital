@@ -1,0 +1,1503 @@
+.top {
+  height: 60px;
+  margin-top: 15px;
+  margin-left: 5px;
+}
+
+#fiscalYear {
+  border-radius: 5px;
+  margin-left: 5px;
+  border-color: #eeee;
+  font-size: 16px;
+}
+
+.fiscalYearLabel {
+  font-size: 20px;
+  color: #666;
+  font-weight: bold;
+}
+
+/* Daily, Weekly, Monthly, Yearly Buttons Style */
+.daily-button,
+.middle-button,
+.yearly-button {
+  background-color: white;
+  color: #0773bc;
+  border-color: #0773bc;
+  box-shadow: none;
+  transition: background-color 0.3s, color 0.3s;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.daily-button:hover,
+.middle-button:hover,
+.yearly-button:hover {
+  background-color: #0773bc;
+  color: white;
+}
+
+.daily-button {
+  border-radius: 5px 0 0 5px !important;
+  border-right: none;
+}
+
+.middle-button {
+  border-radius: 0 !important;
+  border-right: none;
+}
+
+.yearly-button {
+  border-radius: 0 5px 5px 0 !important;
+}
+
+.active {
+  background-color: #0773bc !important;
+  color: white !important;
+}
+
+.date {
+  font-size: 15px;
+  color: #666;
+  /* Text color */
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.fromtodate {
+  border-radius: 5px;
+  border-color: #eeee;
+  color: #666;
+  width: 115px;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.sub-container1 {
+  width: 98.5%;
+  height: 320px;
+  background-color: white;
+  border: 1px solid #eeee;
+  justify-content: center;
+  border-radius: 5px !important;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.sub-container2 {
+  width: 98%;
+  height: 180px;
+  background-color: white;
+  border: 1px solid #eeee;
+  justify-content: center;
+  border-radius: 5px !important;
+  margin-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sub-container3 {
+  border: 1px solid #eeee;
+  width: 98%;
+  height: 170px;
+  background-color: white;
+  justify-content: center;
+  margin-bottom: 10px;
+  border-radius: 5px !important;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.sub-container4 {
+  border: 1px solid #eeee;
+  width: 99%;
+  height: 600px;
+  background-color: white;
+  padding-top: 20px;
+  padding-left: 20px;
+  justify-content: center;
+  border-radius: 5px !important;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  margin-top: -40px;
+}
+
+.sub-container5 {
+  border: 1px solid #eeee;
+  width: 99.5%;
+  height: 650px;
+  background-color: white;
+  justify-content: center;
+  border-radius: 5px !important;
+  padding-left: 10px;
+  padding-right: 10px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  margin-top: -25px;
+}
+
+.sub-container6 {
+  margin-top: 15px;
+  border: 1px solid #eeee;
+  width: 99.5%;
+  height: 250px;
+  background-color: white;
+  justify-content: center;
+  border-radius: 10px;
+  border-radius: 5px !important;
+  padding-left: 10px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sub-container7 {
+  width: 99.2%;
+  height: 500px;
+  background-color: white;
+  border: 1px solid #eeee;
+  justify-content: center;
+  border-radius: 5px !important;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sub-container8 {
+  border: 1px solid #eeee;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  width: 99.5%;
+  height: 650px;
+  background-color: white;
+  justify-content: center;
+  border-radius: 5px !important;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sub-container9 {
+  border: 1px solid #eeee;
+  margin-top: 10px;
+  width: 99%;
+  height: 600px;
+  background-color: white;
+  padding-top: 20px;
+  padding-left: 20px;
+  justify-content: center;
+  border-radius: 5px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sub-container10 {
+  width: 98%;
+  height: 155px;
+  background-color: white;
+  border: 1px solid #eeee;
+  justify-content: center;
+  padding-top: 10px;
+  padding-right: 10px;
+  border-radius: 5px !important;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.chart-header {
+  display: flex;
+  height: 45px;
+}
+
+.chartheading {
+  margin-right: 5px;
+  font-size: 16px;
+  color: white;
+  /* Text color */
+  font-weight: bold;
+}
+
+.iconspan {
+  margin-top: -1px;
+}
+
+.sampledspan {
+  font-size: 18px;
+  margin-left: 20px;
+  margin-top: -12px;
+}
+
+.pharmacyspan {
+  font-size: 18px;
+  margin-left: 20px;
+  margin-top: -5px;
+}
+
+.pharmacypatientcountright {
+  padding-right: 25px;
+}
+
+.viewdetails {
+  display: flex;
+  align-items: center;
+  border: 1px solid #888;
+  border-radius: 5px !important;
+  height: 27px;
+  justify-content: center;
+  width: 100px;
+  padding-top: 10px;
+  margin-right: 10px;
+}
+
+.button-container {
+  display: flex;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  align-items: flex-end;
+  flex-direction: column;
+}
+
+.visitdetails {
+  display: flex;
+  align-items: center;
+  border: 1px solid #888;
+  border-radius: 5px !important;
+  height: 22px;
+  justify-content: center;
+  width: 120px;
+  margin-left: 70px;
+}
+
+.viewvisitreports {
+  color: #777;
+  margin-left: 2px;
+  font-size: 7px;
+  font-weight: bold;
+  margin-top: 7px;
+}
+
+.infoviewvisitreport {
+  color: #666;
+  margin-left: 5px;
+}
+
+.labdetailsheading {
+  margin-right: 5px;
+  font-size: 16px;
+  color: #666;
+  /* Text color */
+  font-weight: bold;
+}
+
+.viewlabdetails {
+  margin-right: 3px;
+  color: #777;
+  margin-left: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.radiodetailsheading {
+  margin-right: 5px;
+  font-size: 16px;
+  color: #666;
+  font-weight: bold;
+}
+
+.viewvisitreports {
+  color: #777;
+  margin-left: 3px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.buttons {
+  background-color: white;
+  margin-bottom: 25px;
+  border-radius: 5px;
+  margin-left: 5px;
+  border-color: white;
+  height: 40px;
+  width: 40px;
+  color: #0773bc;
+  font-size: 22px;
+  font-weight: bolder;
+}
+
+#EButton {
+  font-size: 28px;
+}
+
+.horizontal-buttons {
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+  padding-right: 0px;
+  padding-right: 0px;
+}
+
+.viewvisitreporttoprow {
+  width: 100%;
+  height: 40px;
+}
+
+.viewvisitreportbottomrow {
+  width: 100%;
+}
+
+.sampled-buttons {
+  margin-top: 2px;
+  display: flex;
+  flex-direction: column;
+  margin-left: -15px;
+}
+
+.pcolorful {
+  font-size: 17px;
+}
+
+.numbercount {
+  font-size: 17px;
+  color: #666;
+  /* Text color */
+  font-weight: bold;
+}
+
+.numbercountvisitreport {
+  font-size: 18px;
+  color: #666;
+  font-weight: bold;
+}
+
+.numbercountvisitreportdown {
+  font-size: 18px;
+  color: #666;
+  font-weight: bold;
+}
+
+.numbercounttop {
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+}
+
+.numbercounttotal {
+  font-size: 35px;
+  margin-left: 25px;
+  color: #ac52c5;
+  font-weight: bold;
+  margin-top: -40px;
+}
+
+.numbercountinpatient {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.numbercountcolorfulline {
+  font-size: 17px;
+  color: #666;
+  /* Text color */
+  font-weight: bold;
+}
+
+.totalpatient {
+  display: flex;
+  margin-top: 110px;
+  margin-left: 50px;
+}
+
+.inline {
+  display: flex;
+  margin-left: 5px;
+  font-size: 17px;
+}
+
+.inlinetop {
+  display: flex;
+  margin-left: 10px;
+  font-size: 17px;
+}
+
+.inlinetoppharmacypatientcount {
+  display: flex;
+  margin-left: 15px;
+  font-size: 17px;
+}
+
+.inlineinpatient {
+  display: flex;
+  margin-left: 30px;
+  font-size: 17px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.inlineinpatientleft {
+  display: flex;
+  font-size: 17px;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.viewinpatientdetails {
+  display: flex;
+  align-items: center;
+  border: 1px solid white;
+  border-radius: 5px !important;
+  height: 22px;
+  justify-content: center;
+  padding-left: 5px;
+  margin-top: 7px;
+
+  /* width: 55%; */
+}
+
+.inlinecovid19 {
+  display: flex;
+  margin-left: 20px;
+  font-size: 17px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.inlinesampledreport {
+  display: flex;
+  margin-left: 10px;
+  font-size: 17px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.inlinepharmacycount {
+  display: flex;
+  margin-left: 20px;
+  font-size: 17px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+p {
+  color: white;
+}
+
+.inline .p {
+  margin: 0;
+}
+
+.text-end {
+  text-align: right;
+}
+
+.currentimpatientdetailsheading {
+  margin-right: 3px;
+  font-size: 14px;
+  color: white;
+  /* Text color */
+  font-weight: bold;
+  margin-left: -10px;
+}
+
+.bedicon {
+  color: white;
+  margin-top: 17px;
+  margin-right: 0px;
+  font-size: 20px;
+}
+
+.viewcurrentimpatientdetails {
+  margin-right: 3px;
+  color: white;
+  margin-top: 7px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.numbercountimpatient {
+  font-size: 15px;
+  color: #666;
+  /* Text color */
+  font-weight: bold;
+}
+
+.currentinpatientDetails .p {
+  margin: 0;
+}
+
+.inpatientbutton {
+  margin-left: 10px;
+}
+
+.ttldeathcnt {
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+}
+
+.numbercountdeath {
+  font-size: 80px;
+  color: white;
+  /* Text color */
+  font-weight: bold;
+}
+
+.totaldeath {
+  margin-top: 7px;
+  margin-right: 5px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.infototaldeath {
+  font-size: 17px;
+  color: white;
+  margin-top: 4px;
+}
+
+.totaldeathheader {
+  display: flex;
+  margin-left: 55px;
+  flex-direction: row;
+  height: 40px;
+}
+
+.verticalcolorfulline {
+  height: 62px;
+  width: 5px;
+  margin: 0;
+  padding: 1px 1px 1px 1px;
+}
+
+.colorfulbutton-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  margin-top: 10px !important;
+}
+
+.middleverticalbutton {
+  border-radius: 0 0 0 0px;
+}
+
+.topverticalbutton {
+  border-radius: 5px 5px 0 0px;
+}
+
+.buttomverticalbutton {
+  border-radius: 0 0 5px 5px;
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  color: #666;
+  padding: 10px 0;
+  margin-top: 25px;
+}
+
+.footerlicensed {
+  margin-left: 40px;
+  font-weight: bold;
+}
+
+.copyright {
+  display: flex;
+  font-weight: bold;
+  float: right;
+  margin-right: 50px;
+}
+
+.chart-box {
+  width: 95%;
+  height: 430px;
+  background-color: none;
+  padding: 20px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.chart-size {
+  width: 95%;
+  height: 90%;
+}
+
+/* For Tooltip */
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  width: 150px;
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hover-text:hover .tooltip-text {
+  visibility: visible;
+}
+
+.hover-text {
+  position: relative;
+  display: inline-block;
+  margin: 40px;
+  font-family: Arial;
+  text-align: center;
+}
+
+/* For Buttons */
+#NPButton:hover + .tooltip-text {
+  visibility: visible;
+}
+
+#OPButton:hover + .tooltip-text {
+  visibility: visible;
+}
+
+#FPButton:hover + .tooltip-text {
+  visibility: visible;
+}
+
+#EButton:hover + .tooltip-text {
+  visibility: visible;
+}
+
+#WButton:hover + .tooltip-text {
+  visibility: visible;
+}
+
+.topcontainer {
+  padding-right: 0px !important;
+  padding-left: 10px !important;
+}
+
+.pharmacypatientcounthead {
+  padding: 0px;
+  padding-left: 15px;
+}
+
+.sub2 {
+  height: 180px;
+  padding-right: 10px;
+}
+
+.sub1 {
+  padding-right: 10px;
+  margin-bottom: 10px;
+}
+
+.sub3 {
+  padding-right: 10px;
+  margin-bottom: 5px;
+}
+
+.sub4 {
+  padding-right: 10px;
+  margin-bottom: 5px;
+}
+
+.sub5 {
+  padding-right: 10px;
+  margin-bottom: 5px;
+}
+
+.sub6 {
+  padding-right: 10px;
+  margin-bottom: 5px;
+}
+
+.sub7 {
+  padding-right: 10px;
+  margin-bottom: 5px;
+}
+
+.sub8 {
+  padding-right: 10px;
+  margin-bottom: 5px;
+}
+
+.sub9 {
+  padding-right: 10px;
+  margin-bottom: 5px;
+}
+
+.sub10 {
+  padding-right: 10px;
+}
+
+.ipdetail {
+  margin-top: 5px;
+  padding-right: 0px;
+  padding-left: 25px;
+}
+
+.margintopinpatient {
+  margin-top: 5px;
+  padding-right: 30px !important;
+}
+
+.arrowlabdetails {
+  margin-top: -8px;
+  color: #666 !important;
+  font-size: 20px;
+}
+
+.arrowiconviewvisitreport {
+  color: #666;
+  font-size: 16px;
+  margin-left: 2px;
+}
+
+.arrowicon {
+  color: white;
+  font-size: 16px;
+}
+
+.arrowlabdetails {
+  color: #666;
+}
+
+.colorfullinerow {
+  margin-top: -17px;
+}
+
+.info {
+  color: white;
+  margin-top: 12px;
+}
+
+.infolabdetails {
+  color: #666;
+  margin-top: 12px;
+}
+
+.fromtopadding {
+  padding-left: 3px;
+  padding-right: 0px;
+}
+
+.NPButton {
+  align-items: start !important;
+}
+
+.OPButton {
+  align-items: center !important;
+}
+
+.FPButton {
+  align-items: end !important;
+}
+
+.NPCount {
+  align-items: left !important;
+  padding-right: 0px;
+  margin-left: 5px;
+}
+
+.OPCount {
+  align-items: center !important;
+  padding-right: 0px;
+}
+
+.FPCount {
+  padding-right: 0px;
+}
+
+#FPButton {
+  margin-left: -20px;
+}
+
+.EButton {
+  align-items: left !important;
+}
+
+.WButton {
+  align-items: end !important;
+}
+
+.ECount {
+  margin-left: 5px;
+}
+
+.WCount {
+  padding-right: 0px;
+}
+
+.containerlabtest {
+  margin-top: 5px !important;
+}
+.deathinfospan {
+  color: white;
+}
+
+.total {
+  margin-top: -5px;
+  font-size: 18px;
+}
+
+.labeltop {
+  margin-top: 13px;
+}
+
+.OKbutton {
+  height: 39px;
+  font-size: 14px !important;
+}
+
+.totalheading {
+  margin-right: 5px;
+  font-size: 16px;
+  color: #666;
+  font-weight: bold;
+}
+
+.flaskicon {
+  margin-top: 12px;
+}
+
+.topnumber {
+  font-size: 40px;
+  margin-top: -8px;
+  margin-left: 29px;
+  font-weight: bold;
+}
+
+.medkiticon {
+}
+
+.pharmacyleftcontainer {
+  margin-left: -15px;
+}
+
+.sampledrightcontainer {
+  margin-top: -20px;
+  margin-left: 15px;
+}
+
+.viewinpatientdetails:hover {
+  cursor: pointer;
+  background-color: #0773bc;
+}
+
+.viewinpatientdetails:active {
+  background-color: #0056a3;
+  transform: scale(0.98);
+}
+
+.visitdetails:hover {
+  cursor: pointer;
+  background-color: #0773bc;
+}
+
+.visitdetails:active {
+  background-color: #0056a3;
+  transform: scale(0.98);
+}
+
+.visitdetails:hover .viewvisitreports {
+  color: white;
+}
+
+.visitdetails:hover .arrowiconviewvisitreport {
+  color: white !important;
+}
+
+.viewdetails:hover {
+  cursor: pointer;
+  background-color: #0773bc;
+}
+
+.viewdetails:active {
+  background-color: #0056a3;
+  transform: scale(0.98);
+}
+
+.viewdetails:hover .viewlabdetails {
+  color: white;
+}
+
+.viewdetails:hover .arrowlabdetails {
+  color: white !important;
+}
+
+.toplabel {
+  margin-top: 10px;
+}
+
+@media only screen and (max-width: 1468px) and (min-width: 768px) {
+  .top {
+    height: 50px;
+    margin-top: 15px;
+    margin-left: 15px;
+  }
+
+  .topcolumn {
+    padding-left: 5px;
+    padding-right: 0px;
+  }
+
+  .topcardsheadercolumn {
+    padding-right: 0px;
+    height: 20px;
+  }
+
+  #fiscalYear {
+    border-radius: 5px;
+    margin-left: 3px;
+    border-color: #ddd;
+    height: 18px;
+    width: 52px;
+    font-size: 10px;
+  }
+
+  .fiscalYearLabel {
+    font-size: 12px;
+    color: #666;
+    font-weight: bold;
+  }
+
+  .daily-button,
+  .middle-button,
+  .yearly-button {
+    background-color: #ffff;
+    color: #0773bc;
+    border-color: #0773bc;
+    transition: background-color 0.3s, color 0.3s;
+    height: 20px;
+    font-size: 8px !important;
+  }
+
+  .date {
+    font-size: 10px;
+    color: #666;
+    /* Text color */
+    font-weight: bold;
+    margin-right: 3px;
+  }
+
+  .fromtodate {
+    border-radius: 5px;
+    border-color: #ddd;
+    color: #666;
+    width: 65px;
+    height: 18px;
+    font-size: 9px;
+  }
+
+  .fromcolumn {
+    padding-left: 20px;
+  }
+
+  .chartheading {
+    margin-right: 5px;
+    font-size: 9px !important;
+    font-weight: bold;
+    margin-top: 0px;
+  }
+
+  #info {
+    font-size: 11px;
+    display: flex;
+    margin-top: 2px;
+  }
+
+  .info {
+    font-size: 11px;
+    display: flex;
+    margin-top: 6px;
+  }
+
+  .chart-header {
+    display: flex;
+    height: 25px;
+  }
+
+  .bedicon {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .sampledspan {
+    font-size: 12px;
+    margin-left: 12px;
+  }
+
+  .pharmacyspan {
+    font-size: 12px;
+    margin-left: 10px;
+  }
+
+  .sub-container2 {
+    width: 103%;
+    height: 130px;
+    background-color: white;
+    border: 1px solid #eeee;
+    padding: 5px;
+    justify-content: center;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 0px;
+  }
+
+  .sub-container1 {
+    width: 103%;
+    margin-bottom: 10px;
+    padding: 5px;
+    height: 210px;
+    margin-top: -15px;
+  }
+
+  .sub-container8 {
+    height: 300px !important;
+    /* padding-right: 0px; */
+    margin-top: 5px;
+  }
+
+  .sub-container10 {
+    width: 103%;
+    height: 102px;
+    margin-top: -15px;
+    margin-bottom: 20px;
+    padding-left: 5px;
+    padding-right: 0px;
+  }
+
+  .infoicon {
+    height: 50px;
+  }
+
+  #pharmacypatientcountButton {
+    height: 30px;
+    width: 30px;
+    margin-top: 10px;
+  }
+
+  #coronaButton {
+    height: 30px;
+    width: 30px;
+  }
+
+  .numbercounttop {
+    font-size: 10 px;
+    font-weight: bold;
+  }
+
+  .inlinetop {
+    display: flex;
+    margin-left: 15px;
+    font-size: 10px;
+  }
+
+  .inlinetoppharmacypatientcount {
+    display: flex;
+    margin-left: 15px;
+    font-size: 10px;
+  }
+
+  .inlinesampledreport {
+    font-size: 12px;
+  }
+
+  .inlinepharmacycount {
+    font-size: 10px;
+    height: 30px;
+  }
+
+  .currentimpatientdetailsheading {
+    margin-right: 3px;
+    font-size: 9px;
+    font-weight: bold;
+    margin-left: -12px;
+    width: 55%;
+    margin-top: 0px;
+  }
+
+  .numbercountdeath {
+    font-size: 70px;
+    margin-right: 2px;
+    margin-top: 3px;
+    margin-left: 25%;
+  }
+
+  .totaldeath {
+    font-size: 10px;
+    margin-left: 0px;
+    margin-right: 3px;
+  }
+
+  .ttldeathcnt {
+    margin-top: -30px;
+    margin-left: -10px;
+  }
+
+  .infototaldeath {
+    font-size: 12px;
+    display: flex;
+  }
+
+  .totaldeathheader {
+    display: flex;
+    margin-left: 40px;
+  }
+
+  .numbercounttotal {
+    font-size: 13px;
+    margin-left: 30px;
+    font-weight: bold;
+  }
+
+  .totalpatient {
+    display: flex;
+    margin-top: 85px;
+    margin-left: 30px;
+  }
+
+  .viewdetails {
+    border: 1px solid #888;
+    border-radius: 5px;
+    height: 18px;
+    justify-content: center;
+    width: 85px;
+    margin-top: -10px;
+    padding-top: 9px;
+    margin-left: 0px;
+  }
+
+  .viewlabdetails {
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 10px;
+    margin-top: -3px;
+  }
+
+  .visitdetails {
+    height: 15px;
+    width: 80px;
+    padding-top: 3px;
+    margin-left: 55px;
+  }
+
+  .infoviewvisitreport {
+    font-size: 11px;
+  }
+
+  .visitreport {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .viewvisitreports {
+    color: #777;
+    margin-left: 2px;
+    font-size: 7px;
+    font-weight: bold;
+    margin-bottom: 10px !important;
+  }
+
+  .labdetailsheading {
+    font-size: 13px;
+    margin-top: 5px;
+  }
+
+  .infolabdetails {
+    font-size: 13px;
+    display: flex;
+    margin-top: 9px;
+  }
+
+  .radiodetailsheading {
+    font-size: 11px;
+    margin-top: 7px;
+  }
+
+  .ipdetail {
+    margin-top: 8px;
+    padding-right: 0px;
+  }
+
+  .margintopinpatient {
+    margin-top: 0px;
+  }
+
+  .numbercountinpatient {
+    color: white;
+    font-weight: bold;
+    font-size: 10px;
+  }
+
+  .inlineinpatient {
+    font-size: 10px;
+    margin-top: 8px;
+  }
+
+  .inlineinpatientleft {
+    font-size: 10px;
+  }
+
+  .viewcurrentimpatientdetails {
+    margin-right: 1px;
+    margin-top: 3px;
+    font-size: 7px;
+  }
+
+  .viewinpatientdetails {
+    width: 115%;
+    height: 15px;
+    padding-top: 3px;
+    align-items: center;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-right: -5px;
+    margin-left: -50%;
+  }
+
+  .numbercountcolorfulline {
+    font-size: 10px;
+    color: #666;
+    /* Text color */
+    font-weight: bold;
+    width: 60%;
+  }
+
+  .pcolorful {
+    font-size: 10px;
+    width: 100%;
+  }
+
+  .sub-container5 {
+    height: 600px !important;
+    margin-top: -35px;
+  }
+
+  .sub-container5 {
+    margin-top: -35px;
+  }
+
+  .sub-container4 {
+    height: 500px !important;
+    width: 101%;
+    margin-top: -60px;
+  }
+
+  .header {
+    height: 25px !important;
+    width: 110% !important;
+    margin-top: 20px;
+  }
+
+  .sub-container7 {
+    height: 450px !important;
+    margin-top: -150px;
+    width: 101%;
+  }
+
+  .sub2 {
+    height: 150px !important;
+    margin-left: -15px;
+  }
+
+  .sub1 {
+    padding-right: 12px;
+  }
+
+  .sub3 {
+    padding-right: 10px;
+  }
+
+  .sub4 {
+    padding-right: 10px;
+  }
+
+  .sub5 {
+    padding-right: 5px;
+  }
+
+  .sub6 {
+    padding-right: 5px;
+  }
+
+  .sub7 {
+    padding-right: 5px;
+  }
+
+  .sub8 {
+    padding-right: 5px;
+  }
+
+  .sub9 {
+    padding-right: 5px;
+  }
+
+  .sub10 {
+    padding-right: 5px;
+  }
+
+  .columnpatients {
+    width: 60%;
+    margin-top: 10px;
+  }
+
+  .sub-container9 {
+    height: 400px;
+    margin-top: 5px;
+  }
+
+  .daily-button {
+  }
+
+  .middle-button {
+    border-radius: 0;
+    /* No rounded corners */
+    border-right: none;
+  }
+
+  .iconspan {
+    margin-top: -7px;
+    width: 20%;
+  }
+
+  .deathinfospan {
+    margin-top: -6px;
+  }
+
+  .arrowicon {
+    font-size: 10px;
+    margin-top: -5px;
+    margin-right: -2px;
+  }
+
+  .arrowiconviewvisitreport {
+    font-size: 8px;
+    margin-top: -3px;
+    margin-left: 2px;
+    color: #666;
+  }
+
+  .arrowlabdetails {
+    font-size: 11px;
+    margin-top: -7px;
+    color: #666;
+    font-weight: 700;
+  }
+
+  .total {
+    font-size: 15px;
+  }
+
+  .numbercounttop {
+    font-size: 10px;
+  }
+
+  .verticalcolorfulline {
+    height: 45px;
+  }
+
+  .buttons {
+    margin-bottom: 10px;
+    margin-left: 5px;
+    height: 20px;
+    width: 30px;
+    font-size: 12px;
+  }
+
+  #EButton {
+    font-size: 15px;
+  }
+
+  .text-end {
+    font-size: 10px;
+  }
+
+  .containerrightpadding {
+    padding-right: 5px;
+  }
+
+  .OWpatientpadding {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .numbercountvisitreport {
+    font-size: 10px;
+  }
+
+  .numbercountvisitreportdown {
+    font-size: 10px;
+  }
+
+  .viewvisitreoprtcontainer {
+    margin-left: 55px !important;
+  }
+
+  .button-container {
+    align-items: center;
+    margin-top: -6px;
+    margin-left: 45px;
+    width: 50px !important;
+  }
+
+  .subcontainer1heading {
+    height: 35px !important;
+  }
+
+  .colorfullinerow {
+    margin-top: -20px;
+  }
+
+  .headpadding {
+    padding-right: 0px;
+    padding-left: 5px;
+    margin-top: -18px;
+  }
+
+  .viewvisitreportbottomrow {
+    margin-top: -27px;
+  }
+
+  .horizontal-buttons {
+    margin-top: -3px;
+    padding-left: 3px;
+  }
+
+  .totalspan {
+    margin-top: -8px;
+  }
+
+  .containerlabtest {
+    margin-top: -135px !important;
+  }
+
+  .labeltop {
+    margin-top: 9px;
+  }
+
+  .totalheading {
+    font-size: 9px !important;
+    margin-top: 0px;
+  }
+
+  .topnumber {
+    font-size: 20px;
+    margin-top: 0px;
+  }
+  .sampledrightcontainer {
+    margin-top: -10px;
+  }
+
+  .flaskicon {
+    margin-top: 10px;
+  }
+
+  .medkiticon {
+    margin-top: 3px;
+  }
+  .toplabel {
+    margin-top: 9px;
+  }
+}

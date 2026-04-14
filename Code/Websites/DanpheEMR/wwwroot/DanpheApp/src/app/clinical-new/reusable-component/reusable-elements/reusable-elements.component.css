@@ -1,0 +1,129 @@
+.clinicalTextArea {
+    width: 100%;
+    height: 100px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+    resize: none;
+}
+
+.dynamicFieldHolder {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* border-bottom: 1px solid #ccc; */
+    padding: 2%;
+    align-items: baseline;
+}
+
+.dynamicFieldHolder label {
+    font-size: 14px;
+}
+
+.ClinicalOptions {
+    width: 35%;
+}
+
+/* .OptionsRemarks {
+    width: 50%;
+} */
+.field-with-table {
+    margin: 8px;
+    border-bottom: 1px solid #abaaaa;
+}
+
+.field-with-table table thead tr {
+    background-color: #d9ebff;
+    color: #696666;
+}
+
+.field-with-table table tbody tr td {
+    background-color: white;
+    color: #696666;
+}
+
+.field-with-table table thead tr th {
+    font-size: 12px;
+}
+
+.field-container textarea {
+    resize: vertical;
+    padding: 4px 10px;
+    height: 30px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.field-container .mul-remark {
+    resize: vertical;
+    padding: 4px 10px;
+    height: 55px;
+    margin-top: 2px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #ddd;
+}
+
+
+.col-sn {
+    width: 5%;
+}
+
+.col-date {
+    width: 15%;
+}
+
+.col-details {
+    width: 55%;
+}
+
+.col-enterby {
+    width: 15%;
+}
+
+.col-action {
+    width: 10%;
+}
+
+.col-remark {
+    width: 30%;
+}
+
+
+
+.edit-container {
+    display: flex;
+    margin: 4px;
+    padding: 4px;
+}
+
+.btn-discard {
+    margin-left: auto;
+}
+
+.fa-edit:hover {
+    cursor: pointer;
+}
+
+.field-label {
+    background: #0773bc9e;
+    font-size: 17px;
+    width: 100%;
+    color: white;
+    padding: 6px;
+}

@@ -1,0 +1,98 @@
+<div *ngIf="ShowGrid" class="row">
+    <div class="col-md-12 col-xs-12 col-sm-12">
+        <danphe-grid [grid-colDefaults]="SharedPhraseGridColumns" [grid-data]="SharedPhrasesList "
+                     (grid-actions)="ClinicalSharedPhraseGridActions($event)"
+                     [show-print-button]="false">
+        </danphe-grid>
+    </div>
+</div>
+
+
+<div class="popup-static portlet box portlet-fullscreen custom_modal modal-lg" *ngIf="ShowAddEditPage">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="modelbox-div clearfix">
+                    <div class="caption custom-caption">
+                        <h3> <span>View Phrase Detail</span></h3>
+                        <a class="btn btn-danger" (click)="Close()" title="Cancel">X</a>
+                    </div>
+                    <div class="form-body form-horizontal hm-form">
+                        <div class="row" style="margin-top:-15px">
+                            <div class="col-md-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Phrases Title<b>:</b></label>
+                                    <div class="col-md-9">
+                                        <label>
+                                            <span style="margin-left:10px">
+                                                {{ Phrases.ClinicalMyPhrasesValidator.get('TemplateName').value }}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Accessibility<b>:</b></label>
+                                    <div class="col-md-9">
+                                        <label>
+                                            <span style="margin-left:10px">
+                                                {{ Phrases.ClinicalMyPhrasesValidator.get('TemplateAccessibility').value }}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Editor Type<b>:</b></label>
+                                    <div class="col-md-9">
+                                        <label>
+                                            <span style="margin-left:10px">
+                                                {{ Phrases.ClinicalMyPhrasesValidator.get('TemplateType').value }}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-xs-12">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Code<b>:</b></label>
+                                    <div class="col-md-9">
+                                        <label>
+                                            <span style="margin-left:10px">
+                                                {{ Phrases.ClinicalMyPhrasesValidator.get('TemplateCode').value }}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Group Name<b>:</b></label>
+                                    <div class="col-md-9">
+                                        <label>
+                                            <span style="margin-left:10px">
+                                                {{ Phrases.ClinicalMyPhrasesValidator.get('TemplateGroup').value }}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="margin-bottom:20px">
+                                <div class="form-group ">
+                                    <div class="col-md-12">
+                                        <label class="control-label no-padding " style="font-size: 15px; text-align: center; display: block;">Phrase
+                                            Content:</label>
+                                        <label [innerHTML]="SafeTemplateContent" class="form-control"
+                                               style="margin-top: 10px; min-height: 300px;overflow: auto"></label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

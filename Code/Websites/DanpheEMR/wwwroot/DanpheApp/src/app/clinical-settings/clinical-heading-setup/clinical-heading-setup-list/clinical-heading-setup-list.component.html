@@ -1,0 +1,157 @@
+<a *ngIf="!ShowSectionMapping" class="btn blue bordered" feature="button" (click)="ShowAddHeadingPage()"><i class="fa fa-plus"></i>Add
+  Document/Section</a>
+
+<div *ngIf="ShowGrid" class="row">
+
+  <div class="col-md-12 col-xs-12 col-sm-12" *ngIf="!ShowSectionMapping">
+    <danphe-grid [grid-colDefaults]="ClinicalHeadingGridColumns" [grid-data]="HeadingListForGrid" (grid-actions)="ClinicalHeadingGridActions($event)"
+                 [paginationPageSize]="100" [show-print-button]="false">
+    </danphe-grid>
+  </div>
+  <div style="margin-top:60px;" *ngIf="ShowAddNewPage">
+    <update-clinical-heading [Heading-Info]="HeadingInfo" [cln-heading-to-edit]="CLNHeadingToEdit" [Show-Add-New-Page]="ShowAddNewPage"
+                             [Update]="Update"
+                             [ParentHeading-Names]="ParentHeadingNames" (Callback-add)="GetDataFromAdd($event)">
+
+    </update-clinical-heading>
+  </div>
+
+</div>
+<div *ngIf="ShowSectionMapping">
+  <div class="col-md-12 d-flex justify-content-between page-bar">
+    <div class="col-md-6" style="margin-left: -25px;">
+      <span>Document Title- <b>{{ManageSectionMapping.ParentHeadingName}}</b></span>
+    </div>
+    <div class="col-md-6 text-right">
+      <a class="btn btn-danger" (click)="BackToGrid()">X</a>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="ShowSectionMapping">
+  <div class="col-md-12" [ngStyle]="{ 'display': ShowSectionDiv ? 'flex' : 'block' }">
+
+    <div *ngIf="ShowSectionDiv" class="sections-panel">
+      <div class="sections-header">
+        <span class="sections-title">Sections</span>
+        <button class="add-section-btn" (click)="AddSection()">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+      <div class="sections-list">
+        <div *ngFor="let section of FilteredSections"
+             class="section-item"
+             (click)="SectionData(section)"
+             [ngClass]="{'selected-section': ClinicalHeadingId === section.ClinicalHeadingId}">
+          <span
+                [ngStyle]="{
+              'color': !section.IsActive ? 'red' : 'black'
+            }">
+            {{ section.ClinicalHeadingName }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="map-components-panel" [ngStyle]="{ 'width': ShowSectionDiv ? '87%' : '100%' }">
+      <div *ngIf="IsSectionSelected">
+        <div class="section-title">
+          <div>
+            Section-
+            <span *ngIf="ClinicalSection.ClinicalHeadingName;">
+              {{ ClinicalSection.ClinicalHeadingName }}
+              <i class="fa fa-edit tbl-action-edit edit-btn"
+                 (click)="EditSection(ClinicalSection)"
+                 style="margin-left:5px; cursor: pointer; margin-top: 10px;"></i>
+            </span>
+          </div>
+          <div>
+            <span class="status">
+              Status:
+              <span *ngIf="ClinicalSection?.ClinicalHeadingId !== undefined && ClinicalSection.ClinicalHeadingId !== 0;"
+                    class="status-label"
+                    [ngClass]="{
+                      'active': ClinicalSection.IsActive,
+                      'inactive': !ClinicalSection.IsActive
+                    }">
+                {{ ClinicalSection.IsActive ? 'Active' : 'Inactive' }}
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-filter">
+        <input type="text" class="search-box" placeholder="Search Medical Component" [(ngModel)]="FilterTerm" />
+
+        <select class="input-type-select" [(ngModel)]="SelectedInputType">
+          <option value="">Select Input Type</option>
+          <option *ngFor="let type of UniqueInputTypes" [value]="type">{{ type }}</option>
+        </select>
+
+        <select class="group-select" [(ngModel)]="SelectedGroupName">
+          <option value="">Select Group Name</option>
+          <option *ngFor="let group of UniqueGroupNames" [value]="group">{{ group }}</option>
+        </select>
+        <button *ngIf="ClinicalSection?.IsActive" class="btn green btn-success"
+                (click)="GetFilteredMedicalComponentListForSectionMapping()">Load</button>
+      </div>
+
+      <div class="table-wrapper">
+
+        <table class="components-table">
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Medical Component</th>
+              <th>Display Sequence</th>
+              <th>Input Type</th>
+              <th>Group Name</th>
+            </tr>
+          </thead>
+          <tbody class="scrollable-tbody">
+            <tr *ngFor="let field of FilteredFieldList(); let i = index">
+              <td><input type="checkbox" class="form-check-input custom-checkbox" [(ngModel)]="field.IsMapped"></td>
+              <td>{{ field.FieldName }}</td>
+              <td>
+                <input type="number" placeholder="Enter Display Sequence" [(ngModel)]="field.DisplaySequence"
+                       (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                       name="displaySequence-{{i}}"
+                       (ngModelChange)="ValidateDisplaySequence(field.DisplaySequence)"
+                       #sequence="ngModel"
+                       required />
+                <div *ngIf="IsSaveClicked" class="color-red font-sm">
+                  <span *ngIf="!ValidateDisplaySequence(field.DisplaySequence).valid">
+                    {{ ValidateDisplaySequence(field.DisplaySequence).message }}
+                  </span>
+                </div>
+              </td>
+
+
+              <td>{{ field.InputType }}</td>
+              <td>{{ field.GroupName }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modelbox-footer">
+        <div class="all-buttons text-right">
+          <button class="btn green btn-success margin-7-hr" (click)="AddSectionMapping()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div style="margin-top:60px;" *ngIf="ShowSectionMapping && ShowDocumentSectionPage">
+  <update-clinical-heading [ShowDocumentSectionPage]="ShowDocumentSectionPage"
+                           [SelectedSection]="SelectedSection"
+                           [ParentHeading-Names]="ParentHeadingNames"
+                           (Callback-addSection)="GetDataFromSectionMapping($event)"
+                           [Update-Section]="UpdateSection"
+                           [SectionParentId]="SectionParentId"
+                           [Heading-Info]="HeadingInfo">
+  </update-clinical-heading>
+</div>

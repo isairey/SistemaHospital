@@ -1,0 +1,20 @@
+export class GetOTBookingList_DTO {
+    OTBookingId: number = 0;
+    HospitalNumber: string = "";
+    PatientName: string = "";
+    AgeSex: string = "";
+    IncomingWard: string = "";
+    BookedForDate: string = "";
+    SurgeryName: string = "";
+    OTPriority: string = "";
+    SurgeryType: string = "";
+    BillingItems: string = "";
+    Surgeon: string = "";
+    Status: string = "";
+    OTConcludeTime: string = "";
+    OTSchedule: string = "";
+    Remarks: string = "";
+    OTExpectedDuration: number = 0;
+    PatientId: number = 0;
+    PatientVisitId: number = 0;
+}

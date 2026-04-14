@@ -1,0 +1,148 @@
+<style>
+  .row {
+    margin: 4px;
+    padding: 4px;
+  }
+
+  .container {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .tab-container {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transition: width 0.5s;
+  }
+
+  .tab-containerfields {
+    margin: 0;
+    padding: 0;
+    width: 100% !important;
+    height: 100%;
+    transition: width 0.5s;
+  }
+
+  .fullWidth {
+    width: 100% !important;
+  }
+
+  .tab-container div {
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  .tabHeading {
+    width: 20%;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  li:hover {
+    background-color: cyan;
+  }
+
+  .active {
+    background-color: cyan;
+  }
+
+  /* .itemright {
+    width: 30%;
+  } */
+
+  /* Side Bar Collapes */
+  .sidebar {
+    height: 100%;
+    width: 200px;
+    position: relative;
+    background-color: #F1F1F1;
+    overflow-x: hidden;
+    transition: width 0.5s;
+    cursor: pointer;
+  }
+
+  .sidebar.closed {
+    width: 0;
+  }
+
+  li {
+    padding: 8px 16px;
+    margin: 2px;
+    border: #000;
+    text-decoration: none;
+    color: black;
+    display: block;
+    transition: 0.3s;
+  }
+
+  .toggleContainer {
+    position: relative;
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    left: auto;
+    right: 5px;
+    top: 6px;
+  }
+
+  .toggleLogo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #222020;
+    font-size: 1.8rem;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+
+  span[hidden] {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  .patient-details-form {
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="row" id="patient-details" style="margin: 0; padding: 0;">
+  <div class="patient-details-form">
+    <patient-overview-details></patient-overview-details>
+  </div>
+</div>
+<div class="container">
+  <div class="tab-container">
+    <div>
+      <ul [ngClass]="{'sidebar':true,'closed':!IsOpen}">
+        <li (click)="OpenHeadingTab(heading)" *ngFor="let heading of HeadingSubHeadingFieldList" [class.active]="heading.ActiveTab">
+          {{heading.DisplayName}}</li>
+      </ul>
+    </div>
+    <div class="tab-containerfields" [ngClass]="{'tab-containerfields': true, 'fullWidth': !IsOpen}">
+      <tab-group [hideTabsNav]="true" [dynamicTabs]="DynamicTabs">
+      </tab-group>
+      <span (click)="ToggleSideNav()" class="toggleContainer">
+        <span class="toggleLogo fa fa-bars"></span>
+      </span>
+    </div>
+  </div>
+  <!-- <div class="itemright">
+    <dynamic-clinical-info-preview [hide-filter]="true"></dynamic-clinical-info-preview>
+  </div> -->
+</div>

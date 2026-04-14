@@ -1,0 +1,17 @@
+.mt-checkbox {
+  font-size: 13px;
+}
+
+.hide-row {
+  display: none;
+}
+.backbutton {
+  margin-top: 5px;
+  padding-left: 0px;
+  margin-left: -10px;
+}
+
+.searchbar {
+  margin-left: -5px;
+  padding-left: 0px !important;
+}

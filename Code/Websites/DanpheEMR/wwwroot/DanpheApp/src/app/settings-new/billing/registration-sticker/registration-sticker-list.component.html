@@ -1,0 +1,22 @@
+<button rbac-permission='{"name":"settings-billing-registration-sticker-manage-view","actionOnInvalid":"remove"}'
+        class="btn blue bordered" (click)="AddBillingItem()">
+    <i class="fa fa-plus"></i>
+    &nbsp; Registration Sticker
+</button>
+
+
+<div *ngIf="ShowGrid" class="row">
+    <div class="col-md-9 col-xs-9 col-sm-9">
+        <danphe-grid [grid-colDefaults]="RegistrationStickerGridColumns"
+                     [grid-data]="RegistrationStickerData"
+                     [grid-showExport]="false"
+                     (grid-actions)="RegistrationStickerGridActions($event)"
+                     [show-print-button]="false">
+        </danphe-grid>
+    </div>
+</div>
+<registration-sticker-add *ngIf="ShowAddPage"
+                          (callback-add)="CallBackAdd()"
+                          [selected-row]="SelectedRow"
+                          [update]="Update">
+</registration-sticker-add>

@@ -1,0 +1,129 @@
+<style>
+  .caption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .caption span {
+    text-align: center;
+  }
+
+  .form-group .col-md-6 {
+    padding: 5px;
+  }
+
+  .form-control {
+    height: 40px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .form-row {
+    display: flex;
+    margin-bottom: 15px;
+    margin-top: 20px;
+  }
+
+  .form-row label {
+    width: 40%;
+    padding-right: 10px;
+    font-weight: bold;
+    margin-left: 40px;
+  }
+
+  .form-row .col-md-6 {
+    width: 60%;
+  }
+
+  .form-row select,
+  .form-row input,
+  .form-row .danphe-multiselect {
+    width: 100%;
+  }
+</style>
+<div class="popup-static portlet box portlet-fullscreen custom_modal" *ngIf="ShowFilterAndExport">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="modelbox-div ref_modal_div clearfix">
+          <div class="caption custom-caption no-margin">
+            <h3>
+              <span>
+                <span>Filter and Export</span>
+              </span>
+            </h3>
+            <a class="btn btn-danger" (click)="Close()">X</a>
+          </div>
+          <div class="row">
+            <form [formGroup]="FilterAndExportValidator" class="form-horizontal hm-form">
+              <div class="form-body col-md-12 hm-form">
+                <div class="form-row">
+                  <label for="ServiceDepartment">Service Department</label>
+                  <div class="col-md-6">
+                    <select id="ServiceDepartment" class="form-control" formControlName="ServiceDepartmentId" (change)="FilteredServiceItems()">
+                      <option value="" selected>All</option>
+                      <option *ngFor="let department of SrvdeptList" [value]="department.ServiceDepartmentId">{{ department.ServiceDepartmentName }}
+                      </option>
+                    </select>
+                  </div>
+                  <label for="Category">Category</label>
+                  <div class="col-md-6">
+                    <select id="Category" class="form-control" formControlName="ServiceCategoryId">
+                      <option value="" selected>All</option>
+                      <option *ngFor="let category of ServiceCategoryList" [value]="category.ServiceCategoryId">{{ category.ServiceCategoryName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label for="Integration">Integration Name</label>
+                  <div class="col-md-6">
+                    <select id="Integration" class="form-control" formControlName="IntegrationName">
+                      <option value="" selected>All</option>
+                      <option *ngFor="let integration of IntegrationNameList" [value]="integration.IntegrationName">{{ integration.IntegrationName
+                        }}</option>
+                    </select>
+                  </div>
+                  <label for="PriceCategory">Price Category</label>
+                  <div class="col-md-6">
+                    <danphe-multiselect [ddl-data]="PriceCategory"
+                                        [placeholder-text]="'--Select Price category --'" [value-property-name]="'PriceCategoryId'"
+                                        (selected-items-list)="PriceCategoryChange($event)"
+                                        [display-property-name]="'PriceCategoryName'" [single-selection]="false">
+                    </danphe-multiselect>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label for="ServiceItem">Service Item</label>
+                  <div class="col-md-6">
+                    <danphe-multiselect [ddl-data]="FilteredServiceItemsList"
+                                        [placeholder-text]="'--Select Item --'" [value-property-name]="'ServiceItemId'"
+                                        (selected-items-list)="ServiceItemChange($event)"
+                                        [display-property-name]="'ItemName'" [single-selection]="false">
+                    </danphe-multiselect>
+                  </div>
+                  <label for="Status">Status</label>
+                  <div class="col-md-6">
+                    <select id="Status" class="form-control" formControlName="Status">
+                      <option value="" selected>Status</option>
+                      <option *ngFor="let status of Status" [value]="status">{{ status }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modelbox-footer">
+            <div class="all-buttons text-right">
+              <input type="button" id="add" class="btn green btn-success margin-7-hr" (click)="FilterAndExport()" value="Filter&Export" />
+              <input type="button" id="close" class="btn red btn-danger margin-7-hr" (click)="Close()" value="Close" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

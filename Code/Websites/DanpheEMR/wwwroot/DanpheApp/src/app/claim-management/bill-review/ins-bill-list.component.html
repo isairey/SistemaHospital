@@ -1,0 +1,391 @@
+<style>
+  .table thead tr th {
+    font-size: 12px;
+  }
+
+  .table thead tr {
+    background-color: #b6b3b3;
+  }
+
+  .highLightBackground {
+    background-color: #e1d0b3;
+  }
+
+  .left {
+    float: left;
+  }
+
+  .right {
+    float: right;
+  }
+
+  .textCenter {
+    text-align: center;
+  }
+
+  .checkbox_Size {
+    height: 15px;
+    width: 15px;
+  }
+
+  .table tbody tr:hover {
+    background-color: #ded7d7
+  }
+</style>
+<div class="col-lg-12 col-sm-12">
+  <div class="caption lb-caption">
+    <span class="caption-subject" style="color:rgb(97, 97, 209); font-weight: 700;">Review Insurance Bills</span>
+  </div>
+</div>
+<div class="col-md-12" style="padding-left:30px; margin-bottom:10px;">
+  <div class="row">
+    <div class="col-md-5 col-xs-12">
+      <div class="row">
+        <div style="display: inline-block;">
+          <from-to-date-select (on-change)="OnFromToDateChange($event)"
+                               [date-settings-name]="'common-range-with-today'">
+          </from-to-date-select>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 col-xs-12" style="padding-left:0px;padding-right:0px;">
+      <div class="row" style="padding-top:3%;">
+        <label style="margin-right: 5px; margin-left:-7%;">VisitType:</label>
+        <div style="display: inline-block; width:60%;">
+          <select class="form-control" [(ngModel)]="VisitType">
+            <option *ngFor="let option of VisitTypes" [value]="option.value">{{ option.label }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 col-xs-12" style="padding-left:0px;padding-right:0px;">
+      <div class="row" style="padding-top:3%;">
+        <label style="margin-right: 5px; margin-left:-3%;">Doc Status:</label>
+        <div style="display: inline-block;width:60%;">
+          <select class="form-control" [(ngModel)]="SelectedDocumentStatus">
+            <option *ngFor="let doc of DocumentSatus" [value]="doc.value">{{ doc.label }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2  col-xs-12" style="padding-left:10px;">
+      <div class="row" style="padding-top:3%;">
+        <select [(ngModel)]="SearchProperty" style="width:40%;">
+          <option value="MemberNo">Member No.</option>
+          <option value="PatientCode">Hospital Number</option>
+          <option value="ShortName">Patient Name</option>
+        </select>
+        <div style="display: inline-block; width:60%;" *ngIf="SearchProperty ==='MemberNo'" class="autocomplete-item">
+          <input danphe-auto-complete class=" form-control" id="pat-serach-by-contact-no" [(ngModel)]="SelectedPatient"
+                 [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+                 [list-formatter]="PatientListFormatterByMemberNumber" display-property-name="MemberNo"
+                 value-property-name=null onClick="this.select();" min-chars="1" (focusout)="OnPatientSelect()"
+                 [grid-sort]="'MemberNo'" match-formatted="true">
+        </div>
+        <div style="display: inline-block; width:60%;" *ngIf="SearchProperty ==='PatientCode'" class="autocomplete-item">
+          <input danphe-auto-complete class=" form-control" id="pat-serach-by-hospital-no" [(ngModel)]="SelectedPatient"
+                 [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+                 [list-formatter]="PatientListFormatterByPatientCode" display-property-name="PatientCode"
+                 value-property-name=null onClick="this.select();" (focusout)="OnPatientSelect()" min-chars="1"
+                 [grid-sort]="'PatientCode'" match-formatted="true">
+        </div>
+        <div style="display: inline-block; width:60%;" *ngIf="SearchProperty ==='ShortName'" class="autocomplete-item">
+          <input danphe-auto-complete class=" form-control" id="pat-serach-by-hospital-patient-name"
+                 [(ngModel)]="SelectedPatient" [source]="AllPatientSearchAsync.bind(this)" [path-to-data]="'Results'"
+                 [list-formatter]="PatientListFormatterByPatientName" display-property-name="ShortName" value-property-name=null
+                 onClick="this.select();" (focusout)="OnPatientSelect()" min-chars="1" [grid-sort]="'ShortName'"
+                 match-formatted="true">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1 col-xs-12">
+      <button [disabled]="loading" class="btn green btn-success pull-right" style="margin-top:6%;"
+              (click)="GetBillReviewList();">Load
+        <i class="fa fa-refresh" style="font-size: 11px;"></i></button>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-4">
+        <input class="custom-table-search form-control" style="width:332px;background-position: 310px;" [(ngModel)]="SearchString"
+               (ngModelChange)="HandleSearch()"
+               onclick="this.select();"
+               placeholder="Hospital No/Patient Name/Claim Code/Invoice No">
+      </div>
+      <div class="col-md-8" style="text-align:right;margin-top:7px;" *ngIf="BillReviewListAll && BillReviewListAll.length >0 && IsBillsSelected">
+        <!-- <div class="col-md-3">
+            <input id="checkbox_billReview_showNonClaimableInvoices" [(ngModel)]="ShowNonClaimableInvoice"
+                   (change)="HandleShowNonClaimableInvoiceCheckbox($event)" type="checkbox" style="margin-right:10px;">
+            <label for="checkbox_billReview_showNonClaimableInvoices">NonClaimable Invoices</label>
+          </div> -->
+        <div class="col-md-3"></div>
+        <div class="col-md-3" style="padding-right:0px !important;" *ngIf="!_claimManagementService.IsNGHISSchemeSelected">
+          <button class="btn orange btn-success form-control" (click)="OpenSetClaimCodePopUp()"><b>Set Claim Code</b></button>
+        </div>
+        <div class="col-md-3" style="padding-right:0px !important;">
+          <button class="btn orange btn-success form-control" (click)="OpenDocumentReceivedPopUp()"><b>Document Receive/Undo</b></button>
+        </div>
+        <!-- <div class="col-md-2">
+            <input DanpheConfirmationDialog
+                   id="btnSetClaimable"
+                   type="submit"
+                   [title]="confirmationTitle"
+                   [message]="confirmationMessageForSetClaimable"
+                   (confirm)="HandleConfirmForSetClaimable()"
+                   (cancel)="HandleCancelForSetClaimable()"
+                   style="font-weight: bold;margin-right: 10px;"
+                   class="btn green btn-success"
+                   value="Set Claimable" [disabled]="loading" />
+          </div> -->
+        <div class="col-md-3" style="padding-right:0px !important;">
+          <input DanpheConfirmationDialog
+                 id="btnSendForClaimScrubbing"
+                 type="submit"
+                 [title]="confirmationTitle"
+                 [message]="confirmationMessageForClaimScrubbing"
+                 (confirm)="HandleConfirmForSendForClaimScrubbing()"
+                 (cancel)="HandleCancelForSendForClaimScrubbing()"
+                 style="font-weight: bold;"
+                 class="btn green btn-success form-control"
+                 value="Send For Claim Scrubbing" [disabled]="loading" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <table class="table table-responsive dispatch-report-table">
+      <thead class="table-header-bg">
+        <tr>
+          <th scope="col" style="width: 50px;">
+            <input type="checkbox" id="checkbox_billReview_selectAllInvoices" [(ngModel)]="SelectAll"
+                   (change)="HandleBillWiseCheckBox($event)" class="checkbox_Size">
+          </th>
+          <th scope="col" class="wd-130">Claim Code </th>
+          <th scope="col" class="wd-270">Hospital No. </th>
+          <th scope="col" class="wd-80"> PatientName </th>
+          <th scope="col" class="wd-80"> Age/Sex </th>
+          <th scope="col" class="wd-80"> Member No. </th>
+          <th scope="col" class="wd-80"> Invoice No. </th>
+          <th scope="col" class="wd-80"> Invoice Date </th>
+          <th scope="col" class="wd-80"> Scheme </th>
+          <th scope="col" class="wd-80"> Total Amount </th>
+          <!-- <th scope="col" class="wd-80"> Claim Status </th> -->
+          <th scope="col" class="wd-80"> Document Status </th>
+          <th scope="col" class="wd-80"> Remarks </th>
+          <th scope="col" class="wd-80"> Visit Type </th>
+          <th scope="col" class="wd-80"> Admission Date </th>
+          <th scope="col" class="wd-80"> Discharged Date </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container
+                      *ngFor="let bill of BillReviewListFiltered | searchFilter: SearchString | async| paginate: {id: 'listing_pagination', itemsPerPage: 20, currentPage: Page } ; let i = index;">
+          <tr [ngClass]="bill.IsClaimable ? '':'highLightBackground'" (click)="SelectInvoice($event,bill)">
+            <td>
+              <input type="checkbox" [(ngModel)]="bill.IsSelected" (change)="HandleMainLevelCheckBox($event)" class="checkbox_Size">
+            </td>
+            <td class="wd-80"> {{ bill.ClaimCode }} </td>
+            <td class="wd-130"> {{ bill.HospitalNo }} </td>
+            <td class="wd-270"> {{ bill.PatientName}} </td>
+            <td class="wd-80"> {{ bill.AgeSex}} </td>
+            <td class="wd-800"> {{ bill.MemberNo }} </td>
+            <td class="wd-80"> <a (click)="BillPreview(bill)">{{ bill.InvoiceNo }}</a> </td>
+            <td class="wd-80"> {{ bill.InvoiceDate | date:'yyyy-MM-dd' }} </td>
+            <td class="wd-80"> {{ bill.SchemeName }} </td>
+            <td class="wd-80"> {{ bill.TotalAmount | number : "1.2-3"}} </td>
+            <!-- <td class="wd-80"> {{ bill.ClaimStatus }} </td> -->
+            <td class="wd-80"> {{ bill.DocumentStatus }} </td>
+            <td class="wd-80"> {{ bill.Remarks }} </td>
+            <td class="wd-80"> {{ bill.VisitType }} </td>
+            <td class="wd-80"> {{ bill.AdmissionDate | date:'yyyy-MM-dd' }} </td>
+            <td class="wd-80"> {{ bill.DischargeDAte | date:'yyyy-MM-dd' }} </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <div>
+      <pagination-controls id="listing_pagination" (pageChange)="Page = $event" style="display: flex; float:right;">
+      </pagination-controls>
+    </div>
+
+  </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowSetClaimCodePopUp">
+  <div class="portlet-body form">
+    <div class="form-body">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-12 col-sm-12 col-xs-12 modelbox-div">
+          <div class="col-md-12">
+            <h4 style="text-align:center">
+              <b>
+                <a style="float:right; border-radius: 50% !important;
+                  margin-top: -50px; margin-right: -50px;" class="btn btn-danger  hidden-print"
+                   (click)="CloseSetClaimCodePopUp()" title="Cancel">X</a>
+              </b>
+            </h4>
+          </div>
+          <div class="col-md-12">
+            <h4 class="margin-0-vr">Set Claim Code</h4>
+          </div>
+          <div class="col-md-12" style="padding:15px;background-color: #c6bbc2;margin-top: 15px;">
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-4">Patient Name<span style="float:right">:</span></div>
+                <div class="col-md-8" *ngFor="let pat of BillListForClaimCodeAssignment.slice(0,1)">{{ pat.PatientName }}</div>
+              </div>
+              <div class="row" style="margin-top: 10px;">
+                <div class="col-md-4">Enter Claim Code<span style="float:right">:</span></div>
+                <div class="col-md-8">
+                  <input class="form-control" type="number" onwheel="this.blur();" onclick="this.select()" (ngModelChange)="ClaimCodeChange()"
+                         [(ngModel)]="NewClaimCode">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-4">Hospital No. <span style="float:right">:</span></div>
+                <div class="col-md-8" *ngFor="let pat of BillListForClaimCodeAssignment.slice(0,1)">{{ pat.HospitalNo }}</div>
+              </div>
+              <div class="row" style="margin-top: 10px;">
+                <div class="col-md-2">
+                  <button class="btn green btn-success" (click)="CheckClaimCode()">OK</button>
+                </div>
+                <div class="col-md-10" style="color:blue;">
+                  NOTE: This Claim Code will be updated for all invoices in this visit
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12" style="margin-top: 15px;">
+            <table class="table table-responsive dispatch-report-table">
+              <thead class="table-header-bg">
+                <tr>
+                  <th scope="col" class="wd-80"> Invoice No. </th>
+                  <th scope="col" class="wd-80"> Invoice Date </th>
+                  <th scope="col" class="wd-80"> Total Amount </th>
+                  <th scope="col" class="wd-130">Claim Code </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let bill of BillListForClaimCodeAssignment">
+                  <tr>
+                    <td class="wd-80"> <a (click)="BillPreview(bill)">{{bill.InvoiceNo}}</a></td>
+                    <td class="wd-80"> {{bill.InvoiceDate | date:'yyyy-MM-dd'}} </td>
+                    <td class="wd-80"> {{ bill.TotalAmount}} </td>
+                    <td class="wd-80"> {{ bill.ClaimCode}} </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-12" style="margin-top: 15px;">
+            <div class="all-buttons text-right">
+              <button type="button" class="btn orange btn-success" (click)="CloseSetClaimCodePopUp()"> Discard
+              </button>
+              <button type="button" class="btn green btn-success" *ngIf="IsClaimCodeValid" (click)="UpdateClaimCode()"> Save Claim Code
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popup-static portlet box portlet-fullscreen" *ngIf="ShowDocumentReceivePopUp">
+  <div class="portlet-body form">
+    <div class="form-body">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-12 col-sm-12 col-xs-12 modelbox-div">
+          <div class="col-md-12">
+            <h4 style="text-align:center">
+              <b>
+                <a style="float:right; border-radius: 50% !important;
+                    margin-top: -50px; margin-right: -50px;" class="btn btn-danger  hidden-print"
+                   (click)="CloseDocumentReceivePopUp()" title="Cancel">X</a>
+              </b>
+            </h4>
+          </div>
+          <div class="col-md-12">
+            <h4 class="margin-0-vr"><b>Manage Document Status</b></h4>
+          </div>
+          <div class="col-md-12" style="padding:15px;background-color: #c6bbc2;margin-top: 15px;">
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-4">Patient Name<span style="float:right">:</span></div>
+                <div class="col-md-8" *ngFor="let pat of BillListForClaimCodeAssignment.slice(0,1)">{{ pat.PatientName }}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-4">Hospital No. <span style="float:right">:</span></div>
+                <div class="col-md-8" *ngFor="let pat of BillListForClaimCodeAssignment.slice(0,1)">{{ pat.HospitalNo }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row col-md-6" style="margin-top:20px;">
+            <div class="icheck-inline" style="margin-left:5px">
+              <label class="mt-radio mt-radio-outline" style="margin-left: 8px">
+                <input name="receive" type="radio" value="true"
+                       (change)="onDocumentReceiveStatusChange(true)">
+                <span></span>Receive</label>
+              <label class="mt-radio mt-radio-outline">
+                <input name="receive" type="radio" value="false"
+                       (change)="onDocumentReceiveStatusChange(false)">
+                <span></span>Undo Receive</label>
+            </div>
+          </div>
+          <div class="col-md-12" style="margin-top: 15px;">
+            <table class="table table-responsive dispatch-report-table">
+              <thead class="table-header-bg">
+                <tr>
+                  <th scope="col" class="wd-80"> Invoice No. </th>
+                  <th scope="col" class="wd-80"> Invoice Date </th>
+                  <th scope="col" class="wd-80"> Total Amount </th>
+                  <th scope="col" class="wd-130">Status </th>
+                  <th scope="col" class="wd-130">Remarks </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let bill of BillListForClaimCodeAssignment">
+                  <tr>
+                    <td class="wd-80"> <a (click)="BillPreview(bill)">{{bill.InvoiceNo}}</a></td>
+                    <td class="wd-80"> {{bill.InvoiceDate | date:'yyyy-MM-dd'}} </td>
+                    <td class="wd-80"> {{ bill.TotalAmount}} </td>
+                    <td class="wd-80"> {{ bill.DocumentStatus}} </td>
+                    <td class="wd-80"> {{ bill.Remarks}} </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <span class="col-md-2">Remarks<span>:</span></span>
+              <textarea name="Remarks" [(ngModel)]="Remarks" cols="50" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="col-md-12" style="margin-top: 15px;">
+            <div class="all-buttons text-right">
+              <button type="button" class="btn green btn-success" (click)="UpdateBillDocumentReceivedStatus()">Save
+              </button>
+              <button type="button" class="btn orange btn-success" (click)="CloseDocumentReceivePopUp()">Discard
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1 hidden-xs hidden-sm"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ins-bill-preview *ngIf="ShowBillPreviewPage"
+                  [show-bill-preview-page]="ShowBillPreviewPage"
+                  [selected-bill]="SelectedBill"
+                  (hide-bill-preview-page)="HideBillPreviewPage($event)"></ins-bill-preview>

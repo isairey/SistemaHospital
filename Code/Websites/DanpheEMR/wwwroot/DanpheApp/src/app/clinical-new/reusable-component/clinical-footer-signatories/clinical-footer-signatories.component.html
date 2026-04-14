@@ -1,0 +1,81 @@
+<div class="page-container">
+  <div class="content">
+    <div class="col-md-6 no-print">
+      <div class="col-md-4">
+        <label class="control-label"><b>Select Nurse</b><b>:</b></label>
+      </div>
+      <div class="col-md-6">
+        <input
+               id="id_txt_request_to_doctor"
+               danphe-auto-complete
+               class="form-control"
+               display-property-name="EmployeeName"
+               [list-formatter]="myListFormatter"
+               [source]="NursesList"
+               [(ngModel)]="SelectedRequestToNurse"
+               placeholder="Nurse Name"
+               [min-chars]="1"
+               value-property-name="EmployeeId"
+               onclick="this.select();"
+               max-num-list="10"
+               (ngModelChange)="OnNurseChange()" />
+      </div>
+    </div>
+    <div class="col-md-6 no-print">
+      <div class="col-md-4">
+        <label class="control-label"><b>Select Doctor</b><b>:</b></label>
+      </div>
+      <div class="col-md-6">
+        <danphe-multiselect *ngIf="EmployeeList.length > 0" [ddl-data]="EmployeeList" [pre-selected]="SelectedRequestToDoctor"
+                            [placeholder-text]="'--Select Doctor --'" [value-property-name]="'EmployeeId'"
+                            (selected-items-list)="OnDoctorChange($event)"
+                            [display-property-name]="'EmployeeName'" [single-selection]="false">
+        </danphe-multiselect>
+      </div>
+    </div>
+  </div>
+  <div class="content" style="margin-top:20px;margin-bottom:10px">
+    <div class="col-md-6 no-print">
+      <div class="col-md-4">
+        <label class="control-label"><b>Checked By</b><b>:</b></label>
+      </div>
+      <div class="col-md-6">
+        <input
+               id="id_txt_request_to_Checked_By_doctor"
+               danphe-auto-complete
+               class="form-control"
+               display-property-name="EmployeeName"
+               [list-formatter]="myListFormatter"
+               [source]="EmployeeList"
+               [(ngModel)]="SelectedRequestToCheckedBy"
+               placeholder="Checked By name"
+               [min-chars]="1"
+               value-property-name="EmployeeId"
+               onclick="this.select();"
+               max-num-list="10"
+               (ngModelChange)="OnCheckedByChange()" />
+      </div>
+    </div>
+    <div class="col-md-6 no-print">
+      <div class="col-md-4">
+        <label class="control-label"><b>Prepared By</b><b>:</b></label>
+      </div>
+      <div class="col-md-6">
+        <input
+               id="id_txt_request_to_Prepared_By_doctor"
+               danphe-auto-complete
+               class="form-control"
+               display-property-name="EmployeeName"
+               [list-formatter]="myListFormatter"
+               [source]="EmployeeList"
+               [(ngModel)]="SelectedRequestToPreparedBy"
+               placeholder="Prepared By Name"
+               [min-chars]="1"
+               value-property-name="EmployeeId"
+               onclick="this.select();"
+               max-num-list="10"
+               (ngModelChange)="OnPreparedByChange()" />
+      </div>
+    </div>
+  </div>
+</div>

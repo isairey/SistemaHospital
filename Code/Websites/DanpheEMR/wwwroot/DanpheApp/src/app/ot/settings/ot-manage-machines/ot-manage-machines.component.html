@@ -1,0 +1,57 @@
+<form [formGroup]="OTMachine.OTMachineValidator" class="form-horizontal hm-form">
+
+  <div class="form-group" style="padding: 0px; margin: 0px;">
+
+    <div class="col-md-4" style="display:flex; justify-content: space-between; padding: 0px 15px 0px 0px !important;">
+      <label class="control-label">Machine Name<sup> *</sup></label>
+      <b>:</b>
+      <div class="col-md-8">
+        <input id="id_txt_machine_name" class="form-control" maxlength="150" type="text"
+               formControlName="MachineName" placeholder="Machine Name"
+               (keydown.enter)="GoToNextElement($event, 'id_txt_machine_charge')" />
+        <span class="color-red font-sm" *ngIf="OTMachine.IsDirty('MachineName')"
+              [hidden]="OTMachine.IsValidCheck('MachineName','required')">Machine Name is required.</span>
+      </div>
+    </div>
+
+    <div class="col-md-3" style="display:flex; justify-content: space-between;">
+      <label class="control-label">Machine Charge<sup> *</sup></label>
+      <b>:</b>
+      <div>
+        <input id="id_txt_machine_charge" class="form-control" maxlength="150" type="number" (input)="OnMachineChargeChange()"
+               formControlName="MachineCharge" placeholder="Machine Charge" (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+               (keydown.enter)="GoToNextElement($event, 'id_checkbox_isActive')" />
+        <span class="color-red font-sm" *ngIf="OTMachine.IsDirty('MachineName')"
+              [hidden]="OTMachine.IsValidCheck('MachineCharge', 'required', 'min')">
+          Valid Machine Charge is required.
+        </span>
+      </div>
+    </div>
+
+    <div class="col-md-1" style="padding: 0px; margin: 3px 0px 0px 30px;">
+      <label for="id_checkbox_isActive" class="is-ref mt-checkbox mt-checkbox-outline">
+        <input type="checkbox" id="id_checkbox_isActive" formControlName="IsActive" style="cursor: pointer;"
+               (keydown.enter)="GoToNextElement($event, 'id_btn_save_ot_machine')" />
+        <span></span>IsActive
+      </label>
+    </div>
+    <div class="col-md-1" style="padding: 0px; margin: 0px 15px;">
+      <button id="id_btn_save_ot_machine" class="btn green btn-success" (click)="SaveOTMachine()" style="float: right; margin-left: 10px;">
+        {{ IsUpdate? 'Update' : 'Save' }}
+      </button>
+    </div>
+    <div class="col-md-1" style="padding: 0px; margin: 0px;">
+      <button id="id_btn_clear_ot_machine" class="btn orange btn-success" (click)="ClearOTMachineFormControls()"
+              style="float: left; margin-left: 10px;">
+        Clear
+      </button>
+    </div>
+  </div>
+
+</form>
+
+<div class="row" style="padding: 10px; margin: 0px;">
+  <danphe-grid [grid-colDefaults]="OTMachineGridColumns"
+               [grid-data]="OTMachineList"
+               (grid-actions)="OTMachineGridActions($event)"> </danphe-grid>
+</div>

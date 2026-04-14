@@ -1,0 +1,15 @@
+<base href="/">
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+    }
+</style>
+<div class="sub-navtab no-print">
+    <ul class="nav nav-tabs no-print" *ngIf="validRoutes !=undefined">
+        <li *ngFor="let route of validRoutes"> <a routerLink="{{route.RouterLink}}" [routerLinkActive]="'a-tab-active'">{{route.DisplayName}}<i
+                   class="{{route.Css}}"></i></a> </li>
+    </ul>
+</div>
+<router-outlet></router-outlet>

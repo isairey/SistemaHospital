@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-md-12">
+    <a class="btn blue bordered" feature="button" (click)="ShowAddNewBirthDetailsPage()"><i class="fa fa-plus"></i>Add Birth Detail</a>
+    <danphe-grid [grid-colDefaults]="BabyBirthListGridColumns" [grid-data]="BirthList" (grid-actions)="GridActions($event)"
+                 [NepaliDateInGridParams]="NepaliDateInGridSettings" [show-print-button]="false">
+    </danphe-grid>
+
+  </div>
+</div>
+<add-birth-details *ngIf="ShowAddNewBirthDetails" [UpdateBirthDetails]="UpdateBirthDetails" [SelectedBabyDetails]="SelectedBabyDetails"
+                   (CallBack-Close)="CallBackClose($event)" (CallBack-Update)="CallBackUpdate()">
+</add-birth-details>

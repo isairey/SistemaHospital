@@ -1,0 +1,254 @@
+<div>
+  <div class="col-md-10 col-lg-10 backbutton">
+    <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+      <div>
+        <button class="btn btn-primary btn-sm" (click)="Back()"><i class="fa fa-angle-left" style="margin-right: 5px;"></i> Back
+        </button>
+      </div>
+      <div style="display: flex; justify-content: flex-end;">
+        <div class="input-group">
+          <div class="icheck-inline">
+            <label>Update Type</label>
+            <label class="mt-checkbox mt-checkbox-outline" *ngIf="SchemePriceCategory.IsPharmacySalePriceEditable">
+              <input type="radio" value="SalePrice" name="SalePrice" [(ngModel)]="UpdateType">
+              <span></span>&nbsp;&nbsp;SalePrice
+            </label>
+            <label class="mt-checkbox mt-checkbox-outline">
+              <input type="radio" value="Quantity" name="Quantity" [(ngModel)]="UpdateType">
+              <span></span>&nbsp;&nbsp;Quantity
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="col-md-3 searchbar"><input placeholder="Search" style="width:360px;" class="searchtbx" type="text" id="id_itemsearch"
+             onClick="this.select();"
+             (keyup)="OnQuickFilterChanged($event)">
+    </div>
+  </div>
+  <div class="col-md-10 col-lg-10 mt10" *ngIf=" !ShowGoToFinalizeMessage">
+    <div class="table-wrap">
+      <table class="table table-striped table-hover inv_table">
+        <thead>
+          <tr style="font-size: 13px !important;">
+            <th>S.N.</th>
+            <th>Receipt No.</th>
+            <th>Date</th>
+            <th>Visit</th>
+            <th>Item Name</th>
+            <th>Batch</th>
+            <th>Exp. Date</th>
+            <th>SalePrice</th>
+            <th>Prov. Qty</th>
+            <th>Ret. Qty</th>
+            <th>Subtotal</th>
+            <th>Dis %</th>
+            <th>Dis Amt</th>
+            <th>VAT %</th>
+            <th>VAT Amt</th>
+            <th>Tot. Amt</th>
+            <th class="text-center"> <label class="mt-checkbox mt-checkbox-outline">
+                <input type="checkbox" [(ngModel)]="SelectAllItems" class="zoomcheckbox" (change)="SelectAllChkOnChange($event)" title="Select All"
+                       [ngModelOptions]="{standalone: true}" />
+                <span></span> </label>
+            </th>
+            <th *ngIf="UpdateType==='SalePrice'">PackageName</th>
+            <th>Store</th>
+            <th>User</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of CurrentSaleItems; let i = index;" [ngClass]="{'hide-row': row.HideRow}">
+            <td>{{i+1}}</td>
+            <td>{{row.ReceiptNo}}</td>
+            <td>{{row.CreatedOn | DanpheDateTime:'format':'YYYY-MM-DD'}}</td>
+            <td>{{row.VisitType}}</td>
+            <td>{{row.ItemName}}</td>
+            <td>{{row.BatchNo}}</td>
+            <td>{{row.ExpiryDate | DanpheDateTime:'format':'YYYY-MM-DD'}}</td>
+            <td><input style="width:80px ; " [(ngModel)]="row.SalePrice" [ngModelOptions]="{standalone: true}" min="0" type="number" value=""
+                     [attr.disabled]="row.IsPharmacySalePriceEditable && UpdateType==='SalePrice'? null: true"></td>
+            <td> {{row.DispatchQty}}</td>
+            <td>
+              <input style="width:80px ; " id="ReturnQty{{i}}" [(ngModel)]="row.ReturnQty" [ngModelOptions]="{standalone: true}"
+                     onClick="this.select();" onfocus="this.select();" (focusout)="ItemRowValueChanged(i)" min="0" type="number"
+                     onmousewheel="this.blur()" (keyup.enter)="FindNextFocusElementByIndex(i)" [disabled]="UpdateType==='SalePrice'">
+              <div class="error-msg" *ngIf="row.DispatchQty<row.ReturnQty">Return Qty Should be less than Prov.
+                Qty</div>
+              <div class="error-msg" *ngIf="row.ReturnQty <0">Invalid Qty</div>
+            </td>
+            <td>{{row.SubTotal | number: "1.2-4"}}</td>
+            <td>{{row.DiscountPercentage | number: "1.2-4"}}</td>
+            <td>{{row.TotalDisAmt | number: "1.2-4"}}</td>
+            <td>{{row.VATPercentage}}</td>
+            <td>{{row.VATAmount}}</td>
+            <td>{{row.TotalAmount | number: "1.2-4"}}</td>
+            <td class="text-center"><label class="mt-checkbox mt-checkbox-outline">
+                <input class="zoomcheckbox" [(ngModel)]="row.IsSelected" name="IsSelected" type="checkbox" (change)="SelectItemCheckOnChange(i)"
+                       [ngModelOptions]="{standalone: true}" title="select item">
+                <span></span> </label>
+            </td>
+            <td *ngIf="UpdateType==='SalePrice'">
+              <div class="autocomplete-item">
+                <input danphe-auto-complete class=" form-control" id="generic" [(ngModel)]="row.BillServiceItem"
+                       [source]="InsurancePackageBillServiceItems" [list-formatter]="BillServiceItemFormatter" placeholder="--Package Name--"
+                       display-property-name="ItemName" value-property-name=null onClick="this.select();"
+                       (ngModelChange)="AssignSelectedServiceItem(i,row)" min-chars="1" [grid-sort]="'ItemName'" match-formatted="true"
+                       [attr.disabled]="row.IsPharmacySalePriceEditable? null : true">
+              </div>
+            </td>
+            <td>{{row.WardName}}</td>
+            <td>{{row.WardUser}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-2 col-lg-2" *ngIf="!ShowGoToFinalizeMessage">
+    <div class="row">
+      <div>
+        <table class="accountinfo">
+          <tr>
+            <td>Sub Total:</td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="CurrentSale.SubTotal" disabled id="subtotal"
+                       name="subtotal" type="number">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Discount Percentage:</td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="CurrentSale.DiscountPer"
+                       (focusout)="OnMainDiscountPercentChange()" id="discountpercent" name="discountpercent" type="number" disabled
+                       onwheel="this.blur()">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Discount Amount: </td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="CurrentSale.DiscountAmount"
+                       (focusout)="OnMainDiscountAmountChange()" id="discountamount" name="discountamount" type="number" disabled
+                       onwheel="this.blur()">
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Vat Amount: </td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="CurrentSale.VATAmount" name="discountamount"
+                       type="number" disabled>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Total Amount:</td>
+            <td>
+              <div class="form-group">
+                <input [(ngModel)]="CurrentSale.TotalAmount" [ngModelOptions]="{standalone: true}" disabled class="form-control" name="TotalAmount"
+                       type="number">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="SchemePriceCategory.IsCoPayment">
+            <td>PaymentMode:</td>
+            <td>
+              <div class="form-group">
+                <input [(ngModel)]="CurrentSale.CoPaymentMode" [ngModelOptions]="{standalone: true}" disabled class="form-control" name="TotalAmount"
+                       type="text">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="SchemePriceCategory.IsCoPayment">
+            <td>Received Amount:</td>
+            <td>
+              <div class="form-group">
+                <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="CurrentSale.ReceivedAmount" id="change" name="change"
+                       type="number" onwheel="this.blur()" min="0"
+                       style="font-weight:bold;height: 40px;font-size:30px !important;background-color:#0773bc; color:#fff;margin-bottom: 3px;">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="SchemePriceCategory.IsCoPayment">
+            <td>CoPay Cash:</td>
+            <td>
+              <div class="form-group">
+                <input [(ngModel)]="CurrentSale.CoPaymentCashAmount" [ngModelOptions]="{standalone: true}" disabled class="form-control"
+                       name="TotalAmount" type="number">
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="SchemePriceCategory.IsCoPayment">
+            <td>CoPay Credit:</td>
+            <td>
+              <div class="form-group">
+                <input [(ngModel)]="CurrentSale.CoPaymentCreditAmount" [ngModelOptions]="{standalone: true}" disabled class="form-control"
+                       name="TotalAmount" type="number">
+              </div>
+            </td>
+          </tr>
+          <tr class="dot">
+            <td colspan="2" class="text-capitalize">In Words : <b>{{CurrentSale.TotalAmount | NumberInWords}} </b>Only.
+              <br />
+              <br />
+            </td>
+          </tr>
+        </table>
+        <div class="col-md-12" style="padding-top:5px; margin-top: 10px;" *ngIf="this.IsOtherProvisionalRemaining">
+          <p style="color: red;">Note: There are some other provisional remaining for this patient.</p>
+        </div>
+        <div class="col-md-12" style="padding-top: 5px; margin-top: 10px;">
+          <div class="row" style="display: flex; justify-content: space-between;">
+            <div *ngIf="UpdateType==='Quantity'">
+              <input DanpheConfirmationDialog type="submit" id="btnPrint" [title]="ConfirmationTitle"
+                     [message]="ConfirmationMessageForProvisionalInvoiceUpdate" (confirm)="Update()" (cancel)="handleCancel()"
+                     class="btn green btn-success tooltip" [disabled]="Loading" value="Update">
+            </div>
+            <div *ngIf="UpdateType==='SalePrice'">
+              <input DanpheConfirmationDialog type="submit" id="btnUpdateSalePrice" [title]="ConfirmationTitle"
+                     [message]="ConfirmationMessageForProvisionalSalePriceUpdate" (confirm)="UpdateSalePrice()" (cancel)="handleCancel()"
+                     class="btn green btn-success tooltip" [disabled]="Loading" value="Update SalePrice">
+            </div>
+            <div style="margin-left: 5px;">
+              <input type="button" class="btn btn-danger" (click)="Cancel()" value="Cancel All Items">
+              <div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 col-lg-12 text-center" *ngIf="ShowGoToFinalizeMessage">
+      <p style="color: red; font-size: larger;">All bills currently have a zero sale price, making updates unavailable. Please proceed to the Finalize
+        tab and finalize the provisional.</p>
+    </div>
+  </div>
+
+  <div class="popup-static portlet box portlet-fullscreen inv_modal" *ngIf="ShowProvisionalReturnReceipt">
+    <div class="portlet-body form">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <div class="modelbox-div clearfix">
+            <a class="btn btn-danger history-del-btn" (click)="OnPopUpClose()" title="Cancel"><i class="fa fa-close"></i></a>
+            <div class="form-body">
+              <div class="col-md-12">
+                <div class="row printStyle print-border">
+                  <div style="text-align:center;">
+                    <pharmacy-provisional-invoice-return-print [return-receipt-no]="ReturnReceiptNo" [fiscal-year-id]="FiscalYearId">
+                    </pharmacy-provisional-invoice-return-print>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

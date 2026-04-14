@@ -1,0 +1,69 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 5px;
+  text-align: left;
+}
+
+th {
+  background-color: #948a85;
+  color: white;
+}
+
+.booking-select__list .booking-select__item .booking-select__item--button,
+.booking-table .booking-table__button {
+  background-color: #ac3e3e;
+  border: none;
+  color: white;
+  font-size: 16px;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  zoom: 0.7;
+}
+
+.booking-select__item{
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+}
+
+.two-column-list {
+  margin: 5px 0px 0px 0px;
+  padding: 0px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.booking-select__list .booking-select__item .booking-select__item--button i,
+.booking-table .booking-table__button i {
+  margin-right: 0;
+}
+
+.booking-table-wrapper {
+  padding: 0 15px;
+}
+
+.booking-table-wrapper .booking-table td {
+  padding: 0 5px;
+}
+
+#numbered-list {
+  /* counter-reset: list-counter; */
+}
+
+.booking-select__list .booking-select__item::before {
+  /* content: counter(list-counter);
+  counter-increment: list-counter; */
+  font-weight: bold;
+  margin-right: 5px;
+}

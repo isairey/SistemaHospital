@@ -1,0 +1,63 @@
+<div>
+  <h5 style="margin-left: 10px; font-weight: bold; padding-top: 10px;">Map Anaesthesia Type</h5>
+  <form [formGroup]="MapAnaesthesiaType.MapAnaesthesiaValidator" class="form-horizontal hm-form">
+
+    <div class="form-group" style="padding: 0px; margin: 0px;">
+      <div class="col-md-12" style="padding: 0px; margin: 0px;">
+        <label class="control-label col-md-2">Anaesthesia Type<sup> *</sup> <b>:</b> </label>
+        <div class="col-md-3">
+          <div class="col-wrapper">
+            <div class="col">
+              <select id="AnaesthesiaTypeId" class="form-control" formControlName="AnaesthesiaTypeId"
+                      (keyup.enter)="GoToNextElement($event, 'ServiceItemId')" [attr.disabled]="IsUpdate ? true : null">
+                <option *ngFor="let ans of AnaesthesiaTypeList" [value]="ans.AnaesthesiaTypeId">{{ ans.AnaesthesiaType }}</option>
+
+              </select>
+              <span class="color-red font-sm" *ngIf="MapAnaesthesiaType.IsDirty('AnaesthesiaTypeId')"
+                    [hidden]="MapAnaesthesiaType.IsValidCheck('AnaesthesiaTypeId','required')">Anaesthesia Type is required.</span>
+            </div>
+          </div>
+        </div>
+        <label class="control-label col-md-2">Billing Item<sup> *</sup> <b>:</b> </label>
+        <div class="col-md-3">
+          <div class="col-wrapper">
+            <div class="col">
+              <select id="ServiceItemId" class="form-control" formControlName="ServiceItemId"
+                      (keyup.enter)="GoToNextElement($event, 'ServiceItemId')" [attr.disabled]="IsUpdate ? true : null">
+                <option *ngFor="let item of ServiceItem" [value]="item.ServiceItemId">{{ item.ItemName }}</option>
+                <span class="color-red font-sm" *ngIf="MapAnaesthesiaType.IsDirty('ServiceItemId')"
+                      [hidden]="MapAnaesthesiaType.IsValidCheck('ServiceItemId','required')">Anaesthesia Type is required.</span>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12" style="padding: 0px; margin: 5px 0px 0px 0px;">
+        <div class="col-md-8" style="padding: 0px 0px 0px 5px; margin: 15px 0px 0px 20px;">
+          <label for="id_checkbox_isActive" class="is-ref mt-checkbox mt-checkbox-outline">
+            <input type="checkbox" id="id_checkbox_isActive" formControlName="IsActive" style="cursor: pointer;" />
+            <span></span>IsActive
+          </label>
+        </div>
+        <div style="padding: 0px; margin: 0px">
+          <button
+                  id="id_btn_save_ot_Map_Anaesthesia" style="float: left;" class="btn green btn-success "
+                  (click)="SaveMapAnaesthesiaType()">
+            {{ IsUpdate? 'Update' : 'Save' }}
+          </button>
+          <button
+                  id="id_btn_clear_ot_Surgery" style="float: left;" class="btn orange btn-success"
+                  (click)="ClearAnaesthesiaTyeFormControls()">
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+<div class="row" style="padding: 10px; margin: 0px;">
+  <danphe-grid [grid-colDefaults]="MapAnaesthesiaGridColumns"
+               [grid-data]="MapServiceItemAnaesthesiaType"
+               (grid-actions)="MapAnaesthesiaTypeGridActions($event)"> </danphe-grid>
+</div>

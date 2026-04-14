@@ -1,0 +1,96 @@
+<div class="row">
+  <div class="form-body">
+    <div class="col-md-12">
+      <div class="caption custom-caption"> <i class="glyphicon glyphicon-asterisk"></i> <span class="caption-subject">Sales Summary Report</span> </div>
+      <div class="row">
+        <div class="col-md-8">
+          <from-to-date-select (on-change)="OnFromToDateChange($event)" [date-settings-name]="'billing-reports'"> </from-to-date-select>
+        </div>
+        <div class="col-md-4 col-xs-12">
+          <div class="form-group">
+            <button class="btn blue" type="button" (click)="LoadReport()" [disabled]="loading">
+              <span *ngIf="!loading">Show Report</span>
+              <span *ngIf="loading">Loading...</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-sm-12">
+      <danphe-grid [grid-colDefaults]="salesSummaryGrid" [grid-data]="salesSummaryResult" [grid-exportOptions]="gridExportOptions" [grid-showExport]="true" [grid-footer-content]="footerContent" [grid-date-range]="dateRange" [report-for]="pharmacy"> </danphe-grid>
+    </div>
+  </div>
+  <!-- Summary -->
+  <div class=" col-sm-12 col-md-12" style="margin-bottom: 10px !important; display: flex;justify-content: center;">
+    <div class="table-responsive table-wrapper" id="print_summary">
+      <div>
+        <table class="table table-bordered table-hover table-condensed custom_table padLess_table" border="1">
+          <thead>
+            <tr>
+              <th colspan="4" style="text-align: center;">
+                <span style="font-size:large;"> Summary </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container>
+              <tr>
+                <td style="font-weight:bold; color:blue"> Gross Cash Sales </td>
+                <td> {{grandTotalSalesSummary.GrossCashSales | number}} </td>
+                <td style="font-weight:bold; color:blue">Gross Credit Sales </td>
+                <td> {{grandTotalSalesSummary.GrossCreditSales | number}} </td>
+                </tr>
+                <tr>
+                  <td style="font-weight:bold; color:blue"> Cash Discount </td>
+                  <td> {{grandTotalSalesSummary.CashDiscount | number}} </td>
+                  <td style="font-weight:bold; color:blue">Credit Discount </td>
+                  <td> {{grandTotalSalesSummary.CreditDiscount | number}} </td>
+                </tr>
+                <tr>
+                <td style="font-weight:bold; color:blue"> Cash Sales </td>
+                <td> {{grandTotalSalesSummary.CashSales | number}} </td>
+                <td style="font-weight:bold; color:blue"> Credit Sales </td>
+                <td> {{grandTotalSalesSummary.CreditSales | number}} </td>
+
+              </tr>
+              <tr>
+                <td style="font-weight:bold; color:blue"> Gross Cash Refund </td>
+                <td> {{grandTotalSalesSummary.GrossCashRefund | number}} </td>
+                <td style="font-weight:bold; color:blue">Gross Credit Refund </td>
+                <td> {{grandTotalSalesSummary.GrossCreditRefund | number}} </td>
+              </tr>
+              <tr>
+                <td style="font-weight:bold; color:blue"> Cash Refund Discount </td>
+                <td> {{grandTotalSalesSummary.CashRefundDiscount | number}} </td>
+                <td style="font-weight:bold; color:blue"> Credit Refund Discount </td>
+                <td> {{grandTotalSalesSummary.CreditRefundDiscount | number}} </td>
+              </tr>
+              <tr>
+                <td style="font-weight:bold; color:blue"> Total Cash Refund </td>
+                <td> {{(grandTotalSalesSummary.CashSalesRefund) | number}} </td>
+                <td style="font-weight:bold; color:blue"> Total Credit Refund </td>
+                <td> {{grandTotalSalesSummary.CreditSalesRefund | number}} </td>
+                </tr>
+              <tr>
+                <td style="font-weight:bold; color:blue"> Net Cash Sales </td>
+                <td> {{(grandTotalSalesSummary.NetCashSales) | number}} </td>
+
+                <td style="font-weight:bold; color:blue">Net Credit Sales</td>
+                <td> {{grandTotalSalesSummary.NetCreditSales | number}} </td>
+              </tr>
+              <tr style="border: 2px solid;">
+                <td style="font-weight:bold; color:blue">Net Total Sales</td>
+                <td> {{grandTotalSalesSummary.NetTotalSales | number}} </td>
+                
+                <td style="font-weight:bold; color:blue"> Cash In Hand </td>
+                <td style="font-weight:bold;"> {{grandTotalSalesSummary.CashInHand | number}}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

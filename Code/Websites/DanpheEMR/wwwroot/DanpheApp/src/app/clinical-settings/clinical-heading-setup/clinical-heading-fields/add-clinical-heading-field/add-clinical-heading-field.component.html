@@ -1,0 +1,189 @@
+<style>
+  .caption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .caption span {
+    text-align: center;
+  }
+
+  .custom-checkbox {
+    width: 20px;
+    height: 20px;
+    margin: auto;
+  }
+</style>
+<div class="popup-static portlet box portlet-fullscreen custom_modal">
+  <div class="portlet-body form">
+    <div class="row">
+      <div class="col-md-11" style="margin-left:4%">
+        <div class="modelbox-div ref_modal_div clearfix">
+          <div class="caption custom-caption no-margin">
+            <h3>
+              <span>
+                <span *ngIf="!Update">Add New Medical Component</span>
+                <span *ngIf="Update">Edit Medical Component</span>
+              </span>
+            </h3>
+            <a class="btn btn-danger" (click)="Close()">X</a>
+          </div>
+          <form [formGroup]="ClinicalHeadingField.CLNHeadingFieldValidator" class="form-horizontal hm-form">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-body col-md-12 hm-form">
+                  <div class="form-group">
+                    <label for="FieldName" class="control-label col-md-4">Medical Component Name<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <input class="form-control" type="text" id="FieldName" formControlName="FieldName" placeholder="FieldName"
+                             (keyup.enter)="SetFocusById('ChildHeadingId')" />
+                      <span class="color-red font-sm"
+                            *ngIf="ClinicalHeadingField.CLNHeadingFieldValidator.get('FieldName').invalid && ClinicalHeadingField.CLNHeadingFieldValidator.get('FieldName').touched">FieldName
+                        is required</span>
+                    </div>
+                  </div>
+                  <!-- <div class="form-group" *ngIf="ShowChoosePretemplate && !ShowPrintableFormOption">
+                    <label for="OptionValue" class="control-label col-md-4">Smart-Template<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <select id="Id_ClinicalSttings_OptionValue" class="form-control" formControlName="OptionValue">
+                        <option *ngFor="let PreTemplate of PreTemplateList" [value]="PreTemplate.PreTemplateName">{{
+                          PreTemplate.KeyWord }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group" *ngIf="ShowPrintableFormOption && !ShowChoosePretemplate">
+                    <label for="SmartTemplate" class="control-label col-md-4">Printable Form<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <select id="Id_ClinicalSttings_OptionValue_SmartTemplate" class="form-control" formControlName="OptionValue">
+                        <option *ngFor="let Template of SmartPrintableTemplateList" [value]="Template.TemplateCode">{{
+                          Template.TemplateName }}
+                        </option>
+                      </select>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-body col-md-12 hm-form">
+                  <div class="form-group">
+                    <label class="control-label col-md-4">Visit Type<sup>*</sup><b>:</b></label>
+                    <div class="col-md-8">
+                      <div>
+                        <label class="mt-checkbox mt-checkbox-outline">
+                          <input type="checkbox" formControlName="IsIPD"
+                                 [checked]="ClinicalHeadingField.CLNHeadingFieldValidator.get('IsIPD').value===true"
+                                 style="width:15px;height:15px" />
+                          <span></span>Inpatient
+                        </label>
+
+                        <label class="mt-checkbox mt-checkbox-outline">
+                          <input type="checkbox" formControlName="IsOPD"
+                                 [checked]="ClinicalHeadingField.CLNHeadingFieldValidator.get('IsOPD').value===true"
+                                 style="width:15px;height:15px" />
+                          <span></span>Outpatient
+                        </label>
+
+                        <label class="mt-checkbox mt-checkbox-outline">
+                          <input type="checkbox" formControlName="IsEmergency"
+                                 [checked]="ClinicalHeadingField.CLNHeadingFieldValidator.get('IsEmergency').value===true"
+                                 style="width:15px;height:15px" />
+                          <span></span>Emergency
+                        </label>
+                      </div>
+                      <span class="color-red font-sm" *ngIf="ClinicalHeadingField.CLNHeadingFieldValidator.hasError('atLeastOneRequired')">
+                        Visit Type is required
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin-bottom: 25px;">
+              <div class="col-md-6">
+                <label for="InputType" class="control-label col-md-4">InputType<sup>*</sup><b>:</b></label>
+                <div class="col-md-8">
+                  <select id="InputType" class="form-control" formControlName="InputType" (ngModelChange)="OnSelectInputType($event)">
+                    <option *ngFor="let inputType of InputTypes" [value]="inputType.value">{{ inputType.name }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div *ngIf="ShowChoosePretemplate && !ShowPrintableFormOption">
+                  <label for="OptionValue" class="control-label col-md-4">Smart-Template<sup>*</sup><b>:</b></label>
+                  <div class="col-md-8">
+                    <select id="Id_ClinicalSttings_OptionValue" class="form-control" formControlName="OptionValue">
+                      <option *ngFor="let PreTemplate of PreTemplateList" [value]="PreTemplate.PreTemplateName">{{
+                        PreTemplate.KeyWord }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div *ngIf="ShowPrintableFormOption && !ShowChoosePretemplate">
+                  <label for="SmartTemplate" class="control-label col-md-4">Printable Form<sup>*</sup><b>:</b></label>
+                  <div class="col-md-8">
+                    <select id="Id_ClinicalSttings_OptionValue_SmartTemplate" class="form-control" formControlName="OptionValue">
+                      <option *ngFor="let Template of SmartPrintableTemplateList" [value]="Template.TemplateCode">{{
+                        Template.TemplateName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row" style="margin-bottom: 25px;">
+              <div class="col-md-6">
+                <label for="GroupName" class="control-label col-md-4">Group Name<b>:</b></label>
+                <div class="col-md-8">
+
+                  <input class="form-control" type="text" id="GroupName" formControlName="GroupName" placeholder="GroupName"
+                         (keyup.enter)="SetFocusById('ChildHeadingId')" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="OptionValue" class="control-label col-md-4">IsAcrossVisitAvailability<b>:</b></label>
+                <div class="col-md-8">
+                  <input type="checkbox" class="form-check-input custom-checkbox"
+                         formControlName="IsAcrossVisitAvailability">
+                </div>
+                <!-- <div *ngIf="ShowPrintableFormOption && !ShowChoosePretemplate">
+                  <label for="SmartTemplate" class="control-label col-md-4">Printable Form<sup>*</sup><b>:</b></label>
+                  <div class="col-md-8">
+                    <select id="Id_ClinicalSttings_OptionValue_SmartTemplate" class="form-control" formControlName="OptionValue">
+                      <option *ngFor="let Template of SmartPrintableTemplateList" [value]="Template.TemplateCode">{{
+                        Template.TemplateName }}
+                      </option>
+                    </select>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 25px;">
+              <div class="col-md-6">
+                <label for="IsDisplayTitle" class="control-label col-md-4">IsDisplayTitle<b>:</b></label>
+                <div class="col-md-8">
+                  <input type="checkbox" class="form-check-input custom-checkbox"
+                         formControlName="IsDisplayTitle">
+                </div>
+              </div>
+            </div>
+
+          </form>
+          <div class="modelbox-footer">
+            <div class="all-buttons text-right">
+              <input type="button" id="add_ClinicalHeadingField" class="btn green btn-success margin-7-hr" *ngIf="!Update"
+                     (click)="AddClinicalHeadingField()" value="Add" />
+              <input type="button" id="updte_ClinicalHeadingField" class="btn green btn-success margin-7-hr" *ngIf="Update"
+                     (click)="UpdateClinicalHeadingFieldSetup()" value="Update" />
+              <input type="button" id="close" class="btn red btn-danger margin-7-hr" (click)="Close()" value="Close" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,424 @@
+<!-- #region PatientInfo -->
+<!-- Booking Details -->
+<div *ngIf="BookingDetails && BookingDetails.PatientName" class="row"
+     style="margin: 10px 0px; padding: 5px;  border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <!-- 1st row -->
+    <div class="row" style="margin: 0px; padding: 5px;">
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Hospital No : </b></span><span>{{BookingDetails.PatientCode}}</span>
+        </div>
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Phone : </b></span><span>{{BookingDetails.PhoneNumber}}</span>
+        </div>
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>OT Date Time : </b></span><span>{{BookingDetails.BookedForDate}}</span>
+        </div>
+    </div>
+    <!-- 2nd row -->
+    <div class="row" style="margin: 0px; padding: 5px;">
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Patient Name : </b></span><span>{{BookingDetails.PatientName}}</span>
+        </div>
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Surgery Name : </b></span><span>{{BookingDetails.SurgeryName}}</span>
+        </div>
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Priority : </b></span><span>{{BookingDetails.Priority}}</span>
+        </div>
+    </div>
+    <!-- 3rd row -->
+    <div class="row" style="margin: 0px; padding: 5px;">
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Address : </b></span><span>{{coreService.SortPatientAddress(BookingDetails)}}</span>
+        </div>
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Surgery Type : </b></span><span>{{BookingDetails.SurgeryType}}</span>
+        </div>
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Status : </b></span>
+            <span class="border-radius : 10px !important"
+                  [ngStyle]="{'background-color': GetColorForStatus(BookingDetails.Status), 'padding': '2px 5px', color: 'white'}"
+                  style="border-radius: 10px !important">
+                {{BookingDetails.Status}}
+            </span>
+        </div>
+    </div>
+    <!-- 4th row -->
+    <div class="row" style="margin: 0px; padding: 5px;">
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Age/Sex : </b></span><span>{{BookingDetails.AgeSex}}</span>
+        </div>
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Prescriber : </b></span><span>{{BookingDetails.Prescriber}}</span>
+        </div>
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>VisitType : </b></span><span>{{BookingDetails.VisitType | CapitalFirstLetter}}</span>
+        </div>
+    </div>
+    <!-- 5th row -->
+    <div *ngIf="BookingDetails.VisitType === InpatientVisitType" class="row" style="margin: 0px; padding: 5px;">
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>IP Number : </b></span><span>{{BookingDetails.VisitCode}}</span>
+        </div>
+        <div class="col-md-4" style="margin: 0px; padding: 0px;">
+            <span><b>Ward/Bed : </b></span><span>{{BookingDetails.WardName}}/{{BookingDetails.BedCode}}</span>
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+
+
+<div class="sub-navtab">
+    <ul class="nav nav-tabs">
+        <li> <a [ngClass]="{'a-tab-active': ShowBookingDetails === true}" (click)="UpdateView(0)">Booking Details</a></li>
+        <li> <a [ngClass]="{'a-tab-active': ShowPersonnelDetails === true}" (click)="UpdateView(1)">Personnel Details</a></li>
+        <li> <a [ngClass]="{'a-tab-active': ShowOTCheckListDetails === true}" (click)="UpdateView(2)">OT CheckList</a></li>
+        <li> <a [ngClass]="{'a-tab-active': ShowAnaesthesiaDetails === true}" (click)="UpdateView(3)">Anaesthesia Details</a></li>
+        <li> <a [ngClass]="{'a-tab-active': ShowInstrumentDetails === true}" (click)="UpdateView(4)">Instrument Details</a></li>
+        <li> <a [ngClass]="{'a-tab-active': ShowConsentForm === true}" (click)="UpdateView(5)">Consent Form</a></li>
+    </ul>
+</div>
+
+
+<div class="col-md-12">
+
+    <!-- #region Booking Details -->
+
+    <div *ngIf="ShowBookingDetails">
+        <ot-booking-add
+                        [ShowAddNewBookingPage]="ShowBookingDetails" [OTBookingId]="OTBookingId" [ShowSearchFilter]="false"
+                        [IsUpdate]="IsUpdate" [is-view-only]="IsViewOnly" [IsCancelled]="IsCancelled"
+                        (CallBackAddClose)="CallBackFromOtBookingAdd($event)">
+        </ot-booking-add>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region Personnel Details -->
+    <div *ngIf="ShowPersonnelDetails">
+        <!-- <div class="div2" *ngIf="IsPatientSelected || IsUpdate"> -->
+        <div style="margin-left: 15px;">
+            <label style="font-weight: 900; font-size: 14px; text-decoration: underline;">Personnel Involvements</label>
+        </div>
+        <div class="row" style="width: 50%;">
+            <div class="col-md-12 form-group" style="margin-bottom: 10px;" *ngIf="!IsViewOnly && !IsCancelled">
+                <label class="col-md-4" style="font-weight: 700; font-size: small;">
+                    Personnel Type<b style="float: right;">:</b></label>
+                <div class="col-md-8">
+                    <select name="AnaesthesiaType"
+                            id="id_txt_personnelType"
+                            (change)="OnPersonnelTypeSelect($event)" (keyup.enter)="GoToNextElement($event, 'id_txt_personnel')">
+                        <option value="">--Select Personnel Type--</option>
+                        <option *ngFor="let p of PersonnelTypes" value="{{p.PersonnelTypeId}}">
+                            {{ p.PersonnelType }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 form-group" *ngIf="!IsViewOnly && !IsCancelled">
+                <label class="col-md-4" style="font-weight: 700; font-size: small;">
+                    Personnel Name<b style="float: right;">:</b></label>
+                <div class="col-md-8">
+                    <input danphe-auto-complete class="form-control" [source]="PersonnelList"
+                           [list-formatter]="PersonnelFormatter" placeholder="Select Personnel"
+                           display-property-name="FullName" value-property-name="EmployeeId"
+                           [min-chars]="0" max-num-list="10" [(ngModel)]="CurrentPersonnel"
+                           id="id_txt_personnel" (valueChanged)="OnPersonnelSelect($event)" />
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="booking-table-wrapper">
+                    <table class="booking-table">
+                        <thead>
+                            <th>S.N.</th>
+                            <th>Personnel Type</th>
+                            <th>Name</th>
+                            <th *ngIf="!IsViewOnly && !IsCancelled">Action</th>
+                        </thead>
+                        <tbody *ngIf="SelectedPersonnelList.length">
+                            <tr *ngFor="let per of SelectedPersonnelList let i=index;">
+                                <td>{{ i+1 }}</td>
+                                <td>{{ per.PersonnelTypeName }}</td>
+                                <td>{{ per.FullName }}</td>
+                                <td *ngIf="!IsViewOnly && !IsCancelled"><button class="booking-table__button" (click)="RemovePersonnel(i)">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div
+                 class="col-md-12 text-right" style="margin-top: 15px" *ngIf="!IsViewOnly && !IsCancelled">
+                <input DanpheConfirmationDialog
+                       id=" id_save_personnel_details"
+                       type="submit"
+                       [title]="confirmationTitle"
+                       [message]="confirmationMessageForPersonnel"
+                       (confirm)="handleConfirmForPersonnelDetails()"
+                       (cancel)="handleCancel()" style="font-weight: bold;margin-right: 10px;" class="btn green btn-success"
+                       [value]="'Update Personnel Details'" [disabled]="loading" />
+            </div>
+        </div>
+
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region CheckList Details -->
+    <div *ngIf="ShowOTCheckListDetails">
+        <!-- <label style="font-weight: 900; font-size: 14px; text-decoration: underline; margin: 0px 0px 0px 15px">CheckList Details</label> -->
+        <ot-booking-checklist
+                              *ngIf="ShowCheckListPage" [ShowCheckListPage]="ShowCheckListPage"
+                              [SelectedOTBooking]="SelectedOTBooking" [is-view-only]="IsViewOnly" [IsCancelled]="IsCancelled"
+                              [SurgeryName]="BookingDetails.SurgeryName">
+        </ot-booking-checklist>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region Anaesthesia Details -->
+    <div *ngIf="ShowAnaesthesiaDetails">
+        <div style="margin-left: 15px;">
+            <label style="font-weight: 900; font-size: 14px; text-decoration: underline;">Anaesthesia Details</label>
+        </div>
+        <div class="row" style="width: 50%; margin-left: 0px;">
+            <div class="form-group">
+                <label class="control-label col-md-4"><b>Use Anaesthesia :</b></label>
+                <div class="col-md-8">
+                    <div class="col-md-1" style="padding: 0px; margin: 3px 0px 0px 10px;">
+                        <input type="checkbox" id="id_checkbox_useAnaesthesia"
+                               style="cursor: pointer; zoom: 1.5;" [(ngModel)]="SelectedOTBooking.UseAnaesthesia"
+                               (click)="OnUseAnaesthesiaSelected()" [disabled]="IsViewOnly || IsCancelled"
+                               (keyup.enter)=" GoToNextElement($event, 'id_txt_anesthesiaType' )" />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="SelectedOTBooking.UseAnaesthesia && !IsViewOnly && !IsCancelled" class="form-group">
+                <label class="control-label col-md-4"><b>Anaesthesia Type :</b></label>
+                <div class="col-md-8" style="margin-bottom: 5px;">
+                    <select name="AnaesthesiaType"
+                            id="id_txt_anesthesiaType"
+                            (change)="OnAnaesthesiaTypeSelect($event)">
+                        <option value="">--Select Anaesthesia Type--</option>
+                        <option *ngFor="let a of AnaesthesiaTypeList" value="{{a.AnaesthesiaTypeId}}">
+                            {{ a.AnaesthesiaType }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div *ngIf="SelectedOTBooking.UseAnaesthesia" class="form-group">
+                <label class="control-label col-md-4"><b>Anaesthesia<sup>*</sup> :</b></label>
+                <div class="col-md-8" *ngIf="!IsViewOnly && !IsCancelled">
+                    <input danphe-auto-complete class="form-control" [source]="FilteredAnaesthesiaList"
+                           [list-formatter]="AnaesthesiaFormatter" placeholder="Select Anaesthesia"
+                           display-property-name="ItemName" value-property-name="ServiceItemId"
+                           [min-chars]="0" max-num-list="10"
+                           id="id_txt_anaesthesia" [(ngModel)]="CurrentAnaesthesia"
+                           (focusout)="OnAnaesthesiaSelect($event)" />
+                </div>
+                <label class="control-label col-md-4"></label>
+                <div class="col-md-8">
+                    <ul class="booking-select__list two-column-list" id="numbered-list">
+                        <li class="booking-select__item" *ngFor="let anesthesia of SelectedAnaesthesiaList; let i = index">
+                            <span class=" booking-select__item--title">
+                                {{ anesthesia.ItemName }}
+                            </span>
+                            <button *ngIf="!IsViewOnly && !IsCancelled" class="booking-select__item--button" (click)="RemoveAnaesthesia(i)">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                 class="col-md-12 text-right" style="margin-top: 15px" *ngIf="!IsViewOnly && !IsCancelled">
+                <input DanpheConfirmationDialog
+                       id=" id_save_anaesthesia_details"
+                       type="submit"
+                       [title]="confirmationTitle"
+                       [message]="confirmationMessageForAnaesthesia"
+                       (confirm)="handleConfirmForAnaesthesiaDetails()"
+                       (cancel)="handleCancel()" style="font-weight: bold;margin-right: 10px;" class="btn green btn-success"
+                       [value]="'Update Anaesthesia Details'" [disabled]="loading" />
+            </div>
+        </div>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region Instrument Details -->
+    <div *ngIf="ShowInstrumentDetails">
+        <div class="row">
+            <label style="margin: 15px; text-decoration: underline; font-weight: bold;">Machine Detail</label>
+        </div>
+
+        <div *ngIf="!IsViewOnly && !IsCancelled" class="col-md-6" style="padding: 0px; margin-left: 0px;">
+            <div class="form-group">
+                <label class="control-label col-md-4"><b>Machine Name<sup>*</sup>:</b></label>
+                <div class="col-md-8">
+                    <input danphe-auto-complete class="form-control" [source]="OTMachineList"
+                           [list-formatter]="MachineFormatter" placeholder="Select Machine"
+                           display-property-name="MachineName" value-property-name="OTMachineId"
+                           [min-chars]="0" max-num-list="10"
+                           (keyup.enter)="GoToNextElement($event, 'id_txt_personnelType')"
+                           id="id_txt_machineName" [(ngModel)]="CurrentOTMachine"
+                           (focusout)="OnOTMachineSelect($event)" />
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!IsViewOnly && !IsCancelled" class="col-md-4" style="padding: 0px; margin-left: 0px;">
+            <div class="form-group">
+                <label class="control-label col-md-4"><b>Machine Charge<sup>*</sup>:</b></label>
+                <div class="col-md-8">
+                    <input class="form-control" type="number" placeholder="Machine Charge" (input)="OnMachineChargeChange()"
+                           (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                           [(ngModel)]="CurrentOTMachine.MachineCharge" />
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!IsViewOnly && !IsCancelled" class="col-md-12 justify-content-end" style="margin: 15px 0px; padding-right: 15px;">
+            <div style="padding: 0; margin: 0;">
+                <button
+                        id="id_btn_clear_machine" class="btn orange btn-success" (click)="ClearMachine()"
+                        style="float: right; margin-left: 10px;">
+                    Clear
+                </button>
+            </div>
+            <div style="padding: 0; margin: 0 15px;">
+                <button
+                        id="id_btn_add_machine" class="btn green btn-success" (click)="SaveMachine()" style="float: right; margin-left: 10px;">
+                    Add Machine
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="booking-table-wrapper">
+                <table class="booking-table">
+                    <thead>
+                        <th>S.N.</th>
+                        <th>Machine Name</th>
+                        <th>Charge</th>
+                        <th *ngIf="!IsViewOnly && !IsCancelled">Action</th>
+                    </thead>
+                    <tbody *ngIf="SelectedMachineListDto.length">
+                        <tr *ngFor="let machine of SelectedMachineListDto let i=index;">
+                            <td>{{ i+1 }}</td>
+                            <td>{{ machine.MachineName }}</td>
+                            <td>{{ machine.Charge }}</td>
+                            <td *ngIf="!IsViewOnly && !IsCancelled">
+                                <button class="booking-table__button" (click)="RemoveMachine(i, machine.MachineDetailId)">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="col-md-12" style="padding-left: 0px;">
+            <label style="margin: 55px 0px 15px 0px; text-decoration: underline; font-weight: bold;">Implant Detail</label>
+        </div>
+
+        <div *ngIf="!IsViewOnly && !IsCancelled" style="margin: 0px; padding: 0px">
+            <div class="col-md-6" style="margin-left: 0px; padding: 0px;">
+                <label class="control-label col-md-4">Implant Name<sup>*</sup> <b>:</b></label>
+                <div class="col-md-8">
+                    <input class="form-control" placeholder="Implant Name" type="text"
+                           (keyup.enter)="GoToNextElement($event, 'id_txt_implant_quantity')"
+                           id="id_txt_implant_name" [(ngModel)]="CurrentImplant.ImplantName"
+                           (focusout)="OnOTMachineSelect($event)" />
+                </div>
+            </div>
+            <div class="col-md-6" style="margin-left: 0px; padding: 0px;">
+                <label class="control-label col-md-4">Implant Quantity<sup>*</sup> <b>:</b></label>
+                <div class="col-md-8">
+                    <input class="form-control" placeholder="Implant Quantity" type="number"
+                           (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                           (keyup.enter)="GoToNextElement($event, 'id_txt_implant_charge')"
+                           id="id_txt_implant_quantity" [(ngModel)]="CurrentImplant.Quantity" (input)="OnImplantQuantityChange()" />
+                </div>
+            </div>
+            <div class="col-md-6" style="margin: 5px 0px; padding: 0px;">
+                <label class="control-label col-md-4">Total Charge<b>:</b></label>
+                <div class="col-md-8">
+                    <input class="form-control" placeholder="Enter Price" type="number"
+                           (wheel)="coreService.PreventNumberChangeOnScroll($event)"
+                           (keyup.enter)="GoToNextElement($event, 'id_txt_implant_remarks')"
+                           id="id_txt_implant_charge" [(ngModel)]="CurrentImplant.Charge" (input)="OnImplantChargeChange()" />
+                </div>
+            </div>
+            <div class="col-md-6" style="margin: 5px 0px; padding: 0px;">
+                <label class="control-label col-md-4">Remarks<b>:</b></label>
+                <div class="col-md-8">
+                    <textarea
+                              class="form-control" placeholder="Remarks" type="text"
+                              (keyup.enter)="GoToNextElement($event, 'id_btn_add_implant')"
+                              id="id_txt_implant_remarks" [(ngModel)]="CurrentImplant.Remarks">
+                        </textarea>
+                </div>
+            </div>
+            <div class="col-md-12 justify-content-end" style="margin: 15px 0px; padding-right: 15px;">
+                <div style="padding: 0; margin: 0;">
+                    <button
+                            id="id_btn_clear_implant" class="btn orange btn-success" (click)="ClearImplant()"
+                            style="float: right; margin-left: 10px;">
+                        Clear
+                    </button>
+                </div>
+                <div style="padding: 0; margin: 0 15px;">
+                    <button
+                            id="id_btn_add_implant" class="btn green btn-success" (click)="SaveImplant()" style="float: right; margin-left: 10px;">
+                        Add Implant
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="booking-table-wrapper">
+                <table class="booking-table">
+                    <thead>
+                        <th>S.N.</th>
+                        <th>Implant Name</th>
+                        <th>Quantity</th>
+                        <th>Charge</th>
+                        <th>Remarks</th>
+                        <th *ngIf="!IsViewOnly && !IsCancelled">Action</th>
+                    </thead>
+                    <tbody *ngIf="SelectedImplantListDto.length">
+                        <tr *ngFor="let implant of SelectedImplantListDto let i=index;">
+                            <td>{{ i+1 }}</td>
+                            <td>{{ implant.ImplantName }}</td>
+                            <td>{{ implant.Quantity }}</td>
+                            <td>{{ implant.Charge }}</td>
+                            <td>{{ implant.Remarks }}</td>
+                            <td *ngIf="!IsViewOnly && !IsCancelled">
+                                <button class="booking-table__button" (click)="RemoveImplant(i, implant.ImplantDetailId)">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region Consent Form-->
+    <consent-form
+                  *ngIf="ShowConsentForm" [ShowConsentForm]="ShowConsentForm"
+                  [SelectedOTBooking]="SelectedOTBooking">
+    </consent-form>
+    <!-- #endregion -->
+
+    <ot-conclude-detail
+                        *ngIf="ShowConcludeDetail && ShowBookingDetails && (SelectedOTBooking && SelectedOTBooking.Status === StatusConcluded)"
+                        [booked-for-date]="SelectedOTBooking.BookedForDate"
+                        [ot-booking-id]="OTBookingId"
+                        [is-view-only]="true">
+    </ot-conclude-detail>
+
+</div>

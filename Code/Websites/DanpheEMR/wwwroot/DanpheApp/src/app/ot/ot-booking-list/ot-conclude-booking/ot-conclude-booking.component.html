@@ -1,0 +1,196 @@
+<div *ngIf="ShowConcludePage" class="popup-static portlet box portlet-fullscreen custom_modal">
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="modelbox-div clearfix">
+                    <div class="caption custom-caption" style="margin: 0px 0px 15px 0px;">
+                        <h3> <span> Conclude Booking </span>
+                        </h3>
+                        <a class="btn btn-danger" (click)="CloseConcludePage()" title="Cancel">X</a>
+                    </div>
+
+                    <!-- body starts-->
+
+
+                    <!-- Booking Details -->
+                    <div *ngIf="BookingDetails && BookingDetails.PatientName" class="row"
+                         style="margin: 10px 0px; padding: 5px;  border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <!-- 1st row -->
+                        <div class="row" style="margin: 0px; padding: 5px;">
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Hospital No : </b></span><span>{{BookingDetails.PatientCode}}</span>
+                            </div>
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Phone : </b></span><span>{{BookingDetails.PhoneNumber}}</span>
+                            </div>
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>OT Date Time : </b></span><span>{{BookingDetails.BookedForDate}}</span>
+                            </div>
+                        </div>
+                        <!-- 2nd row -->
+                        <div class="row" style="margin: 0px; padding: 5px;">
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Patient Name : </b></span><span>{{BookingDetails.PatientName}}</span>
+                            </div>
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Surgery Name : </b></span><span>{{BookingDetails.SurgeryName}}</span>
+                            </div>
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Priority : </b></span><span>{{BookingDetails.Priority}}</span>
+                            </div>
+                        </div>
+                        <!-- 3rd row -->
+                        <div class="row" style="margin: 0px; padding: 5px;">
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Address : </b></span><span>{{coreService.SortPatientAddress(BookingDetails)}}</span>
+                            </div>
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Surgery Type : </b></span><span>{{BookingDetails.SurgeryType}}</span>
+                            </div>
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Status : </b></span><span>{{BookingDetails.Status}}</span>
+                            </div>
+                        </div>
+                        <!-- 4th row -->
+                        <div class="row" style="margin: 0px; padding: 5px;">
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Age/Sex : </b></span><span>{{BookingDetails.AgeSex}}</span>
+                            </div>
+                            <div class="col-md-4" style="margin: 0px; padding: 0px;">
+                                <span><b>Prescriber : </b></span><span>{{BookingDetails.Prescriber}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- body ends-->
+
+                    <!-- #region Personnel Involvement -->
+                    <div class="section-wrapper" style="display: flex; margin: 0px; padding: 0px; justify-content: center;">
+                        <div style="margin-bottom: 20px;">
+                            <div style="margin-left: 15px;">
+                                <label style="font-weight: 900; font-size: 14px; text-decoration: underline;">Personnel Involvements</label>
+                            </div>
+                            <!-- <div class="row" style="width: 50%;"> -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="booking-table-wrapper">
+                                        <table class="booking-table">
+                                            <thead>
+                                                <th style="width: 75px;">S.N.</th>
+                                                <th>Personnel Type</th>
+                                                <th>Name</th>
+                                            </thead>
+                                            <tbody *ngIf="SelectedPersonnelList.length">
+                                                <tr *ngFor="let per of SelectedPersonnelList let i=index;">
+                                                    <td>{{ i+1 }}</td>
+                                                    <td>{{ per.PersonnelTypeName }}</td>
+                                                    <td>{{ per.FullName }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Anaesthesia Details -->
+                    <div class="section-wrapper" style="display: flex; margin: 0px; padding: 0px; justify-content: center;">
+                        <div style="margin-bottom: 20px;">
+                            <div style="margin-left: 15px;">
+                                <label style="font-weight: 900; font-size: 14px; text-decoration: underline;">Anaesthesia Details</label>
+                            </div>
+                            <!-- <div class="row" style="width: 50%;"> -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="booking-table-wrapper">
+                                        <table class="booking-table">
+                                            <thead>
+                                                <th style="width: 75px;">S.N.</th>
+                                                <th>Anaesthesia Type</th>
+                                                <th>Anaesthesia Name</th>
+                                            </thead>
+                                            <tbody *ngIf="AnaesthesiaDetailList.length">
+                                                <tr *ngFor="let ans of AnaesthesiaDetailList let i=index;">
+                                                    <td>{{ i+1 }}</td>
+                                                    <td>{{ ans.AnaesthesiaTypeName }}</td>
+                                                    <td>{{ ans.AnaesthesiaName }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Instrument Details -->
+                    <div class="section-wrapper" style="display: flex; margin: 0px; padding: 0px; justify-content: center;">
+                        <div style="padding: 0px; margin: 0px 0px 20px 0px;">
+                            <div style="margin-left: 15px;">
+                                <label style="font-weight: 900; font-size: 14px; text-decoration: underline;">Instrument Details</label>
+                            </div>
+                            <!-- <div class="row" style="width: 50%;"> -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="booking-table-wrapper">
+                                        <table class="booking-table">
+                                            <caption style="text-align: center;"><span>Machine Details</span></caption>
+                                            <thead>
+                                                <th style="width: 75px;">S.N.</th>
+                                                <th>Machine Name</th>
+                                                <th>Charge</th>
+                                            </thead>
+                                            <tbody *ngIf="SelectedMachineList.length">
+                                                <tr *ngFor="let machine of SelectedMachineList let i=index;">
+                                                    <td>{{ i+1 }}</td>
+                                                    <td>{{ machine.MachineName }}</td>
+                                                    <td>{{ machine.Charge }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="booking-table-wrapper">
+                                        <table class="booking-table">
+                                            <caption style="text-align: center;"><span>Implant Details</span></caption>
+                                            <thead>
+                                                <th style="width: 75px;">S.N.</th>
+                                                <th>Implant Name</th>
+                                                <th>Quantity</th>
+                                                <th>Charge</th>
+                                                <th>Remarks</th>
+                                            </thead>
+                                            <tbody *ngIf="SelectedImplantList.length">
+                                                <tr *ngFor="let implant of SelectedImplantList let i=index;">
+                                                    <td>{{ i+1 }}</td>
+                                                    <td>{{ implant.ImplantName }}</td>
+                                                    <td>{{ implant.Quantity }}</td>
+                                                    <td>{{ implant.Charge }}</td>
+                                                    <td>{{ implant.Remarks }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #endregion -->
+
+                    <div class="section-wrapper">
+                        <div style="padding: 0px; margin: 0px 0px 20px 0px;">
+                            <ot-conclude-detail
+                                                [booked-for-date]="SelectedOTBooking.BookedForDate" [ot-booking-id]="SelectedOTBooking.OTBookingId"
+                                                (CallBackCloseConcludeBooking)="CallBackCloseConcludeBooking($event)"
+                                                (CallBackEditBookingFromConcludePage)="EditBookingDetailsFromConcludePage($event)">
+                            </ot-conclude-detail>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

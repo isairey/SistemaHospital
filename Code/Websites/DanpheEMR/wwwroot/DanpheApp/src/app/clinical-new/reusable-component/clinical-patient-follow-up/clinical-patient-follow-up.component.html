@@ -1,0 +1,63 @@
+<div class="wrapper">
+    <form [formGroup]="Patient_Follow_Up_Dto.PatientFollowUpValidator" class="form-with-border">
+        <div class="row" style="padding-left: 05px;background-color: cornflowerblue;">
+            <div class="col-md-12">
+                <div style="padding-top: 4px;">
+                    <label for="FollowUpDetais" style="width: 20%;height: 30px;padding-top: 8px;color:white">
+                        Follow Up Details
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2" style="padding-top: 10px;">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <div>
+                        <input class="form-control" type="number"
+                            (wheel)="coreService.PreventNumberChangeOnScroll($event)" placeholder="Enter Follow Up Days"
+                            formControlName="FollowUpDays" />
+                        <div *ngIf="Patient_Follow_Up_Dto.PatientFollowUpValidator.get('FollowUpDays').invalid && Patient_Follow_Up_Dto.PatientFollowUpValidator.get('FollowUpDays').touched"
+                            class="color-red font-sm">
+                            <span
+                                *ngIf="Patient_Follow_Up_Dto.PatientFollowUpValidator.get('FollowUpDays').hasError('required')"
+                                class="color-red font-sm">
+                                Follow up days is require.
+                            </span>
+                            <span
+                                *ngIf="Patient_Follow_Up_Dto.PatientFollowUpValidator.get('FollowUpDays').hasError('min')"
+                                class="color-red font-sm">
+                                follow up days Can't be Zero Or Negative Number.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <div class="form-group">
+                    <div>
+                        <label style="vertical-align: top; margin-top: 7px; margin-right: 10px;">Follow Up
+                            Date<b>:</b></label>
+                        <div style="display: inline-block;">
+                            <label class="form-control"
+                                style="background-color: #e9ecef; cursor: not-allowed; width: 150px;">
+                                <span style="margin-left:30px">
+                                    {{ CalculatedFollowUpDate }}
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" col-md-4">
+                <div class="form-group">
+                    <textarea appFocusTextbox class="form-control" id="additionalNotes" placeholder="Remarks" rows="3"
+                        name="additionalNotes" style="height: 32px;" formControlName="FollowUpRemarks"></textarea>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <input type="button" id="add" class="btn blue btn-success margin-7-hr" value="Save"
+                    (click)="AddFollowUp()" />
+            </div>
+        </div>
+    </form>
+</div>

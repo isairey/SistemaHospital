@@ -1,0 +1,26 @@
+export class GetOTBillingItem_DTO {
+    ServiceItemId: number = 0;
+    ServiceDepartmentId: number = null;
+    IntegrationItemId: number = null;
+    IntegrationName: string = null;
+    ItemCode: string = null;
+    ItemName: string = "";
+    IsTaxApplicable: boolean = false;
+    Description: string = null;
+    DisplaySeq: number = null;
+    IsDoctorMandatory: boolean = false;
+    IsOT: boolean = false;
+    IsProc: boolean = false;
+    ServiceCategoryId: number = null;
+    AllowMultipleQty: boolean = false;
+    DefaultDoctorList: string = null;
+    IsValidForReporting: boolean = false;
+    IsErLabApplicable: boolean = false;
+    CreatedBy: number = null;
+    CreatedOn: string = null;
+    ModifiedOn: string = null;
+    ModifiedBy: number = null;
+    IsActive: boolean = false;
+    IsIncentiveApplicable: boolean = false;
+    ServiceDepartmentName: string = null;
+}
