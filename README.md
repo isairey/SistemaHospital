@@ -1,6 +1,6 @@
 
 
-# 🏥 Sistema de Gestión Hospitalaria EMR (Danphe)
+# 🏥 Sistema de Gestión Hospitalaria EMR HospitalDap
 
 <p align="center">
   <img src="https://img.shields.io/badge/Estado-Activo-success?style=for-the-badge">
