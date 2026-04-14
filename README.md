@@ -21,7 +21,7 @@
 
 ## 📌 Descripción
 
-**Danphe EMR** es un sistema empresarial basado en la web diseñado para la gestión hospitalaria integral.  
+**HospitalDap** es un sistema empresarial basado en la web diseñado para la gestión hospitalaria integral.  
 
 Actualmente se encuentra en funcionamiento en **4 hospitales**, ofreciendo una solución completa para operaciones médicas, administrativas y financieras.
 
